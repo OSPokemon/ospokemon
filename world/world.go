@@ -1,23 +1,32 @@
 package world
 
 import (
+	"strconv"
 	"sync"
+	"time"
 )
 
-var World struct {
-	sync.Mutex
-	Entities map[int]Entity
+var mutex = sync.Mutex{}
+var Entities = make(map[int]Entity)
+
+func Lock() {
+	mutex.Lock()
 }
 
-func init() {
-	World.Entities = make(map[int]Entity)
+func Unlock() {
+	mutex.Unlock()
 }
 
 func AddEntity(e Entity) int {
-	World.Lock()
-	defer World.Unlock()
+	Lock()
+	defer Unlock()
+	id := unsafeAddEntity(e)
+	return id
+}
+
+func unsafeAddEntity(e Entity) int {
 	id := reserveEntityId()
-	World.Entities[id] = e
+	Entities[id] = e
 	return id
 }
 
@@ -35,7 +44,29 @@ func reserveEntityId() int {
 }
 
 func RemoveEntity(id int) {
-	World.Lock()
-	defer World.Unlock()
-	delete(World.Entities, id)
+	Lock()
+	defer Unlock()
+	unsafeRemoveEntity(id)
+}
+
+func unsafeRemoveEntity(id int) {
+	delete(Entities, id)
+}
+
+func Update(now time.Time) map[string]*View {
+	view := make(map[string]*View)
+
+	Lock()
+	defer Unlock()
+
+	for id, _ := range Entities {
+		UpdateEntity(id, now)
+	}
+
+	for id, entity := range Entities {
+		eview := MakeView(entity, now)
+		view[strconv.Itoa(id)] = eview
+	}
+
+	return view
 }

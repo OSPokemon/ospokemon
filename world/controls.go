@@ -22,6 +22,7 @@ const (
 )
 
 type Effect struct {
+	Name     string
 	Type     EffectType
 	Data     interface{}
 	Start    time.Time
@@ -29,12 +30,16 @@ type Effect struct {
 }
 
 type Ability struct {
-	Cast     time.Duration
-	Cooldown time.Duration
-	Effects  []*Effect
+	Name        string
+	Cast        time.Duration
+	Cooldown    time.Duration
+	MaxCooldown time.Duration
+	Effects     []*Effect
 }
 
-var MoveAbility = &Ability{} // Special flag ability
+var MoveAbility = &Ability{ // Special flag ability
+	Name: "move",
+}
 
 type Action struct {
 	Clock   time.Time
@@ -83,10 +88,8 @@ func (e *Effect) Update(entityId int, entity Entity, now time.Time) bool {
 				update = true
 			}
 		} else {
+			entity.Graphics().Current = entity.Graphics().Animations[ANIMstun]
 			entity.Controls().State |= CTRLstun
-			graphics := entity.Graphics()
-			graphics.Current.AnimationType = ANIMstun
-			graphics.Current.Clock = now
 			entity.Controls().Current = nil
 			update = true
 		}
@@ -103,7 +106,7 @@ func (a *Action) Update(entityId int, entity Entity, now time.Time) bool {
 		destination := a.Target.(Position)
 		speedy := entity.(Speedy)
 		vector := CreatePathVector(entity.Physics().Position, destination, speedy.Speed())
-		moveEffect := &Effect{EFCTmove, vector, now, 0}
+		moveEffect := &Effect{"move", EFCTmove, vector, now, 0}
 		entity.SetEffects(append(entity.Effects(), moveEffect))
 		update = true
 	}

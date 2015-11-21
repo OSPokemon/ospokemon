@@ -6,6 +6,7 @@ import (
 )
 
 type Entity interface {
+	Name() string
 	Physics() *Physics
 	Graphics() *Graphics
 	Controls() *Controls
@@ -23,13 +24,13 @@ type Speedy interface {
 	Speed() int
 }
 
-func UpdateEntity(selfId int, now time.Time) bool {
-	entity := World.Entities[selfId]
+func UpdateEntity(id int, now time.Time) bool {
+	entity := Entities[id]
 	var update bool
 
 	persistEffects := make([]*Effect, len(entity.Effects()))
 	for _, effect := range entity.Effects() {
-		update = effect.Update(selfId, entity, now) || update
+		update = effect.Update(id, entity, now) || update
 
 		if !effect.Start.Add(effect.Duration).Before(now) {
 			persistEffects = append(persistEffects, effect)
@@ -37,13 +38,11 @@ func UpdateEntity(selfId int, now time.Time) bool {
 	}
 	entity.SetEffects(persistEffects)
 
-	update = update || entity.Graphics().Update(entity, now)
-
 	return update
 }
 
 func MoveEntity(id int, v *Vector) {
-	entity := World.Entities[id]
+	entity := Entities[id]
 
 	if int(entity.Controls().State&CTRLroot) > 0 {
 		return
@@ -56,7 +55,7 @@ func MoveEntity(id int, v *Vector) {
 	}
 
 	if int(entity.Controls().State&CTRLcollision) > 0 {
-		for id2, entity2 := range World.Entities {
+		for id2, entity2 := range Entities {
 			if id == id2 {
 				continue
 			}
