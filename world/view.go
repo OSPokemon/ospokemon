@@ -5,6 +5,7 @@ import (
 )
 
 type View struct {
+	Id       int
 	Name     string
 	Physics  *Physics
 	Graphic  string
@@ -32,8 +33,10 @@ type EffectView struct {
 	Completion float64
 }
 
-func MakeView(e Entity, now time.Time) *View {
+func MakeView(id int, e Entity, now time.Time) *View {
 	view := &View{}
+
+	view.Id = id
 
 	view.Name = e.Name()
 

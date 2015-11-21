@@ -64,7 +64,7 @@ func Update(now time.Time) map[string]*View {
 	}
 
 	for id, entity := range Entities {
-		eview := MakeView(entity, now)
+		eview := MakeView(id, entity, now)
 		view[strconv.Itoa(id)] = eview
 	}
 
