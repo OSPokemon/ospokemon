@@ -4,21 +4,17 @@ import (
 	"time"
 )
 
+// Effects
+
 type EffectType uint8
 
 const (
-	EFCThealth EffectType = iota
-	EFCTmove
+	EFCTimmune EffectType = iota
+	EFCTstasis
+	EFCThealth
 	EFCTstun
-	EFCTconjure
-)
-
-const (
-	CTRLcollision    byte = 01
-	CTRLfreeze       byte = 02
-	CTRLstun         byte = 04
-	CTRLroot         byte = 010
-	CTRLinvulnerable byte = 020
+	EFCTroot
+	EFCTmove
 )
 
 type Effect struct {
@@ -29,17 +25,55 @@ type Effect struct {
 	Duration time.Duration
 }
 
-type Ability struct {
-	Name        string
-	Cast        time.Duration
-	Cooldown    time.Duration
-	MaxCooldown time.Duration
-	Effects     []*Effect
+type Effects []*Effect
+
+func (e Effects) Len() int {
+	return len(e)
 }
 
-var MoveAbility = &Ability{ // Special flag ability
-	Name: "move",
+func (e Effects) Swap(i, j int) {
+	e[i], e[j] = e[j], e[i]
 }
+
+func (e Effects) Less(i, j int) bool {
+	return e[i].Type < e[j].Type
+}
+
+// Spells
+
+type TargetType uint8
+type SpellScript func(Entity, interface{})
+
+const (
+	TRGTnone TargetType = iota
+	TRGTposition
+	TRGTentity
+)
+
+type Spell struct {
+	Name        string
+	Description string
+	CastTime    time.Duration
+	Cooldown    time.Duration
+	Cost        *SpellCost
+	Range       float64
+	TargetType  TargetType
+	Script      SpellScript
+}
+
+type SpellCost struct {
+	Mana  int
+	Items map[int]int
+}
+
+// Abilities
+
+type Ability struct {
+	LastCast time.Time
+	Spell    *Spell
+}
+
+// Actions
 
 type Action struct {
 	Clock   time.Time
@@ -47,69 +81,25 @@ type Action struct {
 	Ability *Ability
 }
 
+// Controls
+
+const (
+	CTRLimmune uint8 = 0x01
+	CTRLstasis uint8 = 0x02
+	CTRLstun   uint8 = 0x04
+	CTRLroot   uint8 = 0x08
+	// pseudo control states
+	CTRLPprotected uint8 = CTRLimmune | CTRLstasis
+	CTRLPnocast    uint8 = CTRLstasis | CTRLstun
+	CTRLPstuck     uint8 = CTRLstasis | CTRLroot
+)
+
 type Controls struct {
-	Current   *Action
-	State     byte
+	Action    *Action
+	State     uint8
 	Abilities map[string]*Ability
 }
 
-func (e *Effect) Update(entityId int, entity Entity, now time.Time) bool {
-	var update bool
-
-	switch e.Type {
-
-	case EFCThealth:
-		healthy := entity.(Healthy)
-		power := e.Data.(int)
-		newhealth := healthy.Health() + power
-
-		if newhealth > healthy.MaxHealth() {
-			power = healthy.MaxHealth() - healthy.Health()
-		}
-		if newhealth < 0 {
-			power = 0 - healthy.Health()
-		}
-
-		if power != 0 {
-			healthy.SetHealth(newhealth)
-			update = true
-		}
-
-		break
-	case EFCTmove:
-		vector := e.Data.(*Vector)
-		MoveEntity(entityId, vector)
-		update = true
-		break
-	case EFCTstun:
-		if int(entity.Controls().State&CTRLstun) > 0 {
-			if e.Start.Add(e.Duration).Before(now) {
-				entity.Controls().State ^= CTRLstun
-				update = true
-			}
-		} else {
-			entity.Graphics().Current = entity.Graphics().Animations[ANIMstun]
-			entity.Controls().State |= CTRLstun
-			entity.Controls().Current = nil
-			update = true
-		}
-		break
-	}
-
-	return update
-}
-
-func (a *Action) Update(entityId int, entity Entity, now time.Time) bool {
-	var update bool
-
-	if a.Ability == MoveAbility {
-		destination := a.Target.(Position)
-		speedy := entity.(Speedy)
-		vector := CreatePathVector(entity.Physics().Position, destination, speedy.Speed())
-		moveEffect := &Effect{"move", EFCTmove, vector, now, 0}
-		entity.SetEffects(append(entity.Effects(), moveEffect))
-		update = true
-	}
-
-	return update
-}
+var WalkAbility = &Ability{
+	Spell: &Spell{"walk", "", 0, 0, nil, 0, TRGTnone, nil},
+} // Special flag ability

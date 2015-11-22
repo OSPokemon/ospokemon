@@ -30,9 +30,11 @@ func (p *playerStore) Load(name string) *Player {
 
 	row := Connection.QueryRow("SELECT name, class, health, maxhealth, x, y FROM players WHERE name=?", name)
 	player := &Player{
+		SPEED: 25,
 		PHYSICS: &world.Physics{
 			Position: world.Position{},
-			Size:     world.Size{64, 64},
+			Size:     world.Size{32, 32},
+			Solid:    true,
 		},
 	}
 

@@ -1,9 +1,16 @@
 package world
 
-func CreatePathVector(pos1 Position, pos2 Position, speed int) *Vector {
-	// do some pathing
+import (
+	"math"
+)
+
+func CreatePathVector(pos1 *Position, pos2 *Position, speed int) *Vector {
+	ydiff := pos2.Y - pos1.Y
+	xdiff := pos2.X - pos1.X
+	mag := math.Sqrt(xdiff*xdiff + ydiff*ydiff)
+
 	return &Vector{
-		Radians:  0,
-		Distance: float64(speed) / 1000,
+		DX: xdiff / mag * float64(speed),
+		DY: ydiff / mag * float64(speed),
 	}
 }

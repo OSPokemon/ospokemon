@@ -3,6 +3,7 @@ package connection
 import (
 	"code.google.com/p/go.net/websocket"
 	"github.com/ospokemon/ospokemon/data"
+	"github.com/ospokemon/ospokemon/world"
 	"log"
 	"strconv"
 )
@@ -26,10 +27,16 @@ var ConnectHandler = websocket.Handler(func(conn *websocket.Conn) {
 	client.Entities = data.FullLoadPlayer(name)
 	Clients[name] = client
 
-	log.Printf("Client created with control: %v", client.Entities)
+	log.Printf("WSclient connection created as %s: %v", name, client.Entities)
 
 	go client.ListenSend()
 	client.ListenRead()
+
+	data.FullUnloadPlayer(name)
+	for _, id := range client.Entities {
+		world.RemoveEntity(id)
+	}
+
 	delete(Clients, name)
 	conn.Close()
 })
@@ -58,7 +65,7 @@ func (c *Client) ListenRead() {
 			err := websocket.JSON.Receive(c.Conn, &message)
 
 			if err != nil {
-				log.Printf("connection.Client.ListenRead err: %v\n", err)
+				log.Printf("WSclient connection closed(%v):%s", err, c.Name)
 				c.Close <- true
 			} else {
 				go ReceiveMessage(c.Name, message)

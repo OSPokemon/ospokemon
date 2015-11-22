@@ -14,11 +14,11 @@ type View struct {
 }
 
 type ControlsView struct {
-	Current   CastingView
+	Action    ActionView
 	Abilities []AbilityView
 }
 
-type CastingView struct {
+type ActionView struct {
 	Name       string
 	Completion float64
 }
@@ -45,16 +45,16 @@ func MakeView(id int, e Entity, now time.Time) *View {
 	view.Graphic = e.Graphics().Current
 
 	view.Controls = ControlsView{}
-	view.Controls.Current = CastingView{}
-	if e.Controls().Current != nil {
-		view.Controls.Current.Name = e.Controls().Current.Ability.Name
-		view.Controls.Current.Completion = float64(e.Controls().Current.Clock.Add(e.Controls().Current.Ability.Cast).Sub(now) / time.Minute)
+	view.Controls.Action = ActionView{}
+	if e.Controls().Action != nil {
+		view.Controls.Action.Name = e.Controls().Action.Ability.Spell.Name
+		view.Controls.Action.Completion = float64(e.Controls().Action.Clock.Add(e.Controls().Action.Ability.Spell.CastTime).Sub(now) / time.Second)
 	}
 	view.Controls.Abilities = make([]AbilityView, len(e.Controls().Abilities))
 	for _, ability := range e.Controls().Abilities {
 		abilityView := AbilityView{
-			Name:     ability.Name,
-			Cooldown: float64(ability.Cooldown),
+			Name:     ability.Spell.Name,
+			Cooldown: float64(ability.LastCast.Add(ability.Spell.Cooldown).Sub(now) / time.Second),
 		}
 		view.Controls.Abilities = append(view.Controls.Abilities, abilityView)
 	}

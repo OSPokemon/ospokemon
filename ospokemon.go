@@ -4,7 +4,7 @@ import (
 	"flag"
 	"github.com/ospokemon/ospokemon/connection"
 	"github.com/ospokemon/ospokemon/data"
-	"github.com/ospokemon/ospokemon/world"
+	"github.com/ospokemon/ospokemon/world/update"
 	"net/http"
 	"time"
 )
@@ -29,7 +29,7 @@ func main() {
 
 func Loop(d time.Duration) {
 	for now := range time.Tick(d) {
-		view := world.Update(now)
+		view := update.UpdateWorld(now)
 		go connection.Update(view)
 	}
 }

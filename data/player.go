@@ -13,7 +13,7 @@ type Player struct {
 	PHYSICS   *world.Physics
 	GRAPHICS  *world.Graphics
 	CONTROLS  *world.Controls
-	EFFECTS   []*world.Effect
+	EFFECTS   world.Effects
 }
 
 func (p *Player) Physics() *world.Physics {
@@ -28,11 +28,11 @@ func (p *Player) Controls() *world.Controls {
 	return p.CONTROLS
 }
 
-func (p *Player) Effects() []*world.Effect {
+func (p *Player) Effects() world.Effects {
 	return p.EFFECTS
 }
 
-func (p *Player) SetEffects(effects []*world.Effect) {
+func (p *Player) SetEffects(effects world.Effects) {
 	p.EFFECTS = effects
 }
 
