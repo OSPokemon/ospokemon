@@ -33,7 +33,7 @@ func (p *playerStore) Load(name string) *Player {
 		SPEED: 25,
 		PHYSICS: &world.Physics{
 			Position: world.Position{},
-			Size:     world.Size{32, 32},
+			Size:     world.Size{64, 64},
 			Solid:    true,
 		},
 	}

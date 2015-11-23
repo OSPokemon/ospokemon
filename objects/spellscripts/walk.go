@@ -25,5 +25,7 @@ func Walk(self world.Entity, t interface{}, now time.Time) {
 	moveEffect := &world.Effect{"walk", world.EFCTmove, vector, now, 0}
 	self.SetEffects(append(self.Effects(), moveEffect))
 
+	self.Graphics().Current = self.Graphics().Animations[vector.AnimationType()]
+
 	log.Printf("MoveAction %s along %v towards %v", self.Name(), vector, destination)
 }

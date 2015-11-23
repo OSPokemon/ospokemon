@@ -49,14 +49,12 @@ func (p *pokemonStore) Load(id int) *PokemonEntity {
 	pokemon := &PokemonEntity{
 		PHYSICS: &world.Physics{
 			Position: world.Position{},
-			Size:     world.Size{},
+			Size:     world.Size{64, 64},
 			Solid:    true,
 		},
 	}
 
 	err := row.Scan(&pokemon.ID, &pokemon.NAME, &pokemon.PHYSICS.Position.X, &pokemon.PHYSICS.Position.Y, &pokemon.SPECIES, &pokemon.LEVEL, &pokemon.EXPERIENCE, &pokemon.ABILITY, &pokemon.FRIENDSHIP, &pokemon.GENDER, &pokemon.NATURE, &pokemon.HEIGHT, &pokemon.WEIGHT, &pokemon.ORIGINALTRAINER, &pokemon.SHINY, &pokemon.ITEM)
-	pokemon.Physics().Size.Height = int(pokemon.Height())
-	pokemon.Physics().Size.Width = int(pokemon.Weight())
 
 	if err != nil {
 		log.Fatal(err)

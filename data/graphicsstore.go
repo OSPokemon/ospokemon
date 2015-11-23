@@ -50,12 +50,16 @@ func (a *animationStore) Load(t string, id int) map[world.AnimationType]string {
 	}
 
 	Animations[t][id] = animations
+
+	log.Printf("Animations provided for %s#%d: %v", t, id, animations)
+
 	return animations
 }
 
 func (g *graphicsStore) New(t string, id int) *world.Graphics {
 	animations := AnimationStore.Load(t, id)
 	return &world.Graphics{
+		Current:    animations[world.ANIMwalk_down],
 		Animations: animations,
 	}
 }

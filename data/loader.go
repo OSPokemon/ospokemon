@@ -20,7 +20,7 @@ func FullLoadPlayer(name string) []int {
 
 	for _, pokemon_id := range pokemon_ids {
 		pokemon := PokemonStore.Load(pokemon_id)
-		pokemon.GRAPHICS = GraphicsStore.New("species", pokemon.Id())
+		pokemon.GRAPHICS = GraphicsStore.New("pokemon", pokemon.Species())
 		pokemon.CONTROLS = &world.Controls{
 			Abilities: make(map[string]*world.Ability),
 		}
