@@ -9,16 +9,19 @@ type animationStore byte
 type graphicsStore byte
 
 var AnimationStore animationStore
-var Animations = make(map[int]map[world.AnimationType]string)
-
 var GraphicsStore graphicsStore
 
-func (a *animationStore) Load(id int) map[world.AnimationType]string {
-	if Animations[id] != nil {
-		return Animations[id]
+var Animations = make(map[string]map[int]map[world.AnimationType]string)
+
+func (a *animationStore) Load(t string, id int) map[world.AnimationType]string {
+	if Animations[t] == nil {
+		Animations[t] = make(map[int]map[world.AnimationType]string)
+	}
+	if Animations[t][id] != nil {
+		return Animations[t][id]
 	}
 
-	rows, err := Connection.Query("SELECT animation_type, animation FROM animations WHERE id=?", id)
+	rows, err := Connection.Query("SELECT animationtype, animation FROM animations WHERE type=? AND id=?", t, id)
 	defer rows.Close()
 
 	if err != nil {
@@ -46,15 +49,13 @@ func (a *animationStore) Load(id int) map[world.AnimationType]string {
 		log.Fatal(err)
 	}
 
-	Animations[id] = animations
+	Animations[t][id] = animations
 	return animations
 }
 
-func (g *graphicsStore) New(id int) *world.Graphics {
-	animations := AnimationStore.Load(id)
-	graphics := &world.Graphics{
+func (g *graphicsStore) New(t string, id int) *world.Graphics {
+	animations := AnimationStore.Load(t, id)
+	return &world.Graphics{
 		Animations: animations,
 	}
-
-	return graphics
 }

@@ -42,7 +42,7 @@ func (e Effects) Less(i, j int) bool {
 // Spells
 
 type TargetType uint8
-type SpellScript func(Entity, interface{})
+type SpellScript func(Entity, interface{}, time.Time)
 
 const (
 	TRGTnone TargetType = iota
@@ -50,15 +50,15 @@ const (
 	TRGTentity
 )
 
-type Spell struct {
-	Name        string
-	Description string
-	CastTime    time.Duration
-	Cooldown    time.Duration
-	Cost        *SpellCost
-	Range       float64
-	TargetType  TargetType
-	Script      SpellScript
+type Spell interface {
+	Name() string
+	Description() string
+	CastTime() time.Duration
+	Cooldown() time.Duration
+	Cost() *SpellCost
+	Range() float64
+	TargetType() TargetType
+	Script() SpellScript
 }
 
 type SpellCost struct {
@@ -70,7 +70,7 @@ type SpellCost struct {
 
 type Ability struct {
 	LastCast time.Time
-	Spell    *Spell
+	Spell    Spell
 }
 
 // Actions
@@ -99,7 +99,3 @@ type Controls struct {
 	State     uint8
 	Abilities map[string]*Ability
 }
-
-var WalkAbility = &Ability{
-	Spell: &Spell{"walk", "", 0, 0, nil, 0, TRGTnone, nil},
-} // Special flag ability

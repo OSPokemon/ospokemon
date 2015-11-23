@@ -24,7 +24,7 @@ func UpdateEntity(entity world.Entity, now time.Time) {
 	if entity.Controls().State&world.CTRLPnocast > 1 {
 		entity.Controls().Action = nil
 	} else if entity.Controls().Action != nil {
-		UpdateAction(entity.Controls().Action, entity, now)
+		entity.Controls().Action.Ability.Spell.Script()(entity, entity.Controls().Action.Target, now)
 	}
 
 	UpdateCollisions(entity)

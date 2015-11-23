@@ -2,21 +2,22 @@ package connection
 
 import (
 	"encoding/json"
+	"github.com/ospokemon/ospokemon/objects/spellscripts"
 	"github.com/ospokemon/ospokemon/world"
 	"log"
 	"strconv"
 	"time"
 )
 
-func Update(base map[string]*world.View) {
+func Update(base map[string]*world.BasicView, now time.Time) {
 	for _, client := range Clients {
 		view := make(map[string]interface{})
 		view["world"] = copyMap(base)
 
-		controlViews := make(map[string]*world.View)
+		controlViews := make(map[string]*world.FullView)
 		for _, id := range client.Entities {
 			tag := strconv.Itoa(id)
-			controlViews[tag] = base[tag]
+			controlViews[tag] = world.MakeFullView(id, world.Entities[id], now)
 		}
 		view["control"] = controlViews
 
@@ -68,7 +69,7 @@ func ReceiveMessage(name string, message map[string]interface{}) {
 	}
 
 	if ability == "walk" {
-		action.Ability = world.WalkAbility
+		action.Ability = walkAbility
 	} else {
 		action.Ability = entity.Controls().Abilities[ability]
 	}
@@ -78,12 +79,48 @@ func ReceiveMessage(name string, message map[string]interface{}) {
 	entity.Controls().Action = action
 }
 
-func copyMap(src map[string]*world.View) map[string]*world.View {
-	dst := make(map[string]*world.View)
+func copyMap(src map[string]*world.BasicView) map[string]*world.BasicView {
+	dst := make(map[string]*world.BasicView)
 
 	for k, v := range src {
 		dst[k] = v
 	}
 
 	return dst
+}
+
+// Patch "Walk" ability onto every entity without occupying Ability slot
+
+var walkAbility = &world.Ability{
+	Spell: WalkSpell,
+}
+
+type walkSpell byte
+
+var WalkSpell walkSpell
+var walkCost = &world.SpellCost{0, make(map[int]int)}
+
+func (walk walkSpell) Name() string {
+	return "Walk"
+}
+func (walk walkSpell) Description() string {
+	return "Walk"
+}
+func (walk walkSpell) CastTime() time.Duration {
+	return 0
+}
+func (walk walkSpell) Cooldown() time.Duration {
+	return 0
+}
+func (walk walkSpell) Cost() *world.SpellCost {
+	return walkCost
+}
+func (walk walkSpell) Range() float64 {
+	return 0
+}
+func (walk walkSpell) TargetType() world.TargetType {
+	return world.TRGTnone
+}
+func (walk walkSpell) Script() world.SpellScript {
+	return spellscripts.Scripts["Walk"]
 }

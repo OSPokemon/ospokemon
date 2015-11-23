@@ -30,6 +30,6 @@ func main() {
 func Loop(d time.Duration) {
 	for now := range time.Tick(d) {
 		view := update.UpdateWorld(now)
-		go connection.Update(view)
+		go connection.Update(view, now)
 	}
 }

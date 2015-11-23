@@ -1,80 +1,83 @@
 package data
 
 import (
-// "fmt"
-// "src.ospokemon.org/gameserver/world"
-// "src.ospokemon.org/ospokemon"
+	"github.com/ospokemon/api-go"
+	"github.com/ospokemon/ospokemon/world"
+	"log"
 )
 
-// var Pokemon = make(map[int]PokemonEntity)
+type pokemonStore byte
 
-// type PokemonEntity interface {
-// 	ospokemon.Pokemon
-// 	world.Entity
-// }
+var PokemonStore pokemonStore
+var Pokemon = make(map[int]*PokemonEntity)
 
-// type GameServerPokemon struct {
-// 	ospokemon.BasicPokemon
-// 	position world.Position
-// 	size     world.Size
-// 	action   *world.Action
-// 	effects  []world.Effect
-// }
+func (p *pokemonStore) FetchIdsInPlayerBox(player_id int, box int) []int {
+	rows, err := Connection.Query("SELECT pokemon_id FROM players_pokemon WHERE player_id=? AND box=?", player_id, box)
+	defer rows.Close()
 
-// func (p *GameServerPokemon) Tag() string {
-// 	return fmt.Sprintf("pokemon%i", p.Id())
-// }
+	if err != nil {
+		log.Fatal(err)
+	}
 
-// func (p *GameServerPokemon) Image() string {
-// 	return fmt.Sprintf("trainer/%i.png", p.Id())
-// }
+	pokemon_ids := make([]int, 0)
+	var pokemon_id int
 
-// func (p *GameServerPokemon) Position() *world.Position {
-// 	return &p.position
-// }
+	for rows.Next() {
+		err = rows.Scan(&pokemon_id)
 
-// func (p *GameServerPokemon) Size() *world.Size {
-// 	return &p.size
-// }
+		if err != nil {
+			log.Fatal(err)
+		}
 
-// func (p *GameServerPokemon) Solid() bool {
-// 	return true
-// }
+		pokemon_ids = append(pokemon_ids, pokemon_id)
+	}
 
-// func (p *GameServerPokemon) Action() *world.Action {
-// 	return p.action
-// }
+	err = rows.Err()
+	if err != nil {
+		log.Fatal(err)
+	}
 
-// func (p *GameServerPokemon) SetAction(action *world.Action) {
-// 	p.action = action
-// }
+	return pokemon_ids
+}
 
-// func (p *GameServerPokemon) Effects() []world.Effect {
-// 	return p.effects
-// }
+func (p *pokemonStore) Load(id int) *PokemonEntity {
+	if Pokemon[id] != nil {
+		return Pokemon[id]
+	}
 
-// func (p *GameServerPokemon) SetEffects(effects []world.Effect) {
-// 	p.effects = effects
-// }
+	row := Connection.QueryRow("SELECT id, name, x, y, species, level, experience, ability, friendship, gender, nature, height, weight, originaltrainer, shiny, item FROM pokemon WHERE id=?", id)
+	pokemon := &PokemonEntity{
+		PHYSICS: &world.Physics{
+			Position: world.Position{},
+			Size:     world.Size{},
+			Solid:    true,
+		},
+	}
 
-// func (p *GameServerPokemon) Health() int {
-// 	stats := p.Stats()
-// 	healthstat := stats["health"]
-// 	return healthstat.Value()
-// }
+	err := row.Scan(&pokemon.ID, &pokemon.NAME, &pokemon.PHYSICS.Position.X, &pokemon.PHYSICS.Position.Y, &pokemon.SPECIES, &pokemon.LEVEL, &pokemon.EXPERIENCE, &pokemon.ABILITY, &pokemon.FRIENDSHIP, &pokemon.GENDER, &pokemon.NATURE, &pokemon.HEIGHT, &pokemon.WEIGHT, &pokemon.ORIGINALTRAINER, &pokemon.SHINY, &pokemon.ITEM)
+	pokemon.Physics().Size.Height = int(pokemon.Height())
+	pokemon.Physics().Size.Width = int(pokemon.Weight())
 
-// func (p *GameServerPokemon) SetHealth(health int) {
-// 	// ( { [IV+2*Base Stat+([EVs]/4)+100] * Level } / 100 )+10
-// 	stats := p.Stats()
-// 	healthstat := stats["health"]
+	if err != nil {
+		log.Fatal(err)
+	}
 
-// 	if health < 0 {
-// 		healthstat.SetValue(0)
-// 	}
+	rows, err := Connection.Query("SELECT stat, ev, iv, value FROM pokemon_stats WHERE pokemon_id=?", id)
 
-// 	maxhealth := ((healthstat.EffortValue() / 4) + 100)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-// 	if health > maxhealth {
-// 		healthstat.SetValue(maxhealth)
-// 	}
-// }
+	pokemon.BasicPokemon.STATS = make(map[string]ospokemon.Stat)
+
+	for rows.Next() {
+		stat_name := ""
+		stat := &ospokemon.BasicStat{}
+		err = rows.Scan(&stat_name, &stat.EV, &stat.IV, &stat.VALUE)
+
+		pokemon.BasicPokemon.STATS[stat_name] = stat
+	}
+
+	Pokemon[id] = pokemon
+	return pokemon
+}

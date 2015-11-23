@@ -28,7 +28,7 @@ func (p *playerStore) Load(name string) *Player {
 		return Players[name]
 	}
 
-	row := Connection.QueryRow("SELECT name, class, health, maxhealth, x, y FROM players WHERE name=?", name)
+	row := Connection.QueryRow("SELECT id, name, class, health, maxhealth, x, y FROM players WHERE name=?", name)
 	player := &Player{
 		SPEED: 25,
 		PHYSICS: &world.Physics{
@@ -38,7 +38,7 @@ func (p *playerStore) Load(name string) *Player {
 		},
 	}
 
-	err := row.Scan(&player.NAME, &player.CLASS, &player.HEALTH, &player.MAXHEALTH, &player.Physics().Position.X, &player.Physics().Position.Y)
+	err := row.Scan(&player.BasicTrainer.ID, &player.NAME, &player.CLASS, &player.HEALTH, &player.MAXHEALTH, &player.Physics().Position.X, &player.Physics().Position.Y)
 
 	if err != nil {
 		log.Fatal(err)
