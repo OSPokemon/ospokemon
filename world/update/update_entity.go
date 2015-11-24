@@ -2,6 +2,7 @@ package update
 
 import (
 	"github.com/ospokemon/ospokemon/world"
+	"math"
 	"sort"
 	"time"
 )
@@ -55,6 +56,21 @@ func UpdateEntity(entity world.Entity, now time.Time) {
 		}
 
 		vector := world.CreatePathVector(&entity.Physics().Position, destination, speed)
+
+		if math.Abs(vector.DX) > math.Abs(vector.DY) {
+			if vector.DX > 0 {
+				entity.Graphics().Current = entity.Graphics().Animations[world.ANIMwalk_right]
+			} else {
+				entity.Graphics().Current = entity.Graphics().Animations[world.ANIMwalk_left]
+			}
+		} else {
+			if vector.DY > 0 {
+				entity.Graphics().Current = entity.Graphics().Animations[world.ANIMwalk_down]
+			} else {
+				entity.Graphics().Current = entity.Graphics().Animations[world.ANIMwalk_up]
+			}
+		}
+
 		MoveEntity(entity, vector)
 	}
 }
