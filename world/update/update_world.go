@@ -14,6 +14,10 @@ func UpdateWorld(now time.Time) map[string]*world.BasicView {
 	}
 
 	for id, entity := range world.Entities {
+		if entity.Controls().State&world.CTRLcloak > 0 {
+			continue
+		}
+
 		eview := world.MakeBasicView(id, entity, now)
 		view[strconv.Itoa(id)] = eview
 	}

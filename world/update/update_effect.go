@@ -15,6 +15,9 @@ func UpdateEffect(effect *world.Effect, entity world.Entity, now time.Time) {
 	case world.EFCTstasis:
 		entity.Controls().State |= world.CTRLstasis
 		return
+	case world.EFCTcloak:
+		entity.Controls().State |= world.CTRLcloak
+		return
 	case world.EFCThealth:
 		power := effect.Data.(int)
 		if power < 0 && isprotected {

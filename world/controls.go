@@ -14,6 +14,7 @@ const (
 	EFCThealth
 	EFCTstun
 	EFCTroot
+	EFCTcloak
 	EFCTmove
 )
 
@@ -88,6 +89,7 @@ const (
 	CTRLstasis uint8 = 0x02
 	CTRLstun   uint8 = 0x04
 	CTRLroot   uint8 = 0x08
+	CTRLcloak  uint8 = 0x10
 	// pseudo control states
 	CTRLPprotected uint8 = CTRLimmune | CTRLstasis
 	CTRLPnocast    uint8 = CTRLstasis | CTRLstun
