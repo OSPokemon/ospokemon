@@ -21,16 +21,7 @@ func FullLoadPlayer(name string) []int {
 	for _, pokemon_id := range pokemon_ids {
 		pokemon := PokemonStore.Load(pokemon_id)
 		pokemon.GRAPHICS = GraphicsStore.New("pokemon", pokemon.Species())
-		pokemon.CONTROLS = &world.Controls{
-			Abilities: make(map[string]*world.Ability),
-		}
-
-		spell_ids := SpellStore.FetchIdsForPokemon(pokemon_id)
-
-		for _, spell_id := range spell_ids {
-			ability := AbilityStore.New(spell_id)
-			pokemon.CONTROLS.Abilities[ability.Spell.Name()] = ability
-		}
+		pokemon.CONTROLS = ControlsStore.BuildForPokemon(pokemon_id)
 
 		entities = append(entities, world.AddEntity(pokemon))
 	}

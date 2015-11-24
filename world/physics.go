@@ -17,7 +17,8 @@ type Size struct {
 type Physics struct {
 	Position
 	Size
-	Solid bool
+	Solid   bool
+	Walking *Position
 }
 
 type Vector struct {

@@ -22,26 +22,23 @@ func (a *animationStore) Load(t string, id int) map[world.AnimationType]string {
 	}
 
 	rows, err := Connection.Query("SELECT animationtype, animation FROM animations WHERE type=? AND id=?", t, id)
-	defer rows.Close()
-
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer rows.Close()
 
 	animations := make(map[world.AnimationType]string)
-	var animTypeInt int
-	var animType world.AnimationType
+	var animType int
 	var animation string
 
 	for rows.Next() {
-		err = rows.Scan(&animTypeInt, &animation)
+		err = rows.Scan(&animType, &animation)
 
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		animType = world.AnimationType(animTypeInt)
-		animations[animType] = animation
+		animations[world.AnimationType(animType)] = animation
 	}
 
 	err = rows.Err()
@@ -59,6 +56,7 @@ func (a *animationStore) Load(t string, id int) map[world.AnimationType]string {
 func (g *graphicsStore) New(t string, id int) *world.Graphics {
 	animations := AnimationStore.Load(t, id)
 	return &world.Graphics{
+		Portrait:   animations[world.ANIMportrait],
 		Current:    animations[world.ANIMwalk_down],
 		Animations: animations,
 	}

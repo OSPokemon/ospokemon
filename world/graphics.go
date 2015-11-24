@@ -7,7 +7,8 @@ import (
 type AnimationType uint8
 
 const (
-	ANIMwalk_down AnimationType = iota
+	ANIMportrait AnimationType = iota
+	ANIMwalk_down
 	ANIMwalk_right
 	ANIMwalk_up
 	ANIMwalk_left
@@ -16,6 +17,7 @@ const (
 )
 
 type Graphics struct {
+	Portrait   string
 	Current    string
 	Animations map[AnimationType]string
 }

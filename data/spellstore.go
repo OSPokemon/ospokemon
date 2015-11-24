@@ -6,62 +6,70 @@ import (
 )
 
 type spellStore byte
-type abilityStore byte
+type controlsStore byte
 
 var SpellStore spellStore
-var AbilityStore abilityStore
+var ControlsStore controlsStore
 
-var Spells = make(map[int]world.Spell)
+var Spells = make(map[int]*world.Spell)
 
-func (s *spellStore) Load(id int) world.Spell {
+func (s *spellStore) Load(id int) *world.Spell {
 	if Spells[id] != nil {
 		return Spells[id]
 	}
 
-	row := Connection.QueryRow("SELECT id, name, t, category, description, pp, power, accuracy, targeter, casttime, cooldown, contestcategory, appeal, jam, contestdescription, priority FROM moves WHERE id=?", id)
-	spell := &MoveSpell{
-		COST: &world.SpellCost{},
+	row := Connection.QueryRow("SELECT id, name, casttime, cooldown, movecast, manacost, range, targettype FROM spells WHERE id=?", id)
+	spell := &world.Spell{
+		Cost: world.SpellCost{0, make(map[int]int)},
 	}
 
-	err := row.Scan(&spell.ID, &spell.NAME, &spell.T, &spell.CATEGORY, &spell.DESCRIPTION, &spell.Pp, &spell.POWER, &spell.ACCURACY, &spell.TARGETER, &spell.CASTTIME, &spell.COOLDOWN, &spell.CONTESTCATEGORY, &spell.APPEAL, &spell.JAM, &spell.CONTESTDESCRIPTION, &spell.PRIORITY)
-	spell.COST.Mana = spell.PP()
-	// TODO spell reagent costs
+	err := row.Scan(&spell.Id, &spell.Name, &spell.CastTime, &spell.Cooldown, &spell.MoveCast, &spell.Cost.Mana, &spell.Range, &spell.TargetType)
 
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	rows, err := Connection.Query("SELECT item_id, quantity FROM spell_reagents WHERE spell_id=?", id)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	var item_id, quantity int
+	for rows.Next() {
+		err = rows.Scan(&item_id, &quantity)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		spell.Cost.Items[item_id] = quantity
 	}
 
 	Spells[id] = spell
 	return spell
 }
 
-func (s *spellStore) FetchIdsForPokemon(id int) []int {
-	rows, err := Connection.Query("SELECT move_id FROM moves_pokemon WHERE pokemon_id=?", id)
-	defer rows.Close()
-
+func (c controlsStore) BuildForPokemon(id int) *world.Controls {
+	rows, err := Connection.Query("SELECT spell_id, keybinding FROM pokemon_spells WHERE pokemon_id=?", id)
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer rows.Close()
 
-	spell_ids := make([]int, 0)
+	controls := &world.Controls{nil, 0, make(map[string]*world.Ability)}
+
 	var spell_id int
-
+	var keybinding string
 	for rows.Next() {
-		err = rows.Scan(&spell_id)
-
+		err = rows.Scan(&spell_id, &keybinding)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		spell_ids = append(spell_ids, spell_id)
+		controls.Abilities[keybinding] = &world.Ability{
+			Spell: SpellStore.Load(spell_id),
+		}
 	}
 
-	return spell_ids
-}
-
-func (a *abilityStore) New(id int) *world.Ability {
-	spell := SpellStore.Load(id)
-	return &world.Ability{
-		Spell: spell,
-	}
+	return controls
 }

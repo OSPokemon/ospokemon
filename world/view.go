@@ -5,11 +5,12 @@ import (
 )
 
 type BasicView struct {
-	Id      int
-	Name    string
-	Physics *Physics
-	Graphic string
-	Effects []EffectView
+	Id       int
+	Name     string
+	Physics  *Physics
+	Graphic  string
+	Portrait string
+	Effects  []EffectView
 }
 
 type FullView struct {
@@ -17,6 +18,7 @@ type FullView struct {
 	Name     string
 	Physics  *Physics
 	Graphic  string
+	Portrait string
 	Controls ControlsView
 	Effects  []EffectView
 }
@@ -52,6 +54,8 @@ func MakeBasicView(id int, e Entity, now time.Time) *BasicView {
 
 	view.Graphic = e.Graphics().Current
 
+	view.Portrait = e.Graphics().Portrait
+
 	view.Effects = make([]EffectView, len(e.Effects()))
 	for _, effect := range e.Effects() {
 		effectView := EffectView{
@@ -75,17 +79,19 @@ func MakeFullView(id int, e Entity, now time.Time) *FullView {
 
 	view.Graphic = e.Graphics().Current
 
+	view.Portrait = e.Graphics().Portrait
+
 	view.Controls = ControlsView{}
 	view.Controls.Action = ActionView{}
 	if e.Controls().Action != nil {
-		view.Controls.Action.Name = e.Controls().Action.Ability.Spell.Name()
-		view.Controls.Action.Completion = float64(e.Controls().Action.Clock.Add(e.Controls().Action.Ability.Spell.CastTime()).Sub(now) / time.Second)
+		view.Controls.Action.Name = e.Controls().Action.Ability.Spell.Name
+		view.Controls.Action.Completion = float64(e.Controls().Action.Ability.LastCast.Add(e.Controls().Action.Ability.CastTime).Sub(now) / time.Second)
 	}
 	view.Controls.Abilities = make([]AbilityView, len(e.Controls().Abilities))
 	for _, ability := range e.Controls().Abilities {
 		abilityView := AbilityView{
-			Name:     ability.Spell.Name(),
-			Cooldown: float64(ability.LastCast.Add(ability.Spell.Cooldown()).Sub(now) / time.Second),
+			Name:     ability.Spell.Name,
+			Cooldown: float64(ability.LastCast.Add(ability.Cooldown).Sub(now) / time.Second),
 		}
 		view.Controls.Abilities = append(view.Controls.Abilities, abilityView)
 	}

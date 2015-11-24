@@ -26,6 +26,8 @@ type Effect struct {
 	Duration time.Duration
 }
 
+// Effects sorting
+
 type Effects []*Effect
 
 func (e Effects) Len() int {
@@ -51,15 +53,17 @@ const (
 	TRGTentity
 )
 
-type Spell interface {
-	Name() string
-	Description() string
-	CastTime() time.Duration
-	Cooldown() time.Duration
-	Cost() *SpellCost
-	Range() float64
-	TargetType() TargetType
-	Script() SpellScript
+type Spell struct {
+	Id         int
+	Name       string
+	CastTime   time.Duration
+	Cooldown   time.Duration
+	MoveCast   bool
+	Cost       SpellCost
+	Range      float64
+	TargetType TargetType
+	Graphics   Graphics
+	Script     SpellScript
 }
 
 type SpellCost struct {
@@ -70,16 +74,20 @@ type SpellCost struct {
 // Abilities
 
 type Ability struct {
+	Spell    *Spell
 	LastCast time.Time
-	Spell    Spell
+	CastTime time.Duration
+	Cooldown time.Duration
+	MoveCast bool
+	Cost     SpellCost
+	Range    float64
 }
 
 // Actions
 
 type Action struct {
-	Clock   time.Time
-	Target  interface{}
 	Ability *Ability
+	Target  interface{}
 }
 
 // Controls

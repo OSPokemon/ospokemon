@@ -10,6 +10,7 @@ func UpdateWorld(now time.Time) map[string]*world.BasicView {
 	view := make(map[string]*world.BasicView)
 
 	for _, entity := range world.Entities {
+		ResetEntity(entity)
 		UpdateEntity(entity, now)
 	}
 

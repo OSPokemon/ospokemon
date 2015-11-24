@@ -6,8 +6,19 @@ import (
 	"time"
 )
 
-func UpdateEntity(entity world.Entity, now time.Time) {
+func ResetEntity(entity world.Entity) {
 	entity.Controls().State = 0
+
+	for _, ability := range entity.Controls().Abilities {
+		ability.CastTime = ability.Spell.CastTime
+		ability.Cooldown = ability.Spell.Cooldown
+		ability.MoveCast = ability.Spell.MoveCast
+		ability.Cost = ability.Spell.Cost
+		ability.Range = ability.Spell.Range
+	}
+}
+
+func UpdateEntity(entity world.Entity, now time.Time) {
 	effects := world.Effects(make([]*world.Effect, 0))
 	sort.Sort(entity.Effects())
 
@@ -23,57 +34,27 @@ func UpdateEntity(entity world.Entity, now time.Time) {
 
 	if entity.Controls().State&world.CTRLPnocast > 1 {
 		entity.Controls().Action = nil
-	} else if entity.Controls().Action != nil {
-		entity.Controls().Action.Ability.Spell.Script()(entity, entity.Controls().Action.Target, now)
 	}
 
-	UpdateCollisions(entity)
-}
+	if entity.Controls().Action != nil {
+		if !entity.Controls().Action.Ability.MoveCast {
+			entity.Physics().Walking = nil
+		}
 
-func MoveEntity(entity world.Entity, v *world.Vector) {
-	if entity.Controls().State&world.CTRLPstuck > 0 {
-		return
+		entity.Controls().Action.Ability.Spell.Script(entity, entity.Controls().Action.Target, now)
 	}
 
-	nextPos := entity.Physics().Position.Add(v)
+	if speedy, ok := entity.(world.Speedy); ok && entity.Physics().Walking != nil {
+		speed := speedy.Speed()
+		destination := entity.Physics().Walking
+		distance := world.GetDistance(&entity.Physics().Position, destination)
 
-	if entity.Physics().Solid {
-		nextPhys := &world.Physics{
-			Position: nextPos,
-			Size:     entity.Physics().Size,
-			Solid:    entity.Physics().Solid,
+		if float64(speed) > distance {
+			speed = int(distance)
+			entity.Physics().Walking = nil
 		}
 
-		for _, entity2 := range world.Entities {
-			if entity == entity2 {
-				continue
-			}
-			if !entity2.Physics().Solid {
-				continue
-			}
-
-			if nextPhys.CheckCollision(entity2.Physics()) {
-				return
-			}
-		}
-	}
-
-	entity.Physics().Position = nextPos
-}
-
-func UpdateCollisions(entity world.Entity) {
-	for _, entity2 := range world.Entities {
-		if entity == entity2 {
-			continue
-		}
-		if entity2.Physics().Solid {
-			continue
-		}
-
-		if applicator, ok := entity2.(world.Applicator); ok {
-			for _, effect := range applicator.MakeEffects() {
-				entity.SetEffects(append(entity.Effects(), effect))
-			}
-		}
+		vector := world.CreatePathVector(&entity.Physics().Position, destination, speed)
+		MoveEntity(entity, vector)
 	}
 }
