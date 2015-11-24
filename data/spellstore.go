@@ -3,6 +3,7 @@ package data
 import (
 	"github.com/ospokemon/ospokemon/world"
 	"log"
+	"time"
 )
 
 type spellStore byte
@@ -23,7 +24,10 @@ func (s *spellStore) Load(id int) *world.Spell {
 		Cost: world.SpellCost{0, make(map[int]int)},
 	}
 
-	err := row.Scan(&spell.Id, &spell.Name, &spell.CastTime, &spell.Cooldown, &spell.MoveCast, &spell.Cost.Mana, &spell.Range, &spell.TargetType)
+	var casttime, cooldown int64
+	err := row.Scan(&spell.Id, &spell.Name, &casttime, &cooldown, &spell.MoveCast, &spell.Cost.Mana, &spell.Range, &spell.TargetType)
+	spell.CastTime = time.Duration(casttime)
+	spell.Cooldown = time.Duration(cooldown)
 
 	if err != nil {
 		log.Fatal(err)
