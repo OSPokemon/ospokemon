@@ -56,7 +56,7 @@ func MakeBasicView(id int, e Entity, now time.Time) *BasicView {
 
 	view.Portrait = e.Graphics().Portrait
 
-	view.Effects = make([]EffectView, len(e.Effects()))
+	view.Effects = make([]EffectView, 0)
 	for _, effect := range e.Effects() {
 		effectView := EffectView{
 			Name:       effect.Name,
@@ -87,7 +87,7 @@ func MakeFullView(id int, e Entity, now time.Time) *FullView {
 		view.Controls.Action.Name = e.Controls().Action.Ability.Spell.Name
 		view.Controls.Action.Completion = float64(e.Controls().Action.Ability.LastCast.Add(e.Controls().Action.Ability.CastTime).Sub(now) / time.Second)
 	}
-	view.Controls.Abilities = make([]AbilityView, len(e.Controls().Abilities))
+	view.Controls.Abilities = make([]AbilityView, 0)
 	for _, ability := range e.Controls().Abilities {
 		abilityView := AbilityView{
 			Name:     ability.Spell.Name,
@@ -96,7 +96,7 @@ func MakeFullView(id int, e Entity, now time.Time) *FullView {
 		view.Controls.Abilities = append(view.Controls.Abilities, abilityView)
 	}
 
-	view.Effects = make([]EffectView, len(e.Effects()))
+	view.Effects = make([]EffectView, 0)
 	for _, effect := range e.Effects() {
 		effectView := EffectView{
 			Name:       effect.Name,
