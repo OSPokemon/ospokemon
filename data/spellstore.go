@@ -1,8 +1,9 @@
 package data
 
 import (
+	log "github.com/Sirupsen/logrus"
+	"github.com/ospokemon/ospokemon/objects/spellscripts"
 	"github.com/ospokemon/ospokemon/world"
-	"log"
 	"time"
 )
 
@@ -28,6 +29,7 @@ func (s *spellStore) Load(id int) *world.Spell {
 	err := row.Scan(&spell.Id, &spell.Name, &casttime, &cooldown, &spell.MoveCast, &spell.Cost.Mana, &spell.Range, &spell.TargetType)
 	spell.CastTime = time.Duration(casttime)
 	spell.Cooldown = time.Duration(cooldown)
+	spell.Script = spellscripts.Scripts[spell.Name]
 
 	if err != nil {
 		log.Fatal(err)
@@ -74,6 +76,11 @@ func (c controlsStore) BuildForPokemon(id int) *world.Controls {
 			Spell: SpellStore.Load(spell_id),
 		}
 	}
+
+	log.WithFields(log.Fields{
+		"PokemonID": id,
+		"Controls":  controls,
+	}).Info("Controls loaded")
 
 	return controls
 }

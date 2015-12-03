@@ -2,7 +2,6 @@ package effectscripts
 
 import (
 	"github.com/ospokemon/ospokemon/world"
-	"github.com/ospokemon/ospokemon/world/update"
 	"log"
 	"time"
 )
@@ -47,4 +46,5 @@ func (e stateeffect) Script(effect *world.Effect, entity world.Entity, now time.
 
 		entity.Controls().State |= data
 		return
+	}
 }

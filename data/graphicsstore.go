@@ -1,8 +1,8 @@
 package data
 
 import (
+	log "github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/world"
-	"log"
 )
 
 type animationStore byte
@@ -48,7 +48,11 @@ func (a *animationStore) Load(t string, id int) map[world.AnimationType]string {
 
 	Animations[t][id] = animations
 
-	log.Printf("Animations provided for %s#%d: %v", t, id, animations)
+	log.WithFields(log.Fields{
+		"type":       t,
+		"id":         id,
+		"animations": animations,
+	}).Info("Animations provided")
 
 	return animations
 }

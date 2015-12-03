@@ -2,7 +2,6 @@ package effectscripts
 
 import (
 	"github.com/ospokemon/ospokemon/world"
-	// "github.com/ospokemon/ospokemon/world/update"
 	"log"
 	"time"
 )
@@ -14,7 +13,7 @@ var Health stateeffect
 func (e healtheffect) New(power int, now time.Time, duration time.Duration) *world.Effect {
 	return &world.Effect{
 		Name:     "HealthMod",
-		Priority: PRIOstandard,
+		Priority: world.PRIOstandard,
 		Data:     power,
 		Script:   Health.Script,
 		Start:    now,

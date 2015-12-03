@@ -2,9 +2,9 @@ package connection
 
 import (
 	"code.google.com/p/go.net/websocket"
+	log "github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/data"
 	"github.com/ospokemon/ospokemon/world"
-	"log"
 	"strconv"
 )
 
@@ -27,7 +27,10 @@ var ConnectHandler = websocket.Handler(func(conn *websocket.Conn) {
 	client.Entities = data.FullLoadPlayer(name)
 	Clients[name] = client
 
-	log.Printf("WSclient connection created as %s: %v", name, client.Entities)
+	log.WithFields(log.Fields{
+		"name":      name,
+		"EntityIDs": client.Entities,
+	}).Info("WSclient connection created")
 
 	go client.ListenSend()
 	client.ListenRead()

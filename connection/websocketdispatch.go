@@ -2,8 +2,8 @@ package connection
 
 import (
 	"encoding/json"
+	log "github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/world"
-	"log"
 	"strconv"
 	"time"
 )
@@ -43,7 +43,10 @@ func ReceiveMessage(name string, message map[string]interface{}) {
 		return
 	}
 
-	log.Printf("message received: %v", message)
+	log.WithFields(log.Fields{
+		"Client":  name,
+		"message": message,
+	}).Debug("WS received")
 
 	if message["walk"] != nil {
 		coords := message["walk"].(map[string]interface{})

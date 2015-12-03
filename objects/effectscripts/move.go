@@ -2,8 +2,7 @@ package effectscripts
 
 import (
 	"github.com/ospokemon/ospokemon/world"
-	// "github.com/ospokemon/ospokemon/world/update"
-	"log"
+	"github.com/ospokemon/ospokemon/world/update"
 	"time"
 )
 
@@ -11,10 +10,10 @@ type moveeffect byte
 
 var Move moveeffect
 
-func (e moveeffect) New(vector *world.Vector, duration time.Duration) *world.Effect {
+func (e moveeffect) New(vector *world.Vector, now time.Time, duration time.Duration) *world.Effect {
 	return &world.Effect{
 		Name:     "Move",
-		Priority: PRIOstandard,
+		Priority: world.PRIOstandard,
 		Data:     vector,
 		Script:   Move.Script,
 		Start:    now,

@@ -1,6 +1,7 @@
 package spellscripts
 
 import (
+	"github.com/ospokemon/ospokemon/objects/effectscripts"
 	"github.com/ospokemon/ospokemon/world"
 	"log"
 	"time"
@@ -18,6 +19,6 @@ func Psychic(self world.Entity, t interface{}, now time.Time) {
 		return
 	}
 
-	effect := &world.Effect{"Psychic", world.EFCThealth, -80, now, 0}
+	effect := effectscripts.Health.New(80, now, 0)
 	target.SetEffects(append(target.Effects(), effect))
 }

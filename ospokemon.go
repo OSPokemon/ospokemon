@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	log "github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/connection"
 	"github.com/ospokemon/ospokemon/data"
 	"github.com/ospokemon/ospokemon/world/update"
@@ -11,11 +12,16 @@ import (
 
 func main() {
 	tickSize := 400
-	var port, dir string
+	var port, dir, logLevel string
 
 	flag.StringVar(&port, "port", "8080", "Port number to open the server on")
 	flag.StringVar(&dir, "dir", ".", "A system path to use as web server root")
+	flag.StringVar(&logLevel, "log", ".", "Log level to set as minimum")
 	flag.Parse()
+
+	if logLevel == "DEBUG" {
+		log.SetLevel(log.DebugLevel)
+	}
 
 	http.Handle("/", http.FileServer(http.Dir(dir+"/public/")))
 	http.Handle("/connect", connection.ConnectHandler)
