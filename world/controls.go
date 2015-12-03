@@ -6,22 +6,19 @@ import (
 
 // Effects
 
-type EffectType uint8
+type EffectScript func(*Effect, Entity, time.Time)
 
 const (
-	EFCTimmune EffectType = iota
-	EFCTstasis
-	EFCThealth
-	EFCTstun
-	EFCTroot
-	EFCTcloak
-	EFCTmove
+	PRIOstate    = -1
+	PRIOstandard = 0
+	PRIOafter    = 1
 )
 
 type Effect struct {
 	Name     string
-	Type     EffectType
+	Priority int
 	Data     interface{}
+	Script   EffectScript
 	Start    time.Time
 	Duration time.Duration
 }
@@ -39,7 +36,7 @@ func (e Effects) Swap(i, j int) {
 }
 
 func (e Effects) Less(i, j int) bool {
-	return e[i].Type < e[j].Type
+	return e[i].Priority < e[j].Priority
 }
 
 // Spells
@@ -66,6 +63,10 @@ type Spell struct {
 	Script     SpellScript
 }
 
+func (s *Spell) String() string {
+	return s.Name
+}
+
 type SpellCost struct {
 	Mana  int
 	Items map[int]int
@@ -81,6 +82,10 @@ type Ability struct {
 	MoveCast bool
 	Cost     SpellCost
 	Range    float64
+}
+
+func (a *Ability) String() string {
+	return a.Spell.String()
 }
 
 // Actions

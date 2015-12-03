@@ -24,7 +24,7 @@ func UpdateEntity(entity world.Entity, now time.Time) {
 	sort.Sort(entity.Effects())
 
 	for _, effect := range entity.Effects() {
-		UpdateEffect(effect, entity, now)
+		effect.Script(effect, entity, now)
 
 		if now.Before(effect.Start.Add(effect.Duration)) {
 			effects = append(effects, effect)
