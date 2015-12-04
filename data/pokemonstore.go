@@ -66,7 +66,7 @@ func (p *pokemonStore) Load(id int) *PokemonEntity {
 		log.Fatal(err)
 	}
 
-	pokemon.BasicPokemon.STATS = make(map[string]ospokemon.Stat)
+	pokemon.STATS = make(map[string]ospokemon.Stat)
 
 	for rows.Next() {
 		stat_name := ""

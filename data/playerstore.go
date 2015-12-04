@@ -1,8 +1,8 @@
 package data
 
 import (
+	log "github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/world"
-	"log"
 )
 
 type playerStore byte

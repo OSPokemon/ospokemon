@@ -73,4 +73,8 @@ func UpdateEntity(entity world.Entity, now time.Time) {
 
 		MoveEntity(entity, vector)
 	}
+
+	if aicontrol, ok := entity.(world.ArtificialIntelligence); ok {
+		aicontrol.Script()(entity, now)
+	}
 }

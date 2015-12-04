@@ -1,5 +1,9 @@
 package world
 
+import (
+	"time"
+)
+
 type Entity interface {
 	Name() string
 	Physics() *Physics
@@ -22,3 +26,9 @@ type Speedy interface {
 type Applicator interface {
 	MakeEffects() Effects
 }
+
+type ArtificialIntelligence interface {
+	Script() AiScript
+}
+
+type AiScript func(Entity, time.Time)

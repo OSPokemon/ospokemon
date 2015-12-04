@@ -1,8 +1,8 @@
 package effectscripts
 
 import (
+	log "github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/world"
-	"log"
 	"time"
 )
 
@@ -25,12 +25,15 @@ func (h *healtheffect) Script(effect *world.Effect, entity world.Entity, now tim
 
 	power, ok := effect.Data.(int)
 	if !ok {
-		log.Printf("effectscripts.State invalid data supplied: %v\n", effect.Data)
+		log.WithFields(log.Fields{
+			"data": effect.Data,
+		}).Warn("effectscripts.Health invalid data supplied")
 		return
 	}
 	healthy, ok := entity.(world.Healthy)
 	if !ok {
-		log.Printf("effectscripts.State invalid target supplied: %v\n", entity)
+			"target": entity,
+		}).Warn("effectscripts.Health invalid target supplied")
 		return
 	}
 
