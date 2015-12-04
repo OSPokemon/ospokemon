@@ -1,9 +1,9 @@
 package data
 
 import (
+	log "github.com/Sirupsen/logrus"
 	"github.com/ospokemon/api-go"
 	"github.com/ospokemon/ospokemon/world"
-	"log"
 )
 
 type pokemonStore byte

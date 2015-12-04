@@ -1,96 +1,96 @@
 package data
 
 import (
-// "database/sql"
-// "log"
-// "src.ospokemon.org/ospokemon"
+	log "github.com/Sirupsen/logrus"
+	"github.com/ospokemon/api-go"
 )
 
-// var SpeciesStore = make(speciesStore)
+type speciesStore byte
 
-// type speciesStore map[int]ospokemon.Species
+var SpeciesStore speciesStore
+var Species = make(map[int]ospokemon.Species)
 
-// func (s speciesStore) Load(id int) ospokemon.Species {
-// 	if s[id] != nil {
-// 		return s[id]
-// 	}
+func (s speciesStore) Load(id int) ospokemon.Species {
+	if Species[id] != nil {
+		return Species[id]
+	}
 
-// 	row := Connection.QueryRow("SELECT * FROM species WHERE id=?", id)
+	importSpecies(id)
+	importSpeciesTypesRows(id)
+	importSpeciesSpellsRows(id)
 
-// 	importSpeciesRow(row)
+	return Species[id]
+}
 
-// 	rows, _ := Connection.Query("SELECT * from species_types where species_id=?", id)
+func importSpecies(id int) {
+	row := Connection.QueryRow("SELECT * FROM species WHERE id=?", id)
+	species := &ospokemon.BasicSpecies{}
 
-// 	importSpeciesTypesRows(rows)
+	err := row.Scan(&species.ID, &species.NAME, &species.TAG, &species.DESCRIPTION, &species.HIDDENABILITY, &species.GENDERLESS, &species.GENDERRATIO, &species.CATCHRATE, &species.BREEDABLE, &species.EGGCYCLES, &species.HEIGHT, &species.WEIGHT, &species.EXPERIENCEYIELD, &species.EXPERIENCECURVE, &species.BODYSTYLE, &species.COLOR, &species.TAMENESS)
 
-// 	return SpeciesStore[id]
-// }
+	if err != nil {
+		log.Fatal(err)
+	}
 
-// func importSpeciesRow(row *sql.Row) {
-// 	species := &ospokemon.BasicSpecies{}
+	Species[id] = species
+}
 
-// 	var id, hidden_ability, genderless, catch_rate, breedable, egg_cycles, xp_yield, xp_curve, tameness int
-// 	var name, tag, description, body_style, color string
-// 	var gender_ratio, height, weight float64
+func importSpeciesTypesRows(id int) {
+	rows, err := Connection.Query("SELECT type_id from species_types where species_id=?", id)
 
-// 	err := row.Scan(&id, &name, &tag, &description, &hidden_ability, &genderless, &gender_ratio, &catch_rate,
-// 		&breedable, &egg_cycles, &height, &weight, &xp_yield, &xp_curve, &body_style, &color, &tameness)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
+	species := Species[id]
+	if species.Types() == nil {
+		species.SetTypes(make([]int, 0))
+	}
 
-// 	species.SetId(id)
-// 	species.SetName(name)
-// 	species.SetTag(tag)
-// 	species.SetDescription(description)
-// 	// TODO abilities
-// 	species.SetHiddenAbility(hidden_ability)
+	for rows.Next() {
+		var type_id int
+		err := rows.Scan(&type_id)
 
-// 	if genderless > 0 {
-// 		species.SetGenderless(true)
-// 	} else {
-// 		species.SetGenderless(false)
-// 	}
+		if err != nil {
+			log.WithFields(log.Fields{
+				"PokemonId": id,
+			}).Warn("data.SpeciesStore failed to load species type")
+		}
 
-// 	species.SetGenderRatio(gender_ratio)
-// 	species.SetCatchRate(catch_rate)
+		species.SetTypes(append(species.Types(), type_id))
+	}
+}
 
-// 	if breedable > 0 {
-// 		species.SetBreedable(true)
-// 	} else {
-// 		species.SetGenderless(false)
-// 	}
+func importSpeciesSpellsRows(id int) {
+	rows, err := Connection.Query("SELECT spell_id, ai_usable from species_spells where species_id=?", id)
 
-// 	species.SetEggCycles(egg_cycles)
-// 	species.SetHeight(height)
-// 	species.SetWeight(weight)
-// 	species.SetExperienceYield(xp_yield)
-// 	species.SetExperienceCurve(xp_curve)
-// 	species.SetBodyStyle(body_style)
-// 	species.SetColor(color)
-// 	species.SetTameness(tameness)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-// 	SpeciesStore[species.Id()] = species
-// }
+	species := Species[id]
+	if species.MoveLists() == nil {
+		species.SetMoveLists(make(map[int][]int))
+		species.MoveLists()[0] = make([]int, 0)
+	}
+	if species.MachineMoves() == nil {
+		species.SetMachineMoves(make([]int, 0))
+	}
 
-// func importSpeciesTypesRows(rows *sql.Rows) {
-// 	for rows.Next() {
-// 		var species_id, type_id int
-// 		err := rows.Scan(&species_id, &type_id)
+	for rows.Next() {
+		var spell_id, ai_usable int
+		err := rows.Scan(&spell_id, &ai_usable)
 
-// 		if err != nil {
-// 			continue
-// 		}
+		if err != nil {
+			log.WithFields(log.Fields{
+				"PokemonId": id,
+			}).Warn("data.SpeciesStore failed to load species spell")
+		}
 
-// 		species := SpeciesStore[species_id]
-// 		species_types := species.Types()
-
-// 		if species_types == nil {
-// 			species_types = make([]int, 1)
-// 		}
-
-// 		species_types = append(species_types, type_id)
-// 		species.SetTypes(species_types)
-// 	}
-// }
+		if ai_usable > 0 {
+			species.SetMachineMoves(append(species.MachineMoves(), spell_id))
+		} else {
+			species.MoveLists()[0] = append(species.MoveLists()[0], spell_id)
+		}
+	}
+}

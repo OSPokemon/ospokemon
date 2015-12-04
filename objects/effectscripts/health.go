@@ -32,9 +32,9 @@ func (h *healtheffect) Script(effect *world.Effect, entity world.Entity, now tim
 	}
 	healthy, ok := entity.(world.Healthy)
 	if !ok {
+		log.WithFields(log.Fields{
 			"target": entity,
 		}).Warn("effectscripts.Health invalid target supplied")
-		return
 	}
 
 	isprotected := entity.Controls().State&world.CTRLPprotected < 1
