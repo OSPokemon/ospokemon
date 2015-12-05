@@ -3,7 +3,7 @@ package connection
 import (
 	"code.google.com/p/go.net/websocket"
 	log "github.com/Sirupsen/logrus"
-	"github.com/ospokemon/ospokemon/data"
+	"github.com/ospokemon/ospokemon/data/loader"
 	"github.com/ospokemon/ospokemon/world"
 	"strconv"
 )
@@ -24,7 +24,7 @@ var ConnectHandler = websocket.Handler(func(conn *websocket.Conn) {
 	}
 
 	client := NewClient(name, conn)
-	client.Entities = data.FullLoadPlayer(name)
+	client.Entities = loader.FullLoadPlayer(name)
 	Clients[name] = client
 
 	log.WithFields(log.Fields{
@@ -35,7 +35,7 @@ var ConnectHandler = websocket.Handler(func(conn *websocket.Conn) {
 	go client.ListenSend()
 	client.ListenRead()
 
-	data.FullUnloadPlayer(name)
+	loader.FullUnloadPlayer(name)
 	for _, id := range client.Entities {
 		world.RemoveEntity(id)
 	}

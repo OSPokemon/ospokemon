@@ -1,6 +1,7 @@
 package world
 
 import (
+	"math"
 	"time"
 )
 
@@ -34,8 +35,11 @@ type ActionView struct {
 }
 
 type AbilityView struct {
-	Name     string
-	Cooldown float64
+	Name       string
+	Hotkey     string
+	TargetType int
+	Graphic    string
+	Cooldown   float64
 }
 
 type EffectView struct {
@@ -88,10 +92,13 @@ func MakeFullView(id int, e Entity, now time.Time) *FullView {
 		view.Controls.Action.Completion = float64(e.Controls().Action.Ability.LastCast.Add(e.Controls().Action.Ability.CastTime).Sub(now) / time.Second)
 	}
 	view.Controls.Abilities = make([]AbilityView, 0)
-	for _, ability := range e.Controls().Abilities {
+	for hotkey, ability := range e.Controls().Abilities {
 		abilityView := AbilityView{
-			Name:     ability.Spell.Name,
-			Cooldown: float64(ability.LastCast.Add(ability.Cooldown).Sub(now) / time.Second),
+			Name:       ability.Spell.Name,
+			Hotkey:     hotkey,
+			TargetType: int(ability.Spell.TargetType),
+			Graphic:    ability.Spell.Graphic,
+			Cooldown:   math.Max(0, float64(ability.LastCast.Add(ability.Cooldown).Sub(now)/time.Second)),
 		}
 		view.Controls.Abilities = append(view.Controls.Abilities, abilityView)
 	}

@@ -1,4 +1,4 @@
-package data
+package loader
 
 import (
 	"github.com/ospokemon/ospokemon/data"

@@ -52,9 +52,7 @@ func importSpeciesTypesRows(id int) {
 		err := rows.Scan(&type_id)
 
 		if err != nil {
-			log.WithFields(log.Fields{
-				"PokemonId": id,
-			}).Warn("data.SpeciesStore failed to load species type")
+			log.Fatal(err)
 		}
 
 		species.SetTypes(append(species.Types(), type_id))
@@ -82,9 +80,7 @@ func importSpeciesSpellsRows(id int) {
 		err := rows.Scan(&spell_id, &ai_usable)
 
 		if err != nil {
-			log.WithFields(log.Fields{
-				"PokemonId": id,
-			}).Warn("data.SpeciesStore failed to load species spell")
+			log.Fatal(err)
 		}
 
 		if ai_usable > 0 {

@@ -20,13 +20,13 @@ func (s *spellStore) Load(id int) *world.Spell {
 		return Spells[id]
 	}
 
-	row := Connection.QueryRow("SELECT id, name, casttime, cooldown, movecast, manacost, range, targettype FROM spells WHERE id=?", id)
+	row := Connection.QueryRow("SELECT id, name, casttime, cooldown, movecast, manacost, range, targettype, graphic FROM spells WHERE id=?", id)
 	spell := &world.Spell{
 		Cost: world.SpellCost{0, make(map[int]int)},
 	}
 
 	var casttime, cooldown int64
-	err := row.Scan(&spell.Id, &spell.Name, &casttime, &cooldown, &spell.MoveCast, &spell.Cost.Mana, &spell.Range, &spell.TargetType)
+	err := row.Scan(&spell.Id, &spell.Name, &casttime, &cooldown, &spell.MoveCast, &spell.Cost.Mana, &spell.Range, &spell.TargetType, &spell.Graphic)
 	spell.CastTime = time.Duration(casttime)
 	spell.Cooldown = time.Duration(cooldown)
 	spell.Script = spellscripts.Scripts[spell.Name]
@@ -80,7 +80,7 @@ func (c controlsStore) BuildForPokemon(id int) *world.Controls {
 	log.WithFields(log.Fields{
 		"PokemonID": id,
 		"Controls":  controls,
-	}).Info("Controls loaded")
+	}).Debug("Controls loaded")
 
 	return controls
 }

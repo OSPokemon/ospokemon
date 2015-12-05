@@ -2,8 +2,8 @@ package data
 
 import (
 	"database/sql"
+	log "github.com/Sirupsen/logrus"
 	_ "github.com/mattn/go-sqlite3"
-	"log"
 )
 
 var Connection *sql.DB

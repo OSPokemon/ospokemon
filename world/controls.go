@@ -59,7 +59,7 @@ type Spell struct {
 	Cost       SpellCost
 	Range      float64
 	TargetType TargetType
-	Graphics   Graphics
+	Graphic    string
 	Script     SpellScript
 }
 

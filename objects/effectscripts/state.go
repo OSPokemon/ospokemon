@@ -1,8 +1,8 @@
 package effectscripts
 
 import (
+	log "github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/world"
-	"log"
 	"time"
 )
 
@@ -25,7 +25,9 @@ func (e stateeffect) Script(effect *world.Effect, entity world.Entity, now time.
 
 	data, ok := effect.Data.(uint8)
 	if !ok {
-		log.Printf("effectscripts.State invalid data supplied: %v\n", effect.Data)
+		log.WithFields(log.Fields{
+			"data": data,
+		}).Error("effectscripts.State invalid data supplied")
 		return
 	}
 

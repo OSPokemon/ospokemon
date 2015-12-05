@@ -52,7 +52,7 @@ func (a *animationStore) Load(t string, id int) map[world.AnimationType]string {
 		"type":       t,
 		"id":         id,
 		"animations": animations,
-	}).Info("Animations provided")
+	}).Debug("Animations provided")
 
 	return animations
 }

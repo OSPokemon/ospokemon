@@ -1,4 +1,4 @@
-package data
+package loader
 
 import (
 	"github.com/ospokemon/api-go"
@@ -15,11 +15,12 @@ func FullLoadPokemon(id int) int {
 	return world.AddEntity(pokemon)
 }
 
-func FullNewAiPokemon(species int, profile *entities.AiProfile) int {
+func FullNewAiPokemon(speciesId int, profile *entities.AiProfile) int {
 	pokemon := &entities.AiPokemonEntity{
 		Entity: data.PokemonEntity{
 			BasicPokemon: ospokemon.BasicPokemon{
-				SPECIES: species,
+				SPECIES: speciesId,
+				STATS:   make(map[string]ospokemon.Stat),
 			},
 			PHYSICS: &world.Physics{
 				Position: world.Position{
@@ -29,10 +30,23 @@ func FullNewAiPokemon(species int, profile *entities.AiProfile) int {
 				Size:  world.Size{64, 64},
 				Solid: true,
 			},
-			GRAPHICS: data.GraphicsStore.New("pokemon", species),
+			GRAPHICS: data.GraphicsStore.New("pokemon", speciesId),
 			EFFECTS:  make([]*world.Effect, 0),
 		},
 		Profile: profile,
+	}
+
+	species := data.SpeciesStore.Load(speciesId)
+
+	pokemon.Entity.BasicPokemon.Stats()["health"] = &ospokemon.BasicStat{
+		IV:    species.Stats()["health"],
+		EV:    species.Stats()["health"],
+		VALUE: species.Stats()["health"],
+	}
+	pokemon.Entity.BasicPokemon.Stats()["speed"] = &ospokemon.BasicStat{
+		IV:    species.Stats()["speed"],
+		EV:    species.Stats()["speed"],
+		VALUE: species.Stats()["speed"],
 	}
 
 	pokemon.Entity.CONTROLS = &world.Controls{} // TODO
