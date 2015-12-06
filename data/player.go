@@ -3,18 +3,23 @@ package data
 import (
 	"github.com/ospokemon/api-go"
 	"github.com/ospokemon/ospokemon/world"
+	// "strconv"
+	"time"
 )
 
 type Player struct {
 	ospokemon.BasicTrainer
-	HEALTH    int
-	MAXHEALTH int
-	SPEED     int
 	PHYSICS   *world.Physics
 	GRAPHICS  *world.Graphics
-	CONTROLS  *world.Controls
-	EFFECTS   world.Effects
+	ACTION    *world.Action
+	CONTROL   uint8
+	STATS     map[string]world.Stat
+	EFFECTS   []*world.Effect
+	WALKING   *world.Position
+	ABILITIES map[string]*world.Ability
 }
+
+// Player is an Entity
 
 func (p *Player) Physics() *world.Physics {
 	return p.PHYSICS
@@ -24,30 +29,84 @@ func (p *Player) Graphics() *world.Graphics {
 	return p.GRAPHICS
 }
 
-func (p *Player) Controls() *world.Controls {
-	return p.CONTROLS
+func (p *Player) Action() *world.Action {
+	return p.ACTION
 }
 
-func (p *Player) Effects() world.Effects {
+func (p *Player) SetAction(action *world.Action) {
+	p.ACTION = action
+}
+
+// Player is mortal
+
+func (p *Player) Control() uint8 {
+	return p.CONTROL
+}
+
+func (p *Player) SetControl(control uint8) {
+	p.CONTROL = control
+}
+
+func (p *Player) Stats() map[string]world.Stat {
+	return p.STATS
+}
+
+func (p *Player) Effects() []*world.Effect {
 	return p.EFFECTS
 }
 
-func (p *Player) SetEffects(effects world.Effects) {
+func (p *Player) SetEffects(effects []*world.Effect) {
 	p.EFFECTS = effects
 }
 
-func (p *Player) Health() int {
-	return p.HEALTH
+// Player is intelligent
+
+func (p *Player) Script() world.AiScript {
+	return func(e world.Entity, now time.Time) {}
 }
 
-func (p *Player) MaxHealth() int {
-	return p.MAXHEALTH
+func (p *Player) Walking() *world.Position {
+	return p.WALKING
 }
 
-func (p *Player) SetHealth(health int) {
-	p.HEALTH = health
+func (p *Player) SetWalking(walking *world.Position) {
+	p.WALKING = walking
 }
 
-func (p *Player) Speed() int {
-	return p.SPEED
+func (p *Player) Abilities() map[string]*world.Ability {
+	return p.ABILITIES
 }
+
+type PlayerStat struct {
+	VALUE        int
+	MAXVALUE     int
+	BASEMAXVALUE int
+}
+
+func (stat *PlayerStat) Value() int {
+	return stat.VALUE
+}
+
+func (stat *PlayerStat) SetValue(value int) {
+	stat.VALUE = value
+}
+
+func (stat *PlayerStat) MaxValue() int {
+	return stat.MAXVALUE
+}
+
+func (stat *PlayerStat) SetMaxValue(maxvalue int) {
+	stat.MAXVALUE = maxvalue
+}
+
+func (stat *PlayerStat) BaseMaxValue() int {
+	return stat.BASEMAXVALUE
+}
+
+func (stat *PlayerStat) SetBaseMaxValue(basemaxvalue int) {
+	stat.BASEMAXVALUE = basemaxvalue
+}
+
+// func (stat *PlayerStat) String() {
+
+// }

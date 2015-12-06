@@ -10,7 +10,7 @@ import (
 func FullLoadPokemon(id int) int {
 	pokemon := data.PokemonStore.Load(id)
 	pokemon.GRAPHICS = data.GraphicsStore.New("pokemon", pokemon.Species())
-	pokemon.CONTROLS = data.ControlsStore.BuildForPokemon(id)
+	pokemon.ABILITIES = data.AbilitiesStore.GetForPokemon(id)
 
 	return world.AddEntity(pokemon)
 }
@@ -30,8 +30,10 @@ func FullNewAiPokemon(speciesId int, profile *entities.AiProfile) int {
 				Size:  world.Size{64, 64},
 				Solid: true,
 			},
-			GRAPHICS: data.GraphicsStore.New("pokemon", speciesId),
-			EFFECTS:  make([]*world.Effect, 0),
+			GRAPHICS:    data.GraphicsStore.New("pokemon", speciesId),
+			STATHANDLES: make(map[string]world.Stat),
+			ABILITIES:   make(map[string]*world.Ability),
+			EFFECTS:     make([]*world.Effect, 0),
 		},
 		Profile: profile,
 	}
@@ -49,7 +51,7 @@ func FullNewAiPokemon(speciesId int, profile *entities.AiProfile) int {
 		VALUE: species.Stats()["speed"],
 	}
 
-	pokemon.Entity.CONTROLS = &world.Controls{} // TODO
+	pokemon.Entity.ABILITIES = make(map[string]*world.Ability) // TODO
 
 	return world.AddEntity(pokemon)
 }

@@ -10,43 +10,44 @@ type stateeffect byte
 
 var State stateeffect
 
-func (s stateeffect) New(state uint8, now time.Time, duration time.Duration) *world.Effect {
+func (s stateeffect) New(state uint8, duration time.Duration) *world.Effect {
 	return &world.Effect{
 		Name:     "StateMod",
 		Priority: world.PRIOstate,
-		Data:     state,
+		Data: map[string]string{
+			"state": string(state),
+		},
 		Script:   State.Script,
-		Start:    now,
 		Duration: duration,
 	}
 }
 
 func (e stateeffect) Script(effect *world.Effect, entity world.Entity, now time.Time) {
 
-	data, ok := effect.Data.(uint8)
+	data := uint8([]byte(effect.Data["state"])[0])
+
+	mortal, ok := entity.(world.Mortality)
 	if !ok {
 		log.WithFields(log.Fields{
-			"data": data,
-		}).Error("effectscripts.State invalid data supplied")
+			"entity": entity,
+		}).Error("effectscripts.State invalid target")
 		return
 	}
-
-	isprotected := entity.Controls().State&world.CTRLPprotected < 1
 
 	switch data {
 	case world.CTRLimmune:
 	case world.CTRLstasis:
 	case world.CTRLcloak:
-		entity.Controls().State |= data
+		mortal.SetControl(mortal.Control() | data)
 		return
 	case world.CTRLstun:
 	case world.CTRLroot:
-		if isprotected {
+		if world.IsProtected(mortal) {
 			effect.Duration = 0
 			return
 		}
 
-		entity.Controls().State |= data
+		mortal.SetControl(mortal.Control() | data)
 		return
 	}
 }

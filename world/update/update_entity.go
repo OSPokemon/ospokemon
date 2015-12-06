@@ -1,80 +1,200 @@
 package update
 
 import (
+	log "github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/world"
 	"math"
 	"sort"
 	"time"
 )
 
-func ResetEntity(entity world.Entity) {
-	entity.Controls().State = 0
+func UpdateEntity(entity world.Entity, now time.Time) {
 
-	for _, ability := range entity.Controls().Abilities {
+	if applicator, ok := entity.(world.Applicator); ok {
+		updateApplicatorEntity(applicator, now)
+	}
+
+	if mortal, ok := entity.(world.Mortality); ok {
+		updateMortalEntity(mortal, now)
+	}
+
+	if intelligent, ok := entity.(world.Intelligence); ok {
+		updateIntelligentEntity(intelligent, now)
+	}
+}
+
+func updateApplicatorEntity(entity world.Applicator, now time.Time) {
+
+}
+
+func updateMortalEntity(entity world.Mortality, now time.Time) {
+	resetMortalEntity(entity, now)
+
+	applyEffectScripts(entity, now)
+}
+
+func updateIntelligentEntity(entity world.Intelligence, now time.Time) {
+	resetIntelligentEntity(entity, now)
+
+	entity.Script()
+
+	maybeWalk(entity, now)
+
+	maybeCast(entity, now)
+}
+
+func resetMortalEntity(entity world.Mortality, now time.Time) {
+	entity.SetControl(entity.Control() & world.CTRLdead) // dead flag doesn't reset. dead is not a debuff
+
+	persisteffects := make([]*world.Effect, 0)
+	for _, effect := range entity.Effects() {
+		if effect.Start == nil {
+			log.WithFields(log.Fields{
+				"entity": entity.Name(),
+				"effect": effect,
+			}).Debug("Effect timer starts")
+			effect.Start = &now
+		}
+		if effect.Start.Add(effect.Duration).Before(now) {
+			log.WithFields(log.Fields{
+				"entity": entity.Name(),
+				"effect": effect,
+			}).Debug("Effect falls off")
+		} else {
+			persisteffects = append(persisteffects, effect)
+		}
+	}
+	entity.SetEffects(persisteffects)
+
+	for _, stat := range entity.Stats() {
+		if stat.Value() > stat.MaxValue() {
+			stat.SetValue(stat.MaxValue())
+		}
+		stat.SetMaxValue(stat.BaseMaxValue())
+	}
+}
+
+func applyEffectScripts(entity world.Mortality, now time.Time) {
+	effects := entity.Effects()
+	sort.Sort(fxsorter(effects))
+
+	for _, effect := range effects {
+		log.WithFields(log.Fields{
+			"entity": entity.Name(),
+			"effect": effect,
+		}).Debug("Effect tick")
+		effect.Script(effect, entity, now)
+	}
+}
+
+func resetIntelligentEntity(entity world.Intelligence, now time.Time) {
+	for _, ability := range entity.Abilities() {
 		ability.CastTime = ability.Spell.CastTime
 		ability.Cooldown = ability.Spell.Cooldown
 		ability.MoveCast = ability.Spell.MoveCast
 		ability.Cost = ability.Spell.Cost
 		ability.Range = ability.Spell.Range
+		ability.TargetData = tdcopier(ability.Spell.TargetData).copy()
 	}
 }
 
-func UpdateEntity(entity world.Entity, now time.Time) {
-	effects := world.Effects(make([]*world.Effect, 0))
-	sort.Sort(entity.Effects())
-
-	for _, effect := range entity.Effects() {
-		effect.Script(effect, entity, now)
-
-		if now.Before(effect.Start.Add(effect.Duration)) {
-			effects = append(effects, effect)
-		}
+func maybeWalk(entity world.Intelligence, now time.Time) {
+	if world.IsDead(entity) {
+		return // dead guys dont walk
+	}
+	if world.IsStuck(entity) {
+		return
 	}
 
-	entity.SetEffects(effects)
+	destination := entity.Walking()
 
-	if entity.Controls().State&world.CTRLPnocast > 1 {
-		entity.Controls().Action = nil
+	if destination == nil {
+		return
 	}
 
-	if entity.Controls().Action != nil {
-		if !entity.Controls().Action.Ability.MoveCast {
-			entity.Physics().Walking = nil
-		}
+	speed := entity.Stats()["speed"].Value()
+	distance := world.GetDistance(&entity.Physics().Position, destination)
 
-		entity.Controls().Action.Ability.Spell.Script(entity, entity.Controls().Action.Target, now)
+	if float64(speed) > distance {
+		speed = int(distance)
+		entity.SetWalking(nil)
 	}
 
-	if speedy, ok := entity.(world.Speedy); ok && entity.Physics().Walking != nil {
-		speed := speedy.Speed()
-		destination := entity.Physics().Walking
-		distance := world.GetDistance(&entity.Physics().Position, destination)
+	vector := world.CreatePathVector(&entity.Physics().Position, destination, speed)
 
-		if float64(speed) > distance {
-			speed = int(distance)
-			entity.Physics().Walking = nil
-		}
-
-		vector := world.CreatePathVector(&entity.Physics().Position, destination, speed)
-
-		if math.Abs(vector.DX) > math.Abs(vector.DY) {
-			if vector.DX > 0 {
-				entity.Graphics().Current = entity.Graphics().Animations[world.ANIMwalk_right]
-			} else {
-				entity.Graphics().Current = entity.Graphics().Animations[world.ANIMwalk_left]
-			}
+	if math.Abs(vector.DX) > math.Abs(vector.DY) {
+		if vector.DX > 0 {
+			entity.Graphics().Current = entity.Graphics().Animations[world.ANIMwalk_right]
 		} else {
-			if vector.DY > 0 {
-				entity.Graphics().Current = entity.Graphics().Animations[world.ANIMwalk_down]
-			} else {
-				entity.Graphics().Current = entity.Graphics().Animations[world.ANIMwalk_up]
-			}
+			entity.Graphics().Current = entity.Graphics().Animations[world.ANIMwalk_left]
+		}
+	} else {
+		if vector.DY > 0 {
+			entity.Graphics().Current = entity.Graphics().Animations[world.ANIMwalk_down]
+		} else {
+			entity.Graphics().Current = entity.Graphics().Animations[world.ANIMwalk_up]
+		}
+	}
+
+	MoveEntity(entity, vector)
+}
+
+func maybeCast(entity world.Intelligence, now time.Time) {
+	if world.IsDead(entity) {
+		return // dead guys dont cast
+	}
+	if world.NoCast(entity) {
+		return
+	}
+	if entity.Action() == nil {
+		return
+	}
+
+	if entity.Action().Start == nil {
+		if entity.Action().Ability.LastCast.Add(entity.Action().Ability.Cooldown).After(now) {
+			return
 		}
 
-		MoveEntity(entity, vector)
+		entity.Action().Start = &now
+	}
+	if entity.Action().Start.Add(entity.Action().Ability.CastTime).Before(now) {
+		log.WithFields(log.Fields{
+			"entity":  entity.Name(),
+			"ability": entity.Action().Ability.Spell.Name,
+		}).Debug("Cast time complete")
+
+		entity.Action().Ability.Spell.Script(entity, entity.Action().Target, now)
+		entity.Action().Ability.LastCast = now
+		entity.SetAction(nil)
+	}
+}
+
+// target data can be coppied
+
+type tdcopier map[string]string
+
+func (src tdcopier) copy() map[string]string {
+	dst := make(map[string]string)
+
+	for k, v := range src {
+		dst[k] = v
 	}
 
-	if aicontrol, ok := entity.(world.ArtificialIntelligence); ok {
-		aicontrol.Script()(entity, now)
-	}
+	return dst
+}
+
+// Effects can be sorted
+
+type fxsorter []*world.Effect
+
+func (e fxsorter) Len() int {
+	return len(e)
+}
+
+func (e fxsorter) Swap(i, j int) {
+	e[i], e[j] = e[j], e[i]
+}
+
+func (e fxsorter) Less(i, j int) bool {
+	return e[i].Priority < e[j].Priority
 }

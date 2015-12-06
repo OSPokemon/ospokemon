@@ -12,16 +12,21 @@ func init() {
 }
 
 func Psychic(self world.Entity, t interface{}, now time.Time) {
-	target, ok := t.(world.Entity)
+	target, ok := t.(world.Mortality)
 
 	if !ok {
 		log.WithFields(log.Fields{
 			"source": self.Name(),
-			"target": t,
+			"target": target.Name(),
 		}).Error("spellscripts.Psychic invalid target")
 		return
 	}
 
-	effect := effectscripts.Health.New(80, now, 0)
+	log.WithFields(log.Fields{
+		"source": self.Name(),
+		"target": target,
+	}).Debug("spellscripts.Psychic execution")
+
+	effect := effectscripts.Health.New(80, 0)
 	target.SetEffects(append(target.Effects(), effect))
 }

@@ -52,6 +52,8 @@ func (p *pokemonStore) Load(id int) *PokemonEntity {
 			Size:     world.Size{64, 64},
 			Solid:    true,
 		},
+		STATHANDLES: make(map[string]world.Stat),
+		ABILITIES:   make(map[string]*world.Ability),
 	}
 
 	err := row.Scan(&pokemon.ID, &pokemon.NAME, &pokemon.PHYSICS.Position.X, &pokemon.PHYSICS.Position.Y, &pokemon.SPECIES, &pokemon.LEVEL, &pokemon.EXPERIENCE, &pokemon.ABILITY, &pokemon.FRIENDSHIP, &pokemon.GENDER, &pokemon.NATURE, &pokemon.HEIGHT, &pokemon.WEIGHT, &pokemon.ORIGINALTRAINER, &pokemon.SHINY, &pokemon.ITEM)

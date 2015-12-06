@@ -5,7 +5,7 @@ import (
 )
 
 func MoveEntity(entity world.Entity, v *world.Vector) {
-	if entity.Controls().State&world.CTRLPstuck > 0 {
+	if mortal, ok := entity.(world.Mortality); ok && world.IsStuck(mortal) {
 		return
 	}
 
@@ -45,9 +45,7 @@ func UpdateCollisions(entity world.Entity) {
 		}
 
 		if applicator, ok := entity2.(world.Applicator); ok {
-			for _, effect := range applicator.MakeEffects() {
-				entity.SetEffects(append(entity.Effects(), effect))
-			}
+			applicator.Apply(entity)
 		}
 	}
 }

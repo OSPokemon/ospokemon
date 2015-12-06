@@ -28,6 +28,52 @@ type AiPokemonEntity struct {
 	Profile *AiProfile
 }
 
+// PokemonEntity is an entity
+
+func (p *AiPokemonEntity) Name() string {
+	return p.Entity.Name()
+}
+
+func (p *AiPokemonEntity) Physics() *world.Physics {
+	return p.Entity.Physics()
+}
+
+func (p *AiPokemonEntity) Graphics() *world.Graphics {
+	return p.Entity.Graphics()
+}
+
+func (p *AiPokemonEntity) Action() *world.Action {
+	return p.Entity.Action()
+}
+
+func (p *AiPokemonEntity) SetAction(action *world.Action) {
+	p.Entity.SetAction(action)
+}
+
+// AiPokemonEntity is mortal
+
+func (p *AiPokemonEntity) Control() uint8 {
+	return p.Entity.Control()
+}
+
+func (p *AiPokemonEntity) SetControl(control uint8) {
+	p.Entity.SetControl(control)
+}
+
+func (p *AiPokemonEntity) Stats() map[string]world.Stat {
+	return p.Entity.Stats()
+}
+
+func (p *AiPokemonEntity) Effects() []*world.Effect {
+	return p.Entity.Effects()
+}
+
+func (p *AiPokemonEntity) SetEffects(effects []*world.Effect) {
+	p.Entity.SetEffects(effects)
+}
+
+// AiPokemonEntity is intelligent
+
 func (e *AiPokemonEntity) Script() world.AiScript {
 	switch e.Profile.AggressionLevel {
 	case AGGROpassive:
@@ -39,45 +85,16 @@ func (e *AiPokemonEntity) Script() world.AiScript {
 	}
 }
 
-func (p *AiPokemonEntity) Name() string {
-	return p.Entity.BasicPokemon.Name()
+func (p *AiPokemonEntity) Walking() *world.Position {
+	return p.Entity.Walking()
 }
 
-func (p *AiPokemonEntity) Physics() *world.Physics {
-	return p.Entity.PHYSICS
+func (p *AiPokemonEntity) SetWalking(walking *world.Position) {
+	p.Entity.SetWalking(walking)
 }
 
-func (p *AiPokemonEntity) Graphics() *world.Graphics {
-	return p.Entity.GRAPHICS
-}
-
-func (p *AiPokemonEntity) Controls() *world.Controls {
-	return p.Entity.CONTROLS
-}
-
-func (p *AiPokemonEntity) Effects() world.Effects {
-	return p.Entity.EFFECTS
-}
-
-func (p *AiPokemonEntity) SetEffects(effects world.Effects) {
-	p.Entity.EFFECTS = effects
-}
-
-func (p *AiPokemonEntity) Health() int {
-	return p.Entity.BasicPokemon.Stats()["health"].Value()
-}
-
-func (p *AiPokemonEntity) MaxHealth() int {
-	// TODO load species health
-	return 1000
-}
-
-func (p *AiPokemonEntity) SetHealth(health int) {
-	p.Entity.BasicPokemon.Stats()["health"].SetValue(health)
-}
-
-func (p *AiPokemonEntity) Speed() int {
-	return p.Entity.BasicPokemon.Stats()["speed"].Value()
+func (p *AiPokemonEntity) Abilities() map[string]*world.Ability {
+	return p.Entity.Abilities()
 }
 
 func UpdateAggressiveAi(self world.Entity, now time.Time) {

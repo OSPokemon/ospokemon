@@ -8,10 +8,10 @@ import (
 )
 
 type spellStore byte
-type controlsStore byte
+type abilitiesStore byte
 
 var SpellStore spellStore
-var ControlsStore controlsStore
+var AbilitiesStore abilitiesStore
 
 var Spells = make(map[int]*world.Spell)
 
@@ -55,14 +55,14 @@ func (s *spellStore) Load(id int) *world.Spell {
 	return spell
 }
 
-func (c controlsStore) BuildForPokemon(id int) *world.Controls {
+func (c abilitiesStore) GetForPokemon(id int) map[string]*world.Ability {
 	rows, err := Connection.Query("SELECT spell_id, keybinding FROM pokemon_spells WHERE pokemon_id=?", id)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer rows.Close()
 
-	controls := &world.Controls{nil, 0, make(map[string]*world.Ability)}
+	abilities := make(map[string]*world.Ability)
 
 	var spell_id int
 	var keybinding string
@@ -72,15 +72,15 @@ func (c controlsStore) BuildForPokemon(id int) *world.Controls {
 			log.Fatal(err)
 		}
 
-		controls.Abilities[keybinding] = &world.Ability{
+		abilities[keybinding] = &world.Ability{
 			Spell: SpellStore.Load(spell_id),
 		}
 	}
 
 	log.WithFields(log.Fields{
 		"PokemonID": id,
-		"Controls":  controls,
+		"Abilities": abilities,
 	}).Debug("Controls loaded")
 
-	return controls
+	return abilities
 }

@@ -3,53 +3,53 @@ package effectscripts
 import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/world"
+	"strconv"
 	"time"
 )
 
 type healtheffect byte
 
-var Health stateeffect
+var Health healtheffect
 
-func (e healtheffect) New(power int, now time.Time, duration time.Duration) *world.Effect {
+func (e healtheffect) New(power int, duration time.Duration) *world.Effect {
 	return &world.Effect{
 		Name:     "HealthMod",
 		Priority: world.PRIOstandard,
-		Data:     power,
+		Data: map[string]string{
+			"power": strconv.Itoa(power),
+		},
 		Script:   Health.Script,
-		Start:    now,
 		Duration: duration,
 	}
 }
 
 func (h *healtheffect) Script(effect *world.Effect, entity world.Entity, now time.Time) {
 
-	power, ok := effect.Data.(int)
-	if !ok {
+	power, err := strconv.Atoi(effect.Data["power"])
+	if err != nil {
 		log.WithFields(log.Fields{
 			"data": effect.Data,
 		}).Error("effectscripts.Health invalid data supplied")
 		return
 	}
-	healthy, ok := entity.(world.Healthy)
+	mortal, ok := entity.(world.Mortality)
 	if !ok {
 		log.WithFields(log.Fields{
 			"target": entity,
 		}).Error("effectscripts.Health invalid target supplied")
 	}
 
-	isprotected := entity.Controls().State&world.CTRLPprotected < 1
-
-	if power < 0 && isprotected {
+	if power < 0 && world.IsProtected(mortal) {
 		return
 	}
 
-	health := healthy.Health() + power
+	health := mortal.Stats()["health"].Value() + power
 
-	if health > healthy.MaxHealth() {
-		power = healthy.MaxHealth() - healthy.Health()
+	if health > mortal.Stats()["health"].MaxValue() {
+		power = mortal.Stats()["health"].MaxValue() - mortal.Stats()["health"].Value()
 	} else if health < 0 {
-		power = -healthy.Health()
+		power = -mortal.Stats()["health"].Value()
 	}
 
-	healthy.SetHealth(healthy.Health() + power)
+	mortal.Stats()["health"].SetValue(mortal.Stats()["health"].Value() + power)
 }

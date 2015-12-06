@@ -4,19 +4,20 @@ import (
 	"encoding/json"
 	log "github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/world"
+	"github.com/ospokemon/ospokemon/world/update"
 	"strconv"
 	"time"
 )
 
-func Update(base map[string]*world.BasicView, now time.Time) {
+func Update(base map[string]interface{}, now time.Time) {
 	for _, client := range Clients {
 		view := make(map[string]interface{})
-		view["world"] = copyMap(base)
+		view["world"] = viewcopier(base).copy()
 
-		controlViews := make(map[string]*world.FullView)
+		controlViews := make(map[string]interface{})
 		for _, id := range client.Entities {
 			tag := strconv.Itoa(id)
-			controlViews[tag] = world.MakeFullView(id, world.Entities[id], now)
+			controlViews[tag] = update.MakeFullView(id, world.Entities[id], now)
 		}
 		view["control"] = controlViews
 
@@ -32,10 +33,10 @@ func ReceiveMessage(name string, message map[string]interface{}) {
 
 	entityId := int(message["entity"].(float64))
 
-	var entity world.Entity
+	var entity world.Intelligence
 	for _, id := range client.Entities {
 		if id == entityId {
-			entity = world.Entities[id]
+			entity = world.Entities[id].(world.Intelligence)
 		}
 	}
 
@@ -53,13 +54,19 @@ func ReceiveMessage(name string, message map[string]interface{}) {
 		walking := &world.Position{}
 		walking.X = coords["x"].(float64)
 		walking.Y = coords["y"].(float64)
-		entity.Physics().Walking = walking
+		entity.SetWalking(walking)
 	} else if message["ability"] != nil {
 		ability := message["ability"].(string)
-		action := &world.Action{}
+		action := &world.Action{
+			Ability: entity.Abilities()[ability],
+		}
 
 		switch target := message["target"].(type) {
 		default:
+			log.WithFields(log.Fields{
+				"client": client.Name,
+				"target": target,
+			}).Warn("Message received with unrecognized target type")
 			break
 		case map[string]interface{}:
 			action.Target = &world.Position{
@@ -67,20 +74,27 @@ func ReceiveMessage(name string, message map[string]interface{}) {
 				Y: target["y"].(float64),
 			}
 			break
-		case int:
-			action.Target = target
+		case float64:
+			action.Target = world.Entities[int(target)]
 			break
 		}
 
-		log.Printf("Action accepted for client(%s)(%d): %v", client.Name, entityId, action)
+		entity.SetAction(action)
 
-		action.Ability = entity.Controls().Abilities[ability]
-		entity.Controls().Action = action
+		log.WithFields(log.Fields{
+			"client": client.Name,
+			"entity": entityId,
+			"action": action,
+		}).Debug("Action accepted for client")
 	}
 }
 
-func copyMap(src map[string]*world.BasicView) map[string]*world.BasicView {
-	dst := make(map[string]*world.BasicView)
+// target data can be coppied
+
+type viewcopier map[string]interface{}
+
+func (src viewcopier) copy() map[string]interface{} {
+	dst := make(map[string]interface{})
 
 	for k, v := range src {
 		dst[k] = v

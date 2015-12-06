@@ -30,7 +30,10 @@ func (p *playerStore) Load(name string) *Player {
 
 	row := Connection.QueryRow("SELECT id, name, class, health, maxhealth, x, y FROM players WHERE name=?", name)
 	player := &Player{
-		SPEED: 25,
+		STATS: map[string]world.Stat{
+			"health": &PlayerStat{100, 100, 100},
+			"speed":  &PlayerStat{25, 25, 25},
+		},
 		PHYSICS: &world.Physics{
 			Position: world.Position{},
 			Size:     world.Size{64, 64},
@@ -38,11 +41,15 @@ func (p *playerStore) Load(name string) *Player {
 		},
 	}
 
-	err := row.Scan(&player.BasicTrainer.ID, &player.NAME, &player.CLASS, &player.HEALTH, &player.MAXHEALTH, &player.Physics().Position.X, &player.Physics().Position.Y)
+	var health, maxhealth int
 
+	err := row.Scan(&player.BasicTrainer.ID, &player.NAME, &player.CLASS, &health, &maxhealth, &player.Physics().Position.X, &player.Physics().Position.Y)
 	if err != nil {
 		log.Fatal(err)
 	}
+	player.Stats()["health"].SetValue(health)
+	player.Stats()["health"].SetMaxValue(maxhealth)
+	player.Stats()["health"].SetBaseMaxValue(maxhealth)
 
 	Players[name] = player
 	return player

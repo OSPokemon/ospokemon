@@ -9,10 +9,8 @@ func FullLoadPlayer(name string) []int {
 	entities := make([]int, 0)
 
 	player := data.PlayerStore.Load(name)
-	player.GRAPHICS = data.GraphicsStore.New("trainerclass", player.Class())
-	player.CONTROLS = &world.Controls{
-		Abilities: make(map[string]*world.Ability),
-	}
+	player.GRAPHICS = data.GraphicsStore.New("trainer", player.Class())
+	player.ABILITIES = make(map[string]*world.Ability)
 
 	entities = append(entities, world.AddEntity(player))
 
@@ -21,6 +19,8 @@ func FullLoadPlayer(name string) []int {
 	for _, pokemon_id := range pokemon_ids {
 		entities = append(entities, FullLoadPokemon(pokemon_id))
 	}
+
+	player.BasicTrainer.POKEMON = pokemon_ids
 
 	return entities
 }

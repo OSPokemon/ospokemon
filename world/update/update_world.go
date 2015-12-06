@@ -6,20 +6,15 @@ import (
 	"time"
 )
 
-func UpdateWorld(now time.Time) map[string]*world.BasicView {
-	view := make(map[string]*world.BasicView)
+func UpdateWorld(now time.Time) map[string]interface{} {
+	view := make(map[string]interface{})
 
 	for _, entity := range world.Entities {
-		ResetEntity(entity)
 		UpdateEntity(entity, now)
 	}
 
 	for id, entity := range world.Entities {
-		if entity.Controls().State&world.CTRLcloak > 0 {
-			continue
-		}
-
-		eview := world.MakeBasicView(id, entity, now)
+		eview := MakeBasicView(id, entity, now)
 		view[strconv.Itoa(id)] = eview
 	}
 
