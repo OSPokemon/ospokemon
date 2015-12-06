@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	tickSize := 400
+	tickSize := 250
 	var port, dir, logLevel string
 
 	flag.StringVar(&port, "port", "8080", "Port number to open the server on")

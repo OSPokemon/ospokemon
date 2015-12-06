@@ -6,48 +6,6 @@ import (
 	"time"
 )
 
-type BasicView struct {
-	Id       int
-	Name     string
-	Physics  *world.Physics
-	Graphic  string
-	Portrait string
-	Effects  []EffectView
-}
-
-type FullView struct {
-	Id       int
-	Name     string
-	Physics  *world.Physics
-	Graphic  string
-	Portrait string
-	Controls ControlsView
-	Effects  []EffectView
-}
-
-type ControlsView struct {
-	Action    ActionView
-	Abilities []AbilityView
-}
-
-type ActionView struct {
-	Name       string
-	Completion float64
-}
-
-type AbilityView struct {
-	Name       string
-	Hotkey     string
-	TargetType int
-	Graphic    string
-	Cooldown   float64
-}
-
-type EffectView struct {
-	Name       string
-	Completion float64
-}
-
 func MakeBasicView(id int, e world.Entity, now time.Time) map[string]interface{} {
 	view := make(map[string]interface{})
 
@@ -60,11 +18,14 @@ func MakeBasicView(id int, e world.Entity, now time.Time) map[string]interface{}
 	if e.Action() != nil && e.Action().Start != nil {
 		action := make(map[string]interface{})
 		action["Name"] = e.Action().Ability.Spell.Name
-		action["Completion"] = float64(e.Action().Start.Add(e.Action().Ability.CastTime).Sub(now))
+		action["Completion"] = float64(now.Sub(*e.Action().Start)) / float64(e.Action().Ability.CastTime) * 100
 		action["Graphic"] = e.Action().Ability.Spell.Graphic
 
 		view["Action"] = action
+	} else {
+		view["Action"] = false
 	}
+
 	if mortal, ok := e.(world.Mortality); ok {
 		effects := make([]map[string]interface{}, 0)
 		for _, effect := range mortal.Effects() {
@@ -74,7 +35,7 @@ func MakeBasicView(id int, e world.Entity, now time.Time) map[string]interface{}
 
 			effectView := map[string]interface{}{
 				"Name":       effect.Name,
-				"Completion": float64(effect.Start.Add(effect.Duration).Sub(now) / time.Second),
+				"Completion": roundTime(effect.Start.Add(effect.Duration).Sub(now)),
 			}
 			effects = append(effects, effectView)
 		}
@@ -98,7 +59,7 @@ func MakeFullView(id int, e world.Entity, now time.Time) map[string]interface{} 
 			abilityview["TargetType"] = int(ability.Spell.TargetType)
 			abilityview["Graphic"] = ability.Spell.Graphic
 
-			abilityview["Cooldown"] = math.Max(0, float64(ability.LastCast.Add(ability.Cooldown).Sub(now)/time.Second))
+			abilityview["Cooldown"] = roundTime(ability.LastCast.Add(ability.Cooldown).Sub(now))
 
 			abilities = append(abilities, abilityview)
 		}
@@ -107,4 +68,12 @@ func MakeFullView(id int, e world.Entity, now time.Time) map[string]interface{} 
 	}
 
 	return view
+}
+
+func roundTime(duration time.Duration) float64 {
+	timeinitial := float64(duration / time.Millisecond / 100)
+	time := math.Floor(timeinitial)
+	time = math.Max(0, time/10)
+
+	return time
 }

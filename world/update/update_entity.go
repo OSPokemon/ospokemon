@@ -38,9 +38,9 @@ func updateIntelligentEntity(entity world.Intelligence, now time.Time) {
 
 	entity.Script()
 
-	maybeWalk(entity, now)
+	moved := maybeWalk(entity, now)
 
-	maybeCast(entity, now)
+	maybeCast(entity, now, moved)
 }
 
 func resetMortalEntity(entity world.Mortality, now time.Time) {
@@ -98,18 +98,22 @@ func resetIntelligentEntity(entity world.Intelligence, now time.Time) {
 	}
 }
 
-func maybeWalk(entity world.Intelligence, now time.Time) {
+func maybeWalk(entity world.Intelligence, now time.Time) bool {
 	if world.IsDead(entity) {
-		return // dead guys dont walk
+		return false // dead guys dont walk
 	}
 	if world.IsStuck(entity) {
-		return
+		return false
 	}
 
 	destination := entity.Walking()
 
 	if destination == nil {
-		return
+		return false
+	}
+	if entity.Action() != nil && entity.Action().Start == nil && !entity.Action().Ability.MoveCast {
+		entity.SetWalking(nil)
+		return false
 	}
 
 	speed := entity.Stats()["speed"].Value()
@@ -137,9 +141,10 @@ func maybeWalk(entity world.Intelligence, now time.Time) {
 	}
 
 	MoveEntity(entity, vector)
+	return true
 }
 
-func maybeCast(entity world.Intelligence, now time.Time) {
+func maybeCast(entity world.Intelligence, now time.Time, moved bool) {
 	if world.IsDead(entity) {
 		return // dead guys dont cast
 	}
@@ -147,6 +152,10 @@ func maybeCast(entity world.Intelligence, now time.Time) {
 		return
 	}
 	if entity.Action() == nil {
+		return
+	}
+	if !entity.Action().Ability.MoveCast && moved {
+		entity.SetAction(nil)
 		return
 	}
 
