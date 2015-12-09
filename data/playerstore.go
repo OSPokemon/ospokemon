@@ -1,56 +1,43 @@
 package data
 
-import (
-	log "github.com/Sirupsen/logrus"
-	"github.com/ospokemon/ospokemon/world"
-)
+// import (
+// 	log "github.com/Sirupsen/logrus"
+// 	"github.com/ospokemon/ospokemon/world"
+// )
 
-type playerStore byte
+// type playerStore byte
 
-var PlayerStore playerStore
-var Players = make(map[string]*Player)
+// var PlayerStore playerStore
+// var Players = make(map[string]*Player)
 
-func (p *playerStore) FetchPassword(name string) string {
-	row := Connection.QueryRow("SELECT password FROM players WHERE name=?", name)
-	var password string
+// func (p *playerStore) Load(name string) *Player {
+// 	if Players[name] != nil {
+// 		return Players[name]
+// 	}
 
-	err := row.Scan(&password)
+// 	row := Connection.QueryRow("SELECT id, name, class, health, maxhealth, x, y FROM players WHERE name=?", name)
+// 	player := &Player{
+// 		STATS: map[string]world.Stat{
+// 			"health": &PlayerStat{100, 100, 100},
+// 			"speed":  &PlayerStat{25, 25, 25},
+// 		},
+// 		PHYSICS: &world.Physics{
+// 			Position: world.Position{},
+// 			Size:     world.Size{64, 64},
+// 			Solid:    true,
+// 		},
+// 	}
 
-	if err != nil {
-		return ""
-	}
+// 	var health, maxhealth int
 
-	return password
-}
+// 	err := row.Scan(&player.BasicTrainer.ID, &player.NAME, &player.CLASS, &health, &maxhealth, &player.Physics().Position.X, &player.Physics().Position.Y)
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	player.Stats()["health"].SetValue(health)
+// 	player.Stats()["health"].SetMaxValue(maxhealth)
+// 	player.Stats()["health"].SetBaseMaxValue(maxhealth)
 
-func (p *playerStore) Load(name string) *Player {
-	if Players[name] != nil {
-		return Players[name]
-	}
-
-	row := Connection.QueryRow("SELECT id, name, class, health, maxhealth, x, y FROM players WHERE name=?", name)
-	player := &Player{
-		STATS: map[string]world.Stat{
-			"health": &PlayerStat{100, 100, 100},
-			"speed":  &PlayerStat{25, 25, 25},
-		},
-		PHYSICS: &world.Physics{
-			Position: world.Position{},
-			Size:     world.Size{64, 64},
-			Solid:    true,
-		},
-	}
-
-	var health, maxhealth int
-
-	err := row.Scan(&player.BasicTrainer.ID, &player.NAME, &player.CLASS, &health, &maxhealth, &player.Physics().Position.X, &player.Physics().Position.Y)
-	if err != nil {
-		log.Fatal(err)
-	}
-	player.Stats()["health"].SetValue(health)
-	player.Stats()["health"].SetMaxValue(maxhealth)
-	player.Stats()["health"].SetBaseMaxValue(maxhealth)
-
-	Players[name] = player
-	return player
-}
+// 	Players[name] = player
+// 	return player
+// }

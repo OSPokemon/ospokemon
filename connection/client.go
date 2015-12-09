@@ -18,7 +18,7 @@ func NewClient(name string, conn *websocket.Conn) *Client {
 	return &Client{
 		Name:     name,
 		Conn:     conn,
-		Entities: make([]int, 1),
+		Entities: make([]int, 0),
 		Send:     make(chan string, 1),
 		Close:    make(chan bool, 1),
 	}

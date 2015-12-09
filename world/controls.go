@@ -42,7 +42,7 @@ type Spell struct {
 	Cost       SpellCost
 	Range      float64
 	TargetType TargetType
-	TargetData map[string]string
+	TargetData map[string]interface{}
 	Graphic    string
 	Script     SpellScript
 }
@@ -60,13 +60,13 @@ type Ability struct {
 	MoveCast   bool
 	Cost       SpellCost
 	Range      float64
-	TargetData map[string]string
+	TargetData map[string]interface{}
 }
 
 type Effect struct {
 	Name     string
 	Priority int
-	Data     map[string]string
+	Data     map[string]interface{}
 	Script   EffectScript
 	Start    *time.Time
 	Duration time.Duration

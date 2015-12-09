@@ -3,7 +3,6 @@ package effectscripts
 import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/world"
-	"strconv"
 	"time"
 )
 
@@ -15,8 +14,8 @@ func (e healtheffect) New(power int, duration time.Duration) *world.Effect {
 	return &world.Effect{
 		Name:     "HealthMod",
 		Priority: world.PRIOstandard,
-		Data: map[string]string{
-			"power": strconv.Itoa(power),
+		Data: map[string]interface{}{
+			"power": power,
 		},
 		Script:   Health.Script,
 		Duration: duration,
@@ -25,8 +24,8 @@ func (e healtheffect) New(power int, duration time.Duration) *world.Effect {
 
 func (h *healtheffect) Script(effect *world.Effect, entity world.Entity, now time.Time) {
 
-	power, err := strconv.Atoi(effect.Data["power"])
-	if err != nil {
+	power, ok := effect.Data["power"].(int)
+	if !ok {
 		log.WithFields(log.Fields{
 			"data": effect.Data,
 		}).Error("effectscripts.Health invalid data supplied")

@@ -5,6 +5,8 @@ import (
 )
 
 type Entity interface {
+	EntityId() int
+	SetEntityId(id int)
 	Name() string
 	Physics() *Physics
 	Graphics() *Graphics

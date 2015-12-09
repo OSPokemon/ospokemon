@@ -2,7 +2,6 @@ package entities
 
 import (
 	// "github.com/ospokemon/api-go"
-	"github.com/ospokemon/ospokemon/data"
 	"github.com/ospokemon/ospokemon/world"
 	"time"
 )
@@ -24,7 +23,7 @@ type AiProfile struct {
 }
 
 type AiPokemonEntity struct {
-	Entity  data.PokemonEntity
+	Entity  PokemonEntity
 	Profile *AiProfile
 }
 

@@ -1,32 +1,9 @@
 package connection
 
 import (
-	"encoding/json"
 	log "github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/world"
-	"github.com/ospokemon/ospokemon/world/update"
-	"strconv"
-	"time"
 )
-
-func Update(base map[string]interface{}, now time.Time) {
-	for _, client := range Clients {
-		view := make(map[string]interface{})
-		view["world"] = viewcopier(base).copy()
-
-		controlViews := make(map[string]interface{})
-		for _, id := range client.Entities {
-			tag := strconv.Itoa(id)
-			controlViews[tag] = update.MakeFullView(id, world.Entities[id], now)
-		}
-		view["control"] = controlViews
-
-		json, _ := json.Marshal(view)
-		message := string(json)
-
-		client.Send <- message
-	}
-}
 
 func ReceiveMessage(name string, message map[string]interface{}) {
 	client := Clients[name]
@@ -86,6 +63,12 @@ func ReceiveMessage(name string, message map[string]interface{}) {
 			"entity": entityId,
 			"action": action,
 		}).Debug("Action accepted for client")
+	} else {
+		log.WithFields(log.Fields{
+			"Client":   client.Name,
+			"EntityId": entityId,
+			"Message":  message,
+		}).Warn("Unrecognized message format")
 	}
 }
 

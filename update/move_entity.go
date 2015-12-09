@@ -34,18 +34,3 @@ func MoveEntity(entity world.Entity, v *world.Vector) {
 
 	entity.Physics().Position = nextPos
 }
-
-func UpdateCollisions(entity world.Entity) {
-	for _, entity2 := range world.Entities {
-		if entity == entity2 {
-			continue
-		}
-		if entity2.Physics().Solid {
-			continue
-		}
-
-		if applicator, ok := entity2.(world.Applicator); ok {
-			applicator.Apply(entity)
-		}
-	}
-}

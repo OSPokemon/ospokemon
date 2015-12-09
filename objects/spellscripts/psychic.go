@@ -3,12 +3,13 @@ package spellscripts
 import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/objects/effectscripts"
+	"github.com/ospokemon/ospokemon/registry"
 	"github.com/ospokemon/ospokemon/world"
 	"time"
 )
 
 func init() {
-	Scripts["Psychic"] = Psychic
+	registry.Scripts["Psychic"] = Psychic
 }
 
 func Psychic(self world.Entity, t interface{}, now time.Time) {

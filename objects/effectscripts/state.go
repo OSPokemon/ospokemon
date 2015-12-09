@@ -10,12 +10,12 @@ type stateeffect byte
 
 var State stateeffect
 
-func (s stateeffect) New(state uint8, duration time.Duration) *world.Effect {
+func (s stateeffect) New(name string, state uint8, duration time.Duration) *world.Effect {
 	return &world.Effect{
-		Name:     "StateMod",
+		Name:     name,
 		Priority: world.PRIOstate,
-		Data: map[string]string{
-			"state": string(state),
+		Data: map[string]interface{}{
+			"state": state,
 		},
 		Script:   State.Script,
 		Duration: duration,
@@ -24,12 +24,18 @@ func (s stateeffect) New(state uint8, duration time.Duration) *world.Effect {
 
 func (e stateeffect) Script(effect *world.Effect, entity world.Entity, now time.Time) {
 
-	data := uint8([]byte(effect.Data["state"])[0])
+	data, ok := effect.Data["state"].(uint8)
+	if !ok {
+		log.WithFields(log.Fields{
+			"Entity": entity,
+		}).Error("effectscripts.State invalid data supplied")
+		return
+	}
 
 	mortal, ok := entity.(world.Mortality)
 	if !ok {
 		log.WithFields(log.Fields{
-			"entity": entity,
+			"Entity": entity,
 		}).Error("effectscripts.State invalid target")
 		return
 	}

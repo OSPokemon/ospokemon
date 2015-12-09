@@ -5,7 +5,7 @@ import (
 	"fmt"
 	log "github.com/Sirupsen/logrus"
 	"github.com/cznic/mathutil"
-	"github.com/ospokemon/ospokemon/data"
+	"github.com/ospokemon/ospokemon/registry"
 	"net/http"
 	"strconv"
 )
@@ -20,9 +20,7 @@ var LoginHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request)
 
 	// redirect if already logged in
 	if sessionCookie, err := r.Cookie("SessionId"); err == nil {
-		sessionId, err := strconv.ParseInt(sessionCookie.Value, 10, 0)
-
-		if err == nil && Sessions[int(sessionId)] != "" {
+		if sessionId, err := strconv.ParseInt(sessionCookie.Value, 10, 0); err == nil && Sessions[int(sessionId)] != "" {
 			log.WithFields(log.Fields{
 				"SessionID": sessionId,
 			}).Debug("Auth request redirected")
@@ -36,17 +34,12 @@ var LoginHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request)
 	// hash := md5.Sum([]byte(password))
 	// password = string(hash[:])
 
-	if data.Players[username] != nil {
-		log.WithFields(log.Fields{
-			"player": username,
-		}).Warn("Authorization rejected. Player already signed on")
-		http.Redirect(w, r, "/?duplicate", http.StatusMovedPermanently)
-		return
+	if registry.Accounts[username] == nil {
+		registry.AccountLoader(username)
 	}
+	account := registry.Accounts[username]
 
-	realPassword := data.PlayerStore.FetchPassword(username)
-
-	if realPassword == "" {
+	if account == nil {
 		log.WithFields(log.Fields{
 			"player": username,
 		}).Warn("Authorization rejected. account does not exist")
@@ -54,7 +47,15 @@ var LoginHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	if realPassword != password {
+	if account.Online {
+		log.WithFields(log.Fields{
+			"player": username,
+		}).Warn("Authorization rejected. Player already signed on")
+		http.Redirect(w, r, "/?duplicate", http.StatusMovedPermanently)
+		return
+	}
+
+	if password != account.Password {
 		log.WithFields(log.Fields{
 			"player": username,
 		}).Warn("Authorization password failure")

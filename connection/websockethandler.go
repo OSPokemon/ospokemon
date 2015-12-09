@@ -3,7 +3,7 @@ package connection
 import (
 	"code.google.com/p/go.net/websocket"
 	log "github.com/Sirupsen/logrus"
-	"github.com/ospokemon/ospokemon/data/loader"
+	"github.com/ospokemon/ospokemon/registry"
 	"github.com/ospokemon/ospokemon/world"
 	"strconv"
 )
@@ -24,8 +24,16 @@ var ConnectHandler = websocket.Handler(func(conn *websocket.Conn) {
 	}
 
 	client := NewClient(name, conn)
-	client.Entities = loader.FullLoadPlayer(name)
 	Clients[name] = client
+
+	account := registry.Accounts[name]
+
+	registry.Loaders["Player"](account.PlayerId)
+	player := registry.Players[account.PlayerId]
+	world.AddEntity(player)
+
+	client.Entities = []int{account.PlayerId}
+	account.Online = true
 
 	log.WithFields(log.Fields{
 		"name":      name,
@@ -34,11 +42,6 @@ var ConnectHandler = websocket.Handler(func(conn *websocket.Conn) {
 
 	go client.ListenSend()
 	client.ListenRead()
-
-	loader.FullUnloadPlayer(name)
-	for _, id := range client.Entities {
-		world.RemoveEntity(id)
-	}
 
 	delete(Clients, name)
 	conn.Close()
@@ -76,41 +79,3 @@ func (c *Client) ListenRead() {
 		}
 	}
 }
-
-// func PushWorld(t time.Time) {
-// 	message := make(map[string]interface{})
-
-// 	world.Entities.Lock()
-// 	for entityId, dirty := range world.Entities.Dirty {
-// 		if !dirty {
-// 			continue
-// 		}
-
-// 		entity := world.Entities.All[entityId]
-// 		entityJson := make(map[string]interface{})
-
-// 		entityJson["tag"] = entity.Tag()
-// 		entityJson["x"] = entity.Position().X
-// 		entityJson["y"] = entity.Position().Y
-
-// 		if entity.Action() != nil {
-// 			action := entity.Action()
-
-// 			if action.Type == world.CastAction {
-// 				castLength := t.Sub(action.Start)
-// 				castPercentage := int(float64(castLength) / float64(action.Duration) * 100)
-// 				entityJson["cast"] = castPercentage
-// 			} else if action.Type == world.MoveAction {
-// 				entityJson["move"] = action.Data.(world.Position)
-// 			}
-// 		}
-
-// 		message[entity.Tag()] = entityJson
-// 	}
-// 	world.Entities.Dirty = make(map[string]bool)
-// 	world.Entities.Unlock()
-
-// 	for _, client := range clients {
-// 		client.Send <- &message
-// 	}
-// }

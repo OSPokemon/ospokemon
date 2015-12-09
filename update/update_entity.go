@@ -3,7 +3,6 @@ package update
 import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/world"
-	"math"
 	"sort"
 	"time"
 )
@@ -24,7 +23,16 @@ func UpdateEntity(entity world.Entity, now time.Time) {
 }
 
 func updateApplicatorEntity(entity world.Applicator, now time.Time) {
+	for _, entity2 := range world.Entities {
+		if entity == entity2 {
+			continue
+		}
+		if !entity2.Physics().Solid {
+			continue
+		}
 
+		entity.Apply(entity2)
+	}
 }
 
 func updateMortalEntity(entity world.Mortality, now time.Time) {
@@ -125,20 +133,7 @@ func maybeWalk(entity world.Intelligence, now time.Time) bool {
 	}
 
 	vector := world.CreatePathVector(&entity.Physics().Position, destination, speed)
-
-	if math.Abs(vector.DX) > math.Abs(vector.DY) {
-		if vector.DX > 0 {
-			entity.Graphics().Current = entity.Graphics().Animations[world.ANIMwalk_right]
-		} else {
-			entity.Graphics().Current = entity.Graphics().Animations[world.ANIMwalk_left]
-		}
-	} else {
-		if vector.DY > 0 {
-			entity.Graphics().Current = entity.Graphics().Animations[world.ANIMwalk_down]
-		} else {
-			entity.Graphics().Current = entity.Graphics().Animations[world.ANIMwalk_up]
-		}
-	}
+	entity.Graphics().Current = entity.Graphics().Animations[vector.AnimationType()]
 
 	MoveEntity(entity, vector)
 	return true
@@ -172,6 +167,10 @@ func maybeCast(entity world.Intelligence, now time.Time, moved bool) {
 			"ability": entity.Action().Ability.Spell.Name,
 		}).Debug("Cast time complete")
 
+		if entity.Action().Ability.Spell.Script == nil {
+			log.Warn("ABORT CAST")
+		}
+
 		entity.Action().Ability.Spell.Script(entity, entity.Action().Target, now)
 		entity.Action().Ability.LastCast = now
 		entity.SetAction(nil)
@@ -180,10 +179,10 @@ func maybeCast(entity world.Intelligence, now time.Time, moved bool) {
 
 // target data can be coppied
 
-type tdcopier map[string]string
+type tdcopier map[string]interface{}
 
-func (src tdcopier) copy() map[string]string {
-	dst := make(map[string]string)
+func (src tdcopier) copy() map[string]interface{} {
+	dst := make(map[string]interface{})
 
 	for k, v := range src {
 		dst[k] = v

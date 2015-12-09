@@ -1,4 +1,4 @@
-package data
+package entities
 
 import (
 	"github.com/ospokemon/api-go"
@@ -11,6 +11,7 @@ type PokemonEntity struct {
 	PHYSICS     *world.Physics
 	GRAPHICS    *world.Graphics
 	ACTION      *world.Action
+	ENTITYID    int
 	CONTROL     uint8
 	STATHANDLES map[string]world.Stat
 	EFFECTS     []*world.Effect
@@ -19,6 +20,14 @@ type PokemonEntity struct {
 }
 
 // PokemonEntity is an entity
+
+func (p *PokemonEntity) EntityId() int {
+	return p.ENTITYID
+}
+
+func (p *PokemonEntity) SetEntityId(id int) {
+	p.ENTITYID = id
+}
 
 func (p *PokemonEntity) Physics() *world.Physics {
 	return p.PHYSICS

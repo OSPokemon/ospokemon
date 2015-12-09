@@ -8,6 +8,7 @@ var Entities = make(map[int]Entity)
 
 func AddEntity(e Entity) int {
 	id := reserveEntityId()
+	e.SetEntityId(id)
 	Entities[id] = e
 	return id
 }
@@ -20,8 +21,8 @@ var entityIdDispatch struct {
 func reserveEntityId() int {
 	entityIdDispatch.Lock()
 	defer entityIdDispatch.Unlock()
-	id := entityIdDispatch.next
 	entityIdDispatch.next++
+	id := entityIdDispatch.next
 	return id
 }
 

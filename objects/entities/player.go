@@ -1,9 +1,8 @@
-package data
+package entities
 
 import (
 	"github.com/ospokemon/api-go"
 	"github.com/ospokemon/ospokemon/world"
-	// "strconv"
 	"time"
 )
 
@@ -12,6 +11,7 @@ type Player struct {
 	PHYSICS   *world.Physics
 	GRAPHICS  *world.Graphics
 	ACTION    *world.Action
+	ENTITYID  int
 	CONTROL   uint8
 	STATS     map[string]world.Stat
 	EFFECTS   []*world.Effect
@@ -20,6 +20,14 @@ type Player struct {
 }
 
 // Player is an Entity
+
+func (p *Player) EntityId() int {
+	return p.ENTITYID
+}
+
+func (p *Player) SetEntityId(id int) {
+	p.ENTITYID = id
+}
 
 func (p *Player) Physics() *world.Physics {
 	return p.PHYSICS
@@ -106,7 +114,3 @@ func (stat *PlayerStat) BaseMaxValue() int {
 func (stat *PlayerStat) SetBaseMaxValue(basemaxvalue int) {
 	stat.BASEMAXVALUE = basemaxvalue
 }
-
-// func (stat *PlayerStat) String() {
-
-// }
