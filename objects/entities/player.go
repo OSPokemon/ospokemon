@@ -17,6 +17,7 @@ type Player struct {
 	EFFECTS   []*world.Effect
 	WALKING   *world.Position
 	ABILITIES map[string]*world.Ability
+	world.Events
 }
 
 // Player is an Entity

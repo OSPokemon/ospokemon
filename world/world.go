@@ -1,6 +1,7 @@
 package world
 
 import (
+	log "github.com/Sirupsen/logrus"
 	"sync"
 )
 
@@ -23,6 +24,11 @@ func reserveEntityId() int {
 	defer entityIdDispatch.Unlock()
 	entityIdDispatch.next++
 	id := entityIdDispatch.next
+
+	log.WithFields(log.Fields{
+		"EntityId": id,
+	}).Debug("EntityId Reserved")
+
 	return id
 }
 

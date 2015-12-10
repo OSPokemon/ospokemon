@@ -25,7 +25,7 @@ const (
 const (
 	TRGTnone TargetType = iota
 	TRGTentity
-	TRGTprojectile
+	TRGTposition
 )
 const (
 	PRIOstate    = -1

@@ -23,3 +23,17 @@ func NewClient(name string, conn *websocket.Conn) *Client {
 		Close:    make(chan bool, 1),
 	}
 }
+
+func (c *Client) AddEntity(entityId interface{}) {
+	c.Entities = append(c.Entities, entityId.(int))
+}
+
+func (c *Client) RemoveEntity(entityId interface{}) {
+	for position := 0; position < len(c.Entities); position++ {
+		if c.Entities[position] == entityId {
+			c.Entities[position] = c.Entities[len(c.Entities)-1]
+			c.Entities = c.Entities[:len(c.Entities)-1]
+			return
+		}
+	}
+}

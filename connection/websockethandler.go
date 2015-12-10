@@ -3,6 +3,7 @@ package connection
 import (
 	"code.google.com/p/go.net/websocket"
 	log "github.com/Sirupsen/logrus"
+	"github.com/ospokemon/ospokemon/objects/entities"
 	"github.com/ospokemon/ospokemon/registry"
 	"github.com/ospokemon/ospokemon/world"
 	"strconv"
@@ -32,7 +33,18 @@ var ConnectHandler = websocket.Handler(func(conn *websocket.Conn) {
 	player := registry.Players[account.PlayerId]
 	world.AddEntity(player)
 
-	client.Entities = []int{account.PlayerId}
+	go preloadPokemon(player)
+
+	client.AddEntity(player.EntityId())
+	for _, pokemonId := range player.Pokemon() {
+		if registry.Pokemon[pokemonId] != nil && registry.Pokemon[pokemonId].EntityId() > 0 {
+			client.AddEntity(registry.Pokemon[pokemonId].EntityId())
+		}
+	}
+
+	player.On("SummonPokemon", client.AddEntity)
+	player.On("DismissPokemon", client.RemoveEntity)
+
 	account.Online = true
 
 	log.WithFields(log.Fields{
@@ -77,5 +89,11 @@ func (c *Client) ListenRead() {
 				go ReceiveMessage(c.Name, message)
 			}
 		}
+	}
+}
+
+func preloadPokemon(player *entities.Player) {
+	for _, pokemonId := range player.Pokemon() {
+		registry.Loaders["Pokemon"](pokemonId)
 	}
 }
