@@ -10,6 +10,7 @@ import (
 
 func init() {
 	registry.Loaders["Pokemon"] = LoadPokemon
+	registry.Unloaders["Pokemon"] = UnloadPokemon
 }
 
 func LoadPokemon(pokemonId int) {
@@ -54,6 +55,12 @@ func LoadPokemon(pokemonId int) {
 	log.WithFields(log.Fields{
 		"Pokemon": pokemon,
 	}).Debug("Pokemon built")
+}
+
+func UnloadPokemon(entity world.Entity) {
+	pokemon := entity.(*entities.PokemonEntity)
+
+	delete(registry.Pokemon, pokemon.Id())
 }
 
 func fetchPokemonInPlayerBox(player_id int, box int) []int {

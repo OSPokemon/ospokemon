@@ -55,6 +55,20 @@ var ConnectHandler = websocket.Handler(func(conn *websocket.Conn) {
 	go client.ListenSend()
 	client.ListenRead()
 
+	account.Online = false
+
+	client.RemoveEntity(player.EntityId())
+	world.RemoveEntity(player.EntityId())
+
+	for _, pokemonId := range client.Entities {
+		if registry.Pokemon[pokemonId] != nil && registry.Pokemon[pokemonId].EntityId() > 0 {
+			world.RemoveEntity(registry.Pokemon[pokemonId].EntityId())
+			registry.Unloaders["Pokemon"](registry.Pokemon[pokemonId])
+		}
+	}
+
+	registry.Unloaders["Player"](player)
+
 	delete(Clients, name)
 	conn.Close()
 })

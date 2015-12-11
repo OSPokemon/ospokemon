@@ -8,7 +8,8 @@ import (
 )
 
 func init() {
-	registry.Loaders["Player"] = registry.LoaderFunc(LoadPlayer)
+	registry.Loaders["Player"] = LoadPlayer
+	registry.Unloaders["Player"] = UnloadPlayer
 }
 
 func LoadPlayer(id int) {
