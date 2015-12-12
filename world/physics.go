@@ -4,7 +4,7 @@ import (
 	"math"
 )
 
-type Position struct {
+type Point struct {
 	X float64
 	Y float64
 }
@@ -15,7 +15,7 @@ type Size struct {
 }
 
 type Physics struct {
-	Position
+	Point
 	Size
 	Solid bool
 }
@@ -25,14 +25,14 @@ type Vector struct {
 	DY float64
 }
 
-func GetDistance(p1 *Position, p2 *Position) float64 {
+func GetDistance(p1 *Point, p2 *Point) float64 {
 	dltx := p1.X - p2.X
 	dlty := p1.Y - p2.Y
 	return math.Sqrt(float64(dlty*dlty) + float64(dltx*dltx))
 }
 
-func (p *Position) Add(v *Vector) Position {
-	return Position{
+func (p *Point) Add(v *Vector) Point {
+	return Point{
 		X: p.X + v.DX,
 		Y: p.Y + v.DY,
 	}

@@ -125,14 +125,14 @@ func maybeWalk(entity world.Intelligence, now time.Time) bool {
 	}
 
 	speed := entity.Stats()["speed"].Value()
-	distance := world.GetDistance(&entity.Physics().Position, destination)
+	distance := world.GetDistance(&entity.Physics().Point, destination)
 
 	if float64(speed) > distance {
 		speed = int(distance)
 		entity.SetWalking(nil)
 	}
 
-	vector := world.CreatePathVector(&entity.Physics().Position, destination, speed)
+	vector := world.CreatePathVector(&entity.Physics().Point, destination, speed)
 	entity.Graphics().Current = entity.Graphics().Animations[vector.AnimationType()]
 
 	MoveEntity(entity, vector)

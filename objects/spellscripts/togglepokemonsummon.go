@@ -22,9 +22,9 @@ func TogglePokemonSummon(self world.Entity, t interface{}, now time.Time) {
 		spell.TargetData["EntityId"] = entityId
 		spell.TargetType = world.TRGTnone
 
-		newposition := t.(*world.Position)
-		pokemon.Physics().Position.X = newposition.X
-		pokemon.Physics().Position.Y = newposition.Y
+		newposition := t.(*world.Point)
+		pokemon.Physics().Point.X = newposition.X
+		pokemon.Physics().Point.Y = newposition.Y
 
 		go self.(world.Eventer).Fire("SummonPokemon", entityId)
 

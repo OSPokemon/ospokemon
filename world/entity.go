@@ -36,8 +36,8 @@ type Intelligence interface {
 	Entity
 	mortality
 	Script() AiScript
-	Walking() *Position
-	SetWalking(p *Position)
+	Walking() *Point
+	SetWalking(p *Point)
 	Abilities() map[string]*Ability
 }
 

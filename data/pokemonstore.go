@@ -48,7 +48,7 @@ package data
 // 	row := Connection.QueryRow("SELECT id, name, x, y, species, level, experience, ability, friendship, gender, nature, height, weight, originaltrainer, shiny, item FROM pokemon WHERE id=?", id)
 // 	pokemon := &PokemonEntity{
 // 		PHYSICS: &world.Physics{
-// 			Position: world.Position{},
+// 			Point: world.Point{},
 // 			Size:     world.Size{64, 64},
 // 			Solid:    true,
 // 		},
@@ -56,7 +56,7 @@ package data
 // 		ABILITIES:   make(map[string]*world.Ability),
 // 	}
 
-// 	err := row.Scan(&pokemon.ID, &pokemon.NAME, &pokemon.PHYSICS.Position.X, &pokemon.PHYSICS.Position.Y, &pokemon.SPECIES, &pokemon.LEVEL, &pokemon.EXPERIENCE, &pokemon.ABILITY, &pokemon.FRIENDSHIP, &pokemon.GENDER, &pokemon.NATURE, &pokemon.HEIGHT, &pokemon.WEIGHT, &pokemon.ORIGINALTRAINER, &pokemon.SHINY, &pokemon.ITEM)
+// 	err := row.Scan(&pokemon.ID, &pokemon.NAME, &pokemon.PHYSICS.Point.X, &pokemon.PHYSICS.Point.Y, &pokemon.SPECIES, &pokemon.LEVEL, &pokemon.EXPERIENCE, &pokemon.ABILITY, &pokemon.FRIENDSHIP, &pokemon.GENDER, &pokemon.NATURE, &pokemon.HEIGHT, &pokemon.WEIGHT, &pokemon.ORIGINALTRAINER, &pokemon.SHINY, &pokemon.ITEM)
 
 // 	if err != nil {
 // 		log.Fatal(err)

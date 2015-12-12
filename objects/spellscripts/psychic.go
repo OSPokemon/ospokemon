@@ -25,7 +25,7 @@ func Psychic(self world.Entity, t interface{}, now time.Time) {
 
 	log.WithFields(log.Fields{
 		"source": self.Name(),
-		"target": target,
+		"target": target.Name(),
 	}).Debug("spellscripts.Psychic execution")
 
 	effect := effectscripts.Health.New(80, 0)

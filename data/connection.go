@@ -1,18 +1,18 @@
-package data
+// package data
 
-import (
-	"database/sql"
-	log "github.com/Sirupsen/logrus"
-	_ "github.com/mattn/go-sqlite3"
-)
+// import (
+// 	"database/sql"
+// 	log "github.com/Sirupsen/logrus"
+// 	_ "github.com/mattn/go-sqlite3"
+// )
 
-var Connection *sql.DB
+// var Connection *sql.DB
 
-func Connect(database string) {
-	var err error
-	Connection, err = sql.Open("sqlite3", database)
+// func Connect(database string) {
+// 	var err error
+// 	Connection, err = sql.Open("sqlite3", database)
 
-	if err != nil {
-		log.Fatal(err)
-	}
-}
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// }

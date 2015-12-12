@@ -21,9 +21,9 @@ func LoadPokemon(pokemonId int) {
 	row := Connection.QueryRow("SELECT id, name, x, y, species, level, experience, ability, friendship, gender, nature, height, weight, originaltrainer, shiny, item FROM pokemon WHERE id=?", pokemonId)
 	pokemon := &entities.PokemonEntity{
 		PHYSICS: &world.Physics{
-			Position: world.Position{},
-			Size:     world.Size{64, 64},
-			Solid:    true,
+			Point: world.Point{},
+			Size:  world.Size{64, 64},
+			Solid: true,
 		},
 		BasicPokemon: ospokemon.BasicPokemon{
 			STATS: make(map[string]ospokemon.Stat),
@@ -31,7 +31,7 @@ func LoadPokemon(pokemonId int) {
 		STATHANDLES: make(map[string]world.Stat),
 	}
 
-	err := row.Scan(&pokemon.ID, &pokemon.NAME, &pokemon.PHYSICS.Position.X, &pokemon.PHYSICS.Position.Y, &pokemon.SPECIES, &pokemon.LEVEL, &pokemon.EXPERIENCE, &pokemon.ABILITY, &pokemon.FRIENDSHIP, &pokemon.GENDER, &pokemon.NATURE, &pokemon.HEIGHT, &pokemon.WEIGHT, &pokemon.ORIGINALTRAINER, &pokemon.SHINY, &pokemon.ITEM)
+	err := row.Scan(&pokemon.ID, &pokemon.NAME, &pokemon.PHYSICS.Point.X, &pokemon.PHYSICS.Point.Y, &pokemon.SPECIES, &pokemon.LEVEL, &pokemon.EXPERIENCE, &pokemon.ABILITY, &pokemon.FRIENDSHIP, &pokemon.GENDER, &pokemon.NATURE, &pokemon.HEIGHT, &pokemon.WEIGHT, &pokemon.ORIGINALTRAINER, &pokemon.SHINY, &pokemon.ITEM)
 	if err != nil {
 		log.Fatal(err)
 	}

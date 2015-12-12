@@ -15,7 +15,7 @@ type Player struct {
 	CONTROL   uint8
 	STATS     map[string]world.Stat
 	EFFECTS   []*world.Effect
-	WALKING   *world.Position
+	WALKING   *world.Point
 	ABILITIES map[string]*world.Ability
 	world.Events
 }
@@ -74,11 +74,11 @@ func (p *Player) Script() world.AiScript {
 	return func(e world.Entity, now time.Time) {}
 }
 
-func (p *Player) Walking() *world.Position {
+func (p *Player) Walking() *world.Point {
 	return p.WALKING
 }
 
-func (p *Player) SetWalking(walking *world.Position) {
+func (p *Player) SetWalking(walking *world.Point) {
 	p.WALKING = walking
 }
 

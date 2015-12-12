@@ -15,7 +15,7 @@ type PokemonEntity struct {
 	CONTROL     uint8
 	STATHANDLES map[string]world.Stat
 	EFFECTS     []*world.Effect
-	WALKING     *world.Position
+	WALKING     *world.Point
 	ABILITIES   map[string]*world.Ability
 }
 
@@ -79,11 +79,11 @@ func (p *PokemonEntity) Script() world.AiScript {
 	return func(e world.Entity, now time.Time) {}
 }
 
-func (p *PokemonEntity) Walking() *world.Position {
+func (p *PokemonEntity) Walking() *world.Point {
 	return p.WALKING
 }
 
-func (p *PokemonEntity) SetWalking(walking *world.Position) {
+func (p *PokemonEntity) SetWalking(walking *world.Point) {
 	p.WALKING = walking
 }
 

@@ -19,11 +19,11 @@ func LoadPlayer(id int) {
 
 	player := &entities.Player{
 		STATS:   make(map[string]world.Stat),
-		PHYSICS: &world.Physics{world.Position{}, world.Size{64, 64}, true},
+		PHYSICS: &world.Physics{world.Point{}, world.Size{64, 64}, true},
 	}
 
 	row := Connection.QueryRow("SELECT id, name, class, x, y FROM players WHERE id=?", id)
-	err := row.Scan(&player.BasicTrainer.ID, &player.NAME, &player.CLASS, &player.Physics().Position.X, &player.Physics().Position.Y)
+	err := row.Scan(&player.BasicTrainer.ID, &player.NAME, &player.CLASS, &player.Physics().Point.X, &player.Physics().Point.Y)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -44,7 +44,7 @@ func UnloadPlayer(entity world.Entity) {
 		return
 	}
 
-	_, err := Connection.Exec("UPDATE players SET class=?, x=?, y=? WHERE name=?", player.Class(), player.Physics().Position.X, player.Physics().Position.Y, player.Name())
+	_, err := Connection.Exec("UPDATE players SET class=?, x=?, y=? WHERE name=?", player.Class(), player.Physics().Point.X, player.Physics().Point.Y, player.Name())
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -15,11 +15,11 @@ const (
 
 type AiProfile struct {
 	AggressionLevel
-	IdleRange    float64
-	ChaseRange   float64
-	HomePosition *world.Position
-	Threat       map[int]int
-	Target       int
+	IdleRange  float64
+	ChaseRange float64
+	HomePoint  *world.Point
+	Threat     map[int]int
+	Target     int
 }
 
 type AiPokemonEntity struct {
@@ -84,11 +84,11 @@ func (e *AiPokemonEntity) Script() world.AiScript {
 	}
 }
 
-func (p *AiPokemonEntity) Walking() *world.Position {
+func (p *AiPokemonEntity) Walking() *world.Point {
 	return p.Entity.Walking()
 }
 
-func (p *AiPokemonEntity) SetWalking(walking *world.Position) {
+func (p *AiPokemonEntity) SetWalking(walking *world.Point) {
 	p.Entity.SetWalking(walking)
 }
 
