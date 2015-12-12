@@ -25,8 +25,10 @@ func LoadPokemon(pokemonId int) {
 			Size:     world.Size{64, 64},
 			Solid:    true,
 		},
+		BasicPokemon: ospokemon.BasicPokemon{
+			STATS: make(map[string]ospokemon.Stat),
+		},
 		STATHANDLES: make(map[string]world.Stat),
-		ABILITIES:   make(map[string]*world.Ability),
 	}
 
 	err := row.Scan(&pokemon.ID, &pokemon.NAME, &pokemon.PHYSICS.Position.X, &pokemon.PHYSICS.Position.Y, &pokemon.SPECIES, &pokemon.LEVEL, &pokemon.EXPERIENCE, &pokemon.ABILITY, &pokemon.FRIENDSHIP, &pokemon.GENDER, &pokemon.NATURE, &pokemon.HEIGHT, &pokemon.WEIGHT, &pokemon.ORIGINALTRAINER, &pokemon.SHINY, &pokemon.ITEM)
@@ -40,7 +42,7 @@ func LoadPokemon(pokemonId int) {
 	}
 
 	loadPokemonGraphics(pokemon)
-	pokemon.STATS = make(map[string]ospokemon.Stat)
+	loadPokemonAbilities(pokemon)
 
 	for rows.Next() {
 		stat_name := ""
@@ -93,5 +95,28 @@ func loadPokemonGraphics(pokemon *entities.PokemonEntity) {
 		Portrait:   animations[world.ANIMportrait],
 		Current:    animations[world.ANIMwalk_down],
 		Animations: animations,
+	}
+}
+
+func loadPokemonAbilities(pokemon *entities.PokemonEntity) {
+	rows, err := Connection.Query("SELECT spell_id, keybinding FROM pokemon_spells WHERE pokemon_id=?", pokemon.Id())
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	pokemon.ABILITIES = make(map[string]*world.Ability)
+
+	var spell_id int
+	var keybinding string
+	for rows.Next() {
+		err = rows.Scan(&spell_id, &keybinding)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		pokemon.Abilities()[keybinding] = &world.Ability{
+			Spell: Spells[spell_id],
+		}
 	}
 }
