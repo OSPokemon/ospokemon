@@ -2,6 +2,7 @@ package entities
 
 import (
 	// "github.com/ospokemon/api-go"
+	"github.com/ospokemon/ospokemon/physics"
 	"github.com/ospokemon/ospokemon/world"
 	"time"
 )
@@ -17,7 +18,7 @@ type AiProfile struct {
 	AggressionLevel
 	IdleRange  float64
 	ChaseRange float64
-	HomePoint  *world.Point
+	HomePoint  *physics.Point
 	Threat     map[int]int
 	Target     int
 }
@@ -84,11 +85,11 @@ func (e *AiPokemonEntity) Script() world.AiScript {
 	}
 }
 
-func (p *AiPokemonEntity) Walking() *world.Point {
+func (p *AiPokemonEntity) Walking() *physics.Point {
 	return p.Entity.Walking()
 }
 
-func (p *AiPokemonEntity) SetWalking(walking *world.Point) {
+func (p *AiPokemonEntity) SetWalking(walking *physics.Point) {
 	p.Entity.SetWalking(walking)
 }
 

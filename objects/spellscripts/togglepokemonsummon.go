@@ -2,6 +2,7 @@ package spellscripts
 
 import (
 	log "github.com/Sirupsen/logrus"
+	"github.com/ospokemon/ospokemon/physics"
 	"github.com/ospokemon/ospokemon/registry"
 	"github.com/ospokemon/ospokemon/world"
 	"strconv"
@@ -22,9 +23,9 @@ func TogglePokemonSummon(self world.Entity, t interface{}, now time.Time) {
 		spell.TargetData["EntityId"] = entityId
 		spell.TargetType = world.TRGTnone
 
-		newposition := t.(*world.Point)
-		pokemon.Physics().Point.X = newposition.X
-		pokemon.Physics().Point.Y = newposition.Y
+		newposition := t.(*physics.Point)
+		pokemon.Physics().Shape.(*physics.Rect).Anchor.X = newposition.X
+		pokemon.Physics().Shape.(*physics.Rect).Anchor.Y = newposition.Y
 
 		go self.(world.Eventer).Fire("SummonPokemon", entityId)
 

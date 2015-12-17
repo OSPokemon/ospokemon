@@ -1,8 +1,11 @@
 package world
 
 import (
+	"github.com/ospokemon/ospokemon/physics"
 	"time"
 )
+
+type AiScript func(Entity, time.Time)
 
 type Entity interface {
 	EntityId() int
@@ -36,8 +39,8 @@ type Intelligence interface {
 	Entity
 	mortality
 	Script() AiScript
-	Walking() *Point
-	SetWalking(p *Point)
+	Walking() *physics.Point
+	SetWalking(p *physics.Point)
 	Abilities() map[string]*Ability
 }
 
@@ -49,5 +52,3 @@ type Stat interface {
 	BaseMaxValue() int
 	SetBaseMaxValue(basemaxvalue int)
 }
-
-type AiScript func(Entity, time.Time)

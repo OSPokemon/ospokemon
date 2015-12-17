@@ -3,6 +3,7 @@ package loader
 import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/objects/entities"
+	"github.com/ospokemon/ospokemon/physics"
 	"github.com/ospokemon/ospokemon/registry"
 	"github.com/ospokemon/ospokemon/world"
 )
@@ -17,13 +18,14 @@ func LoadPlayer(id int) {
 		return
 	}
 
+	rect := physics.Rect{physics.Point{}, physics.Vector{1, 0}, 64, 64}
 	player := &entities.Player{
 		STATS:   make(map[string]world.Stat),
-		PHYSICS: &world.Physics{world.Point{}, world.Size{64, 64}, true},
+		PHYSICS: &world.Physics{&rect, true},
 	}
 
 	row := Connection.QueryRow("SELECT id, name, class, x, y FROM players WHERE id=?", id)
-	err := row.Scan(&player.BasicTrainer.ID, &player.NAME, &player.CLASS, &player.Physics().Point.X, &player.Physics().Point.Y)
+	err := row.Scan(&player.BasicTrainer.ID, &player.NAME, &player.CLASS, &rect.Anchor.X, &rect.Anchor.Y)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -44,7 +46,7 @@ func UnloadPlayer(entity world.Entity) {
 		return
 	}
 
-	_, err := Connection.Exec("UPDATE players SET class=?, x=?, y=? WHERE name=?", player.Class(), player.Physics().Point.X, player.Physics().Point.Y, player.Name())
+	_, err := Connection.Exec("UPDATE players SET class=?, x=?, y=? WHERE name=?", player.Class(), player.Physics().Shape.(*physics.Rect).Anchor.X, player.Physics().Shape.(*physics.Rect).Anchor.Y, player.Name())
 	if err != nil {
 		log.Fatal(err)
 	}

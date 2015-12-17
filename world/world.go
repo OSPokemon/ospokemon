@@ -33,5 +33,10 @@ func reserveEntityId() int {
 }
 
 func RemoveEntity(id int) {
+
+	log.WithFields(log.Fields{
+		"EntityId": id,
+	}).Debug("EntityId Cleared")
+
 	delete(Entities, id)
 }

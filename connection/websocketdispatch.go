@@ -2,6 +2,7 @@ package connection
 
 import (
 	log "github.com/Sirupsen/logrus"
+	"github.com/ospokemon/ospokemon/physics"
 	"github.com/ospokemon/ospokemon/world"
 )
 
@@ -28,7 +29,7 @@ func ReceiveMessage(name string, message map[string]interface{}) {
 
 	if message["walk"] != nil {
 		coords := message["walk"].(map[string]interface{})
-		walking := &world.Point{}
+		walking := &physics.Point{}
 		walking.X = coords["x"].(float64)
 		walking.Y = coords["y"].(float64)
 		entity.SetWalking(walking)
@@ -46,7 +47,7 @@ func ReceiveMessage(name string, message map[string]interface{}) {
 			}).Warn("Message received with unrecognized target type")
 			break
 		case map[string]interface{}:
-			action.Target = &world.Point{
+			action.Target = &physics.Point{
 				X: target["x"].(float64),
 				Y: target["y"].(float64),
 			}

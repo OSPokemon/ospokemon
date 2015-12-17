@@ -2,28 +2,25 @@ package effectscripts
 
 import (
 	log "github.com/Sirupsen/logrus"
+	"github.com/ospokemon/ospokemon/physics"
 	"github.com/ospokemon/ospokemon/update"
 	"github.com/ospokemon/ospokemon/world"
 	"time"
 )
 
-type moveeffect byte
-
-var Move moveeffect
-
-func (e moveeffect) New(vector *world.Vector, duration time.Duration) *world.Effect {
+func NewMoveEffect(name string, vector physics.Vector) *world.Effect {
 	return &world.Effect{
-		Name:     "Move",
+		Name:     name,
 		Priority: world.PRIOstandard,
 		Data: map[string]interface{}{
 			"Vector": vector,
 		},
-		Script:   Move.Script,
-		Duration: duration,
+		Script:   MoveScript,
+		Duration: 0,
 	}
 }
 
-func (h *moveeffect) Script(effect *world.Effect, entity world.Entity, now time.Time) {
+func MoveScript(effect *world.Effect, entity world.Entity, now time.Time) {
 	mortal, ok := entity.(world.Mortality)
 	if !ok {
 		log.WithFields(log.Fields{
@@ -35,7 +32,7 @@ func (h *moveeffect) Script(effect *world.Effect, entity world.Entity, now time.
 		return
 	}
 
-	vector, ok := effect.Data["Vector"].(*world.Vector)
+	vector, ok := effect.Data["Vector"].(physics.Vector)
 	if !ok {
 		log.WithFields(log.Fields{
 			"data": effect.Data,

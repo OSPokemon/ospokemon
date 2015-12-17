@@ -2,6 +2,7 @@ package entities
 
 import (
 	"github.com/ospokemon/api-go"
+	"github.com/ospokemon/ospokemon/physics"
 	"github.com/ospokemon/ospokemon/world"
 	"time"
 )
@@ -15,7 +16,7 @@ type Player struct {
 	CONTROL   uint8
 	STATS     map[string]world.Stat
 	EFFECTS   []*world.Effect
-	WALKING   *world.Point
+	WALKING   *physics.Point
 	ABILITIES map[string]*world.Ability
 	world.Events
 }
@@ -74,11 +75,11 @@ func (p *Player) Script() world.AiScript {
 	return func(e world.Entity, now time.Time) {}
 }
 
-func (p *Player) Walking() *world.Point {
+func (p *Player) Walking() *physics.Point {
 	return p.WALKING
 }
 
-func (p *Player) SetWalking(walking *world.Point) {
+func (p *Player) SetWalking(walking *physics.Point) {
 	p.WALKING = walking
 }
 

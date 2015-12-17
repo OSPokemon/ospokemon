@@ -1,6 +1,7 @@
 package world
 
 import (
+	"github.com/ospokemon/ospokemon/physics"
 	"math"
 )
 
@@ -22,7 +23,7 @@ type Graphics struct {
 	Animations map[AnimationType]string
 }
 
-func (v *Vector) AnimationType() AnimationType {
+func DirectionAnimation(v physics.Vector) AnimationType {
 	if math.Abs(v.DX) > math.Abs(v.DY) {
 		if v.DX > 0 {
 			return ANIMwalk_right

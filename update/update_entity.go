@@ -31,7 +31,13 @@ func updateApplicatorEntity(entity world.Applicator, now time.Time) {
 			continue
 		}
 
-		entity.Apply(entity2)
+		if CheckCollision(entity.Physics().Shape, entity2.Physics().Shape) {
+			log.WithFields(log.Fields{
+				"Applicator": entity.Name(),
+				"Target":     entity2.Name(),
+			}).Debug("Application triggered")
+			entity.Apply(entity2)
+		}
 	}
 }
 
@@ -44,7 +50,7 @@ func updateMortalEntity(entity world.Mortality, now time.Time) {
 func updateIntelligentEntity(entity world.Intelligence, now time.Time) {
 	resetIntelligentEntity(entity, now)
 
-	entity.Script()
+	entity.Script()(entity, now)
 
 	moved := maybeWalk(entity, now)
 
@@ -59,14 +65,14 @@ func resetMortalEntity(entity world.Mortality, now time.Time) {
 		if effect.Start == nil {
 			log.WithFields(log.Fields{
 				"entity": entity.Name(),
-				"effect": effect,
+				"effect": effect.Name,
 			}).Debug("Effect timer starts")
 			effect.Start = &now
 		}
 		if effect.Start.Add(effect.Duration).Before(now) {
 			log.WithFields(log.Fields{
 				"entity": entity.Name(),
-				"effect": effect,
+				"effect": effect.Name,
 			}).Debug("Effect falls off")
 		} else {
 			persisteffects = append(persisteffects, effect)
@@ -89,7 +95,7 @@ func applyEffectScripts(entity world.Mortality, now time.Time) {
 	for _, effect := range effects {
 		log.WithFields(log.Fields{
 			"entity": entity.Name(),
-			"effect": effect,
+			"effect": effect.Name,
 		}).Debug("Effect tick")
 		effect.Script(effect, entity, now)
 	}
@@ -125,15 +131,27 @@ func maybeWalk(entity world.Intelligence, now time.Time) bool {
 	}
 
 	speed := entity.Stats()["speed"].Value()
-	distance := world.GetDistance(&entity.Physics().Point, destination)
+	distance := distancePointShape(*destination, entity.Physics().Shape)
 
 	if float64(speed) > distance {
+		log.WithFields(log.Fields{
+			"Entity":   entity.Name(),
+			"Speed":    speed,
+			"Distance": distance,
+		}).Debug("Walking completed")
 		speed = int(distance)
-		entity.SetWalking(nil)
+		entity.SetWalking(nil) // done walking
+	} else {
+		log.WithFields(log.Fields{
+			"Entity":   entity.Name(),
+			"Speed":    speed,
+			"Distance": distance,
+			"Shape":    entity.Physics().Shape,
+		}).Debug("Walking step")
 	}
 
-	vector := world.CreatePathVector(&entity.Physics().Point, destination, speed)
-	entity.Graphics().Current = entity.Graphics().Animations[vector.AnimationType()]
+	vector := world.CreatePathVector(entity.Physics().Shape, *destination, speed)
+	entity.Graphics().Current = entity.Graphics().Animations[world.DirectionAnimation(vector)]
 
 	MoveEntity(entity, vector)
 	return true

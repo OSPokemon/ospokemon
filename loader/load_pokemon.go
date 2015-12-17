@@ -4,6 +4,7 @@ import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/ospokemon/api-go"
 	"github.com/ospokemon/ospokemon/objects/entities"
+	"github.com/ospokemon/ospokemon/physics"
 	"github.com/ospokemon/ospokemon/registry"
 	"github.com/ospokemon/ospokemon/world"
 )
@@ -18,20 +19,18 @@ func LoadPokemon(pokemonId int) {
 		return
 	}
 
+	rect := &physics.Rect{physics.Point{}, physics.Vector{1, 0}, 64, 64}
+
 	row := Connection.QueryRow("SELECT id, name, x, y, species, level, experience, ability, friendship, gender, nature, height, weight, originaltrainer, shiny, item FROM pokemon WHERE id=?", pokemonId)
 	pokemon := &entities.PokemonEntity{
-		PHYSICS: &world.Physics{
-			Point: world.Point{},
-			Size:  world.Size{64, 64},
-			Solid: true,
-		},
+		PHYSICS: &world.Physics{rect, true},
 		BasicPokemon: ospokemon.BasicPokemon{
 			STATS: make(map[string]ospokemon.Stat),
 		},
 		STATHANDLES: make(map[string]world.Stat),
 	}
 
-	err := row.Scan(&pokemon.ID, &pokemon.NAME, &pokemon.PHYSICS.Point.X, &pokemon.PHYSICS.Point.Y, &pokemon.SPECIES, &pokemon.LEVEL, &pokemon.EXPERIENCE, &pokemon.ABILITY, &pokemon.FRIENDSHIP, &pokemon.GENDER, &pokemon.NATURE, &pokemon.HEIGHT, &pokemon.WEIGHT, &pokemon.ORIGINALTRAINER, &pokemon.SHINY, &pokemon.ITEM)
+	err := row.Scan(&pokemon.ID, &pokemon.NAME, &rect.Anchor.X, &rect.Anchor.Y, &pokemon.SPECIES, &pokemon.LEVEL, &pokemon.EXPERIENCE, &pokemon.ABILITY, &pokemon.FRIENDSHIP, &pokemon.GENDER, &pokemon.NATURE, &pokemon.HEIGHT, &pokemon.WEIGHT, &pokemon.ORIGINALTRAINER, &pokemon.SHINY, &pokemon.ITEM)
 	if err != nil {
 		log.Fatal(err)
 	}

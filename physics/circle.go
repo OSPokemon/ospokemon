@@ -1,0 +1,26 @@
+package physics
+
+import (
+// "math"
+)
+
+type Circle struct {
+	Anchor Point
+	Radius float64
+}
+
+func (c Circle) Copy() Shape {
+	// center :=
+
+	return Circle{
+		Anchor: c.Anchor.Copy().(Point),
+		Radius: c.Radius,
+	}
+}
+
+func (c Circle) Move(v Vector) Shape {
+	return Circle{
+		Anchor: c.Anchor.Move(v).(Point),
+		Radius: c.Radius,
+	}
+}
