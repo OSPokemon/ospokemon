@@ -10,8 +10,6 @@ type Circle struct {
 }
 
 func (c Circle) Copy() Shape {
-	// center :=
-
 	return Circle{
 		Anchor: c.Anchor.Copy().(Point),
 		Radius: c.Radius,

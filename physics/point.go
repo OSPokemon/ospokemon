@@ -1,9 +1,5 @@
 package physics
 
-import (
-	"math"
-)
-
 type Point struct {
 	X float64
 	Y float64
@@ -21,10 +17,4 @@ func (p Point) Move(v Vector) Shape {
 		X: p.X + v.DX,
 		Y: p.Y + v.DY,
 	}
-}
-
-func DistancePointPoint(point1 Point, point2 Point) float64 {
-	dltx := point1.X - point2.X
-	dlty := point1.Y - point2.Y
-	return math.Sqrt((dlty * dlty) + (dltx * dltx))
 }

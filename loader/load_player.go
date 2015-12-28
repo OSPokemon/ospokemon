@@ -46,7 +46,7 @@ func UnloadPlayer(entity world.Entity) {
 		return
 	}
 
-	_, err := Connection.Exec("UPDATE players SET class=?, x=?, y=? WHERE name=?", player.Class(), player.Physics().Shape.(*physics.Rect).Anchor.X, player.Physics().Shape.(*physics.Rect).Anchor.Y, player.Name())
+	_, err := Connection.Exec("UPDATE players SET class=?, x=?, y=? WHERE name=?", player.Class(), player.Physics().Shape.(physics.Rect).Anchor.X, player.Physics().Shape.(*physics.Rect).Anchor.Y, player.Name())
 	if err != nil {
 		log.Fatal(err)
 	}

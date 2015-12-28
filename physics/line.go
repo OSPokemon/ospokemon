@@ -26,6 +26,19 @@ func (line Line) Vector() Vector {
 	}
 }
 
+func (line Line) Equation() func(float64) float64 {
+	if line.P2.X-line.P1.X == 0 {
+		return nil
+	} else {
+		return line.equation
+	}
+}
+
+func (line Line) equation(x float64) float64 {
+	m := (line.P2.Y - line.P1.Y) / (line.P2.X - line.P1.X)
+	return (m * (x - line.P1.X)) + line.P1.Y
+}
+
 func YIntersect(slope float64, point Point) float64 {
 	return point.Y - slope*point.X
 }

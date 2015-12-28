@@ -13,5 +13,3 @@ var AccountUnloader func(string)
 var Loaders = make(map[string]LoaderFunc)
 
 var Unloaders = make(map[string]UnloaderFunc)
-
-var UnloaderDispatch = make(map[int]string)

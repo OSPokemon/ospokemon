@@ -19,7 +19,7 @@ func LoadPokemon(pokemonId int) {
 		return
 	}
 
-	rect := &physics.Rect{physics.Point{}, physics.Vector{1, 0}, 64, 64}
+	rect := physics.Rect{physics.Point{}, physics.Vector{1, 0}, 64, 64}
 
 	row := Connection.QueryRow("SELECT id, name, x, y, species, level, experience, ability, friendship, gender, nature, height, weight, originaltrainer, shiny, item FROM pokemon WHERE id=?", pokemonId)
 	pokemon := &entities.PokemonEntity{
