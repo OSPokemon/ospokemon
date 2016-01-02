@@ -31,10 +31,6 @@ func updateApplicatorEntity(entity world.Applicator, now time.Time) {
 			continue
 		}
 
-		if entity.Name() == "Gust Wind" {
-			log.WithFields(log.Fields{}).Debug("Gust wind check collision ", entity2.Name(), DistanceShapeShape(entity.Physics().Shape, entity2.Physics().Shape))
-		}
-
 		if CheckCollision(entity.Physics().Shape, entity2.Physics().Shape) {
 			log.WithFields(log.Fields{
 				"Applicator": entity.Name(),

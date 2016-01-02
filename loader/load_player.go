@@ -8,35 +8,29 @@ import (
 	"github.com/ospokemon/ospokemon/world"
 )
 
-func init() {
-	registry.Loaders["Player"] = LoadPlayer
-	registry.Unloaders["Player"] = UnloadPlayer
-}
+func LoadPlayer(id int) *entities.Player {
+	if registry.Players[id] == nil {
+		player := &entities.Player{
+			STATS: make(map[string]world.Stat),
+		}
+		rect := physics.Rect{physics.Point{}, physics.Vector{1, 0}, 64, 64}
 
-func LoadPlayer(id int) {
-	if registry.Players[id] != nil {
-		return
+		row := Connection.QueryRow("SELECT id, name, class, x, y FROM players WHERE id=?", id)
+		err := row.Scan(&player.BasicTrainer.ID, &player.NAME, &player.CLASS, &rect.Anchor.X, &rect.Anchor.Y)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		player.PHYSICS = &world.Physics{rect, true}
+		loadPlayerGraphics(player)
+		loadPlayerStats(player)
+		loadPlayerPokemon(player)
+		loadPlayerAbilities(player)
+
+		registry.Players[id] = player
 	}
 
-	rect := physics.Rect{physics.Point{}, physics.Vector{1, 0}, 64, 64}
-	player := &entities.Player{
-		STATS:   make(map[string]world.Stat),
-		PHYSICS: &world.Physics{&rect, true},
-	}
-
-	row := Connection.QueryRow("SELECT id, name, class, x, y FROM players WHERE id=?", id)
-	err := row.Scan(&player.BasicTrainer.ID, &player.NAME, &player.CLASS, &rect.Anchor.X, &rect.Anchor.Y)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// loadPlayerPhysics(player) // handled
-	loadPlayerGraphics(player)
-	loadPlayerStats(player)
-	loadPlayerPokemon(player)
-	loadPlayerAbilities(player)
-
-	registry.Players[id] = player
+	return registry.Players[id]
 }
 
 func UnloadPlayer(entity world.Entity) {

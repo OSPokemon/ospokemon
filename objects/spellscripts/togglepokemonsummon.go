@@ -23,10 +23,10 @@ func TogglePokemonSummon(self world.Entity, t interface{}, now time.Time) {
 		spell.TargetData["EntityId"] = entityId
 		spell.TargetType = world.TRGTnone
 
-		newposition := t.(*physics.Point)
+		newposition := t.(physics.Point)
 		oldrect := pokemon.Physics().Shape.(physics.Rect)
-		newrotation := (physics.Line{oldrect.Anchor, *newposition}).Vector()
-		newrect := physics.Rect{*newposition, newrotation, oldrect.Height, oldrect.Width}
+		newrotation := physics.Vector{1, 0}
+		newrect := physics.Rect{newposition, newrotation, oldrect.Height, oldrect.Width}
 		pokemon.Physics().Shape = newrect
 
 		go self.(world.Eventer).Fire("SummonPokemon", entityId)

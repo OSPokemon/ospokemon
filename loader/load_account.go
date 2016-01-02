@@ -2,20 +2,15 @@ package loader
 
 import (
 	log "github.com/Sirupsen/logrus"
-	"github.com/ospokemon/ospokemon/objects/auth"
-	"github.com/ospokemon/ospokemon/registry"
+	"github.com/ospokemon/ospokemon/server"
 )
 
-func init() {
-	registry.AccountLoader = LoadAccount
-}
-
 func LoadAccount(name string) {
-	if registry.Accounts[name] != nil {
+	if server.Accounts[name] != nil {
 		return
 	}
 
-	account := &auth.Account{}
+	account := &server.Account{}
 
 	row := Connection.QueryRow("SELECT id, name, password FROM players WHERE name=?", name)
 	err := row.Scan(&account.PlayerId, &account.Username, &account.Password)
@@ -23,5 +18,5 @@ func LoadAccount(name string) {
 		log.Fatal(err)
 	}
 
-	registry.Accounts[name] = account
+	server.Accounts[name] = account
 }

@@ -9,53 +9,31 @@ import (
 	"github.com/ospokemon/ospokemon/world"
 )
 
-func init() {
-	registry.Loaders["Pokemon"] = LoadPokemon
-	registry.Unloaders["Pokemon"] = UnloadPokemon
-}
+func LoadPokemon(pokemonId int) *entities.PokemonEntity {
+	if registry.Pokemon[pokemonId] == nil {
+		pokemon := &entities.PokemonEntity{
+			BasicPokemon: ospokemon.BasicPokemon{
+				STATS: make(map[string]ospokemon.Stat),
+			},
+			STATHANDLES: make(map[string]world.Stat),
+		}
+		rect := physics.Rect{physics.Point{}, physics.Vector{1, 0}, 64, 64}
 
-func LoadPokemon(pokemonId int) {
-	if registry.Pokemon[pokemonId] != nil {
-		return
+		row := Connection.QueryRow("SELECT id, name, x, y, species, level, experience, ability, friendship, gender, nature, height, weight, originaltrainer, shiny, item FROM pokemon WHERE id=?", pokemonId)
+		err := row.Scan(&pokemon.ID, &pokemon.NAME, &rect.Anchor.X, &rect.Anchor.Y, &pokemon.SPECIES, &pokemon.LEVEL, &pokemon.EXPERIENCE, &pokemon.ABILITY, &pokemon.FRIENDSHIP, &pokemon.GENDER, &pokemon.NATURE, &pokemon.HEIGHT, &pokemon.WEIGHT, &pokemon.ORIGINALTRAINER, &pokemon.SHINY, &pokemon.ITEM)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		pokemon.PHYSICS = &world.Physics{rect, true}
+		loadPokemonGraphics(pokemon)
+		loadPokemonAbilities(pokemon)
+		loadPokemonStats(pokemon)
+
+		registry.Pokemon[pokemonId] = pokemon
 	}
 
-	rect := physics.Rect{physics.Point{}, physics.Vector{1, 0}, 64, 64}
-
-	row := Connection.QueryRow("SELECT id, name, x, y, species, level, experience, ability, friendship, gender, nature, height, weight, originaltrainer, shiny, item FROM pokemon WHERE id=?", pokemonId)
-	pokemon := &entities.PokemonEntity{
-		PHYSICS: &world.Physics{rect, true},
-		BasicPokemon: ospokemon.BasicPokemon{
-			STATS: make(map[string]ospokemon.Stat),
-		},
-		STATHANDLES: make(map[string]world.Stat),
-	}
-
-	err := row.Scan(&pokemon.ID, &pokemon.NAME, &rect.Anchor.X, &rect.Anchor.Y, &pokemon.SPECIES, &pokemon.LEVEL, &pokemon.EXPERIENCE, &pokemon.ABILITY, &pokemon.FRIENDSHIP, &pokemon.GENDER, &pokemon.NATURE, &pokemon.HEIGHT, &pokemon.WEIGHT, &pokemon.ORIGINALTRAINER, &pokemon.SHINY, &pokemon.ITEM)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	rows, err := Connection.Query("SELECT stat, ev, iv, value FROM pokemon_stats WHERE pokemon_id=?", pokemonId)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	loadPokemonGraphics(pokemon)
-	loadPokemonAbilities(pokemon)
-
-	for rows.Next() {
-		stat_name := ""
-		stat := &ospokemon.BasicStat{}
-		err = rows.Scan(&stat_name, &stat.EV, &stat.IV, &stat.VALUE)
-
-		pokemon.BasicPokemon.STATS[stat_name] = stat
-	}
-
-	registry.Pokemon[pokemonId] = pokemon
-
-	log.WithFields(log.Fields{
-		"Pokemon": pokemon,
-	}).Debug("Pokemon built")
+	return registry.Pokemon[pokemonId]
 }
 
 func UnloadPokemon(entity world.Entity) {
@@ -117,5 +95,20 @@ func loadPokemonAbilities(pokemon *entities.PokemonEntity) {
 		pokemon.Abilities()[keybinding] = &world.Ability{
 			Spell: Spells[spell_id],
 		}
+	}
+}
+
+func loadPokemonStats(pokemon *entities.PokemonEntity) {
+	rows, err := Connection.Query("SELECT stat, ev, iv, value FROM pokemon_stats WHERE pokemon_id=?", pokemon.Id())
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for rows.Next() {
+		var stat_name string
+		stat := &ospokemon.BasicStat{}
+		err = rows.Scan(&stat_name, &stat.EV, &stat.IV, &stat.VALUE)
+
+		pokemon.BasicPokemon.STATS[stat_name] = stat
 	}
 }

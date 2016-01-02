@@ -16,7 +16,7 @@ func init() {
 
 func Gust(self world.Entity, t interface{}, now time.Time) {
 	startpoint := self.Physics().Shape.(physics.Rect).Anchor
-	endpoint := *t.(*physics.Point)
+	endpoint := t.(physics.Point)
 
 	line := physics.Line{startpoint, endpoint}
 	vector := line.Vector()
