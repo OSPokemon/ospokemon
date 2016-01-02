@@ -97,8 +97,21 @@ func TestDistanceLineLine(test *testing.T) {
 
 	line7 := Line{Point{100, 100}, Point{100, 500}}
 	line8 := Line{Point{0, 0}, Point{500, 0}}
-
 	if distance := DistanceLineLine(line7, line8); distance != 100 {
 		test.Error("Distance between vertical/horizontal lines expected 100 got", distance)
+	}
+
+	// real world example
+	line1 = Line{Point{461, 480}, Point{461, 544}}
+	line2 = Line{Point{238, 385}, Point{181, 355}}
+	if distance := math.Floor(DistanceLineLine(line1, line2)); distance != 242 {
+		test.Error("Distance expected 242 got", distance)
+	}
+
+	// real world example
+	line1 = Line{Point{483, 325}, Point{547, 325}}
+	line2 = Line{Point{661, 312}, Point{719, 339}}
+	if distance := math.Floor(DistanceLineLine(line1, line2)); distance != 114 {
+		test.Error("Distance expected 114 got", distance)
 	}
 }

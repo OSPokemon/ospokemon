@@ -71,13 +71,21 @@ func DistanceLineLine(line1 Line, line2 Line) float64 {
 			x := line1.P1.X
 			y := eq2(x)
 
-			return math.Min(DistancePointLine(Point{x, y}, line1), edgedist)
+			if y >= math.Min(line1.P1.Y, line1.P2.Y) && y <= math.Max(line1.P1.Y, line1.P2.Y) {
+				edgedist = math.Min(edgedist, DistancePointLine(Point{x, y}, line2))
+			}
+
+			return edgedist
 		}
 	} else if eq2 == nil {
 		x := line2.P1.X
 		y := eq1(x)
 
-		return math.Min(DistancePointLine(Point{x, y}, line2), edgedist)
+		if y >= math.Min(line2.P1.Y, line2.P2.Y) && y <= math.Max(line2.P1.Y, line2.P2.Y) {
+			edgedist = math.Min(edgedist, DistancePointLine(Point{x, y}, line1))
+		}
+
+		return edgedist
 	}
 
 	if line1slope := line1.Vector().AsSlope(); line1slope == 0 {
@@ -87,13 +95,21 @@ func DistanceLineLine(line1 Line, line2 Line) float64 {
 			y := line1.P1.Y
 			x := (y - line2.P1.Y + line2slope*line2.P1.X) / line2slope
 
-			return math.Min(DistancePointLine(Point{x, y}, line2), edgedist)
+			if x >= math.Min(line1.P1.X, line1.P2.X) && x <= math.Max(line1.P1.X, line1.P2.X) {
+				edgedist = math.Min(edgedist, DistancePointLine(Point{x, y}, line2))
+			}
+
+			return edgedist
 		}
 	} else if line2.Vector().AsSlope() == 0 {
 		y := line2.P1.Y
 		x := (y - line1.P1.Y + line1slope*line1.P1.X) / line1slope
 
-		return math.Min(DistancePointLine(Point{x, y}, line1), edgedist)
+		if x >= math.Min(line2.P1.X, line2.P2.X) && x <= math.Max(line2.P1.X, line2.P2.X) {
+			edgedist = math.Min(edgedist, DistancePointLine(Point{x, y}, line1))
+		}
+
+		return edgedist
 	}
 
 	x := pointsSlopesIntersect(line1.Vector().AsSlope(), line2.Vector().AsSlope(), line1.P1, line2.P1)
