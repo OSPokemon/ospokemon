@@ -38,6 +38,11 @@ var LoginHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request)
 	session := CreateSession(username)
 	Sessions[session.SessionId] = session
 
+	log.WithFields(log.Fields{
+		"Account": session.Username,
+		"Session": session.SessionId,
+	}).Info("Session created")
+
 	w.Header().Set("Set-Cookie", "SessionId="+strconv.Itoa(session.SessionId))
 	http.Redirect(w, r, "/play/", http.StatusMovedPermanently)
 })

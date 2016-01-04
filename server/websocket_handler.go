@@ -31,22 +31,30 @@ var WebsocketHandler = websocket.Handler(func(conn *websocket.Conn) {
 
 	client := CreateClient(conn, session)
 
+	log.WithFields(log.Fields{
+		"Session": client.SessionId,
+		"Client":  client.ClientId,
+	}).Info("Client created")
+
 	ConnectClient(client)
 	listenClient(client)
 	DisconnectClient(client)
+
+	log.WithFields(log.Fields{
+		"Session": client.SessionId,
+		"Client":  client.ClientId,
+	}).Info("Client closed")
 
 	delete(Clients, session.ClientId)
 	conn.Close()
 })
 
 func listenClient(c *Client) {
-	var message map[string]interface{}
-
 	for {
+		var message map[string]interface{}
 		err := websocket.JSON.Receive(c.Conn, &message)
 
 		if err != nil {
-			log.Println("WSclient connection closed")
 			return
 		} else {
 			go ReceiveMessage(c, message)

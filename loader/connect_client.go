@@ -5,7 +5,6 @@ import (
 	"github.com/ospokemon/ospokemon/registry"
 	"github.com/ospokemon/ospokemon/server"
 	"github.com/ospokemon/ospokemon/world"
-	"log"
 )
 
 func ConnectClient(client *server.Client) {
@@ -25,7 +24,6 @@ func ConnectClient(client *server.Client) {
 }
 
 func DisconnectClient(client *server.Client) {
-	log.Println("DisconnectClient")
 	session := server.Sessions[client.SessionId]
 	account := server.Accounts[session.Username]
 	player := registry.Players[account.PlayerId]

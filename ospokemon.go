@@ -22,8 +22,7 @@ func main() {
 		log.SetLevel(log.DebugLevel)
 	}
 
-	tickSize := 250
-	go Loop(time.Duration(tickSize) * time.Millisecond)
+	go Loop(time.Duration(250) * time.Millisecond)
 
 	http.Handle("/", http.FileServer(http.Dir(path)))
 	http.Handle("/connect", server.WebsocketHandler)
