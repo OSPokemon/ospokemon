@@ -23,9 +23,7 @@ var LoginHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request)
 	}
 
 	username := r.FormValue("username")
-	password := r.FormValue("password")
-	// hash := md5.Sum([]byte(password))
-	// password = string(hash[:])
+	password := HashPassword(r.FormValue("password"))
 
 	if _, err := LoginAccount(username, password); err != nil {
 		log.WithFields(log.Fields{

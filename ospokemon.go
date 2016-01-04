@@ -27,6 +27,7 @@ func main() {
 	http.Handle("/", http.FileServer(http.Dir(path)))
 	http.Handle("/connect", server.WebsocketHandler)
 	http.Handle("/login", server.LoginHandler)
+	http.Handle("/signup", server.SignupHandler)
 	http.ListenAndServe(":"+port, nil)
 }
 
@@ -40,6 +41,7 @@ func readFlags() {
 
 func configureLoader() {
 	server.LoginAccount = loader.LoginAccount
+	server.DoSignup = loader.DoSignup
 	server.ConnectClient = loader.ConnectClient
 	server.DisconnectClient = loader.DisconnectClient
 	server.ReceiveMessage = update.ReceiveMessage

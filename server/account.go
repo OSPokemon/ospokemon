@@ -10,6 +10,7 @@ type Account struct {
 }
 
 var LoginAccount func(username string, password string) (*Account, error)
+var MakeAccount func(username string, password string) (*Account, error)
 
 func LogoutAccount(account *Account) {
 	if account.SessionId > 0 {
