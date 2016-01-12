@@ -1,20 +1,37 @@
 package server
 
-var Accounts = make(map[string]*Account)
+import (
+	log "github.com/Sirupsen/logrus"
+	"time"
+)
 
 type Account struct {
-	PlayerId  int
-	Username  string
-	Password  string
-	SessionId int
+	Username    string
+	Password    string
+	Register    time.Time
+	SessionId   int
+	PlayerIds   []int
+	PlayerId    int
+	Permissions map[string]bool
 }
 
-var LoginAccount func(username string, password string) (*Account, error)
-var MakeAccount func(username string, password string) (*Account, error)
+var Accounts = make(map[string]*Account)
 
-func LogoutAccount(account *Account) {
-	if account.SessionId > 0 {
-		delete(Sessions, account.SessionId)
+var LoadAccount func(username string) (*Account, error)
+var CreateAccount func(username string, password string) (*Account, error)
+var ChangePassword func(account *Account) error
+
+func GetAccount(username string) *Account {
+	if Accounts[username] == nil {
+		if account, err := LoadAccount(username); err == nil {
+			Accounts[username] = account
+		} else {
+			log.WithFields(log.Fields{
+				"Username": username,
+				"Error":    err.Error(),
+			}).Info("Account lookup failed")
+		}
 	}
-	delete(Accounts, account.Username)
+
+	return Accounts[username]
 }

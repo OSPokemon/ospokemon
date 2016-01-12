@@ -5,30 +5,26 @@ import (
 	"github.com/cznic/mathutil"
 )
 
-var Clients = make(map[int]*Client)
-var clientIdGen, _ = mathutil.NewFC32(0, 999999, true)
-
 type Client struct {
 	ClientId  int
 	SessionId int
 	Entities  []int
 	Conn      *websocket.Conn
-	Close     chan bool
 }
+
+var Clients = make(map[int]*Client)
+var clientIdGen, _ = mathutil.NewFC32(1, 999999999, true)
 
 var ConnectClient func(client *Client)
 var DisconnectClient func(client *Client)
-var ReceiveMessage func(c *Client, message map[string]interface{})
+var ReceiveMessage func(username string, message map[string]interface{})
 
-func CreateClient(conn *websocket.Conn, session *Session) *Client {
-	if session == nil || session.Username == "" {
-		return nil
-	} else {
-		session.ClientId = clientIdGen.Next()
+func CreateClient(conn *websocket.Conn) *Client {
+	return &Client{
+		ClientId: clientIdGen.Next(),
+		Entities: make([]int, 0),
+		Conn:     conn,
 	}
-
-	Clients[session.ClientId] = &Client{session.ClientId, session.SessionId, make([]int, 0), conn, make(chan bool)}
-	return Clients[session.ClientId]
 }
 
 func (c *Client) AddEntity(entityId interface{}) {
@@ -36,9 +32,9 @@ func (c *Client) AddEntity(entityId interface{}) {
 }
 
 func (c *Client) RemoveEntity(entityId interface{}) {
-	for position := 0; position < len(c.Entities); position++ {
-		if c.Entities[position] == entityId {
-			c.Entities[position] = c.Entities[len(c.Entities)-1]
+	for i := 0; i < len(c.Entities); i++ {
+		if c.Entities[i] == entityId {
+			c.Entities[i] = c.Entities[len(c.Entities)-1]
 			c.Entities = c.Entities[:len(c.Entities)-1]
 			return
 		}
