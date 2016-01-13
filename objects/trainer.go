@@ -8,11 +8,12 @@ import (
 )
 
 type Trainer struct {
-	ENTITYID  int
-	GRAPHIC   string
-	COLLISION engine.Collision
-	MAP       string
-	SHAPE     physics.Shape
+	ACCOUNTNAME string
+	ENTITYID    int
+	GRAPHIC     string
+	COLLISION   engine.Collision
+	MAP         string
+	SHAPE       physics.Shape
 	ospokemon.BasicTrainer
 	ACTION    *engine.Action
 	CONTROL   engine.Control
@@ -27,8 +28,12 @@ type Trainer struct {
 var Trainers = make(map[int]*Trainer)
 
 var LoadTrainer func(id int) (*Trainer, error)
-var CreateTrainer func(name string, class int) (*Trainer, error)
+var CreateTrainer func(accountname string, name string, class int) (*Trainer, error)
 var SaveTrainer func(trainer *Trainer) error
+
+func (p *Trainer) AccountName() string {
+	return p.ACCOUNTNAME
+}
 
 // Trainer is an Entity
 

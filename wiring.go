@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/ospokemon/api-go"
 	"github.com/ospokemon/ospokemon/db"
 	"github.com/ospokemon/ospokemon/engine"
 	"github.com/ospokemon/ospokemon/linker"
@@ -15,6 +14,10 @@ func wiring() {
 	server.ChangePassword = db.ChangePassword
 	server.ConnectClient = linker.ConnectClient
 	server.ReceiveMessage = engine.ReceiveMessage
-	ospokemon.LoadSpecies = db.LoadSpecies
+	objects.GetSpeciesIds = db.GetSpeciesIds
+	objects.LoadSpecies = db.LoadSpecies
 	objects.LoadTrainer = db.LoadTrainer
+	objects.CreateTrainer = db.CreateTrainer
+	objects.MakePokemon = linker.MakePokemon
+	objects.SavePokemon = db.SavePokemon
 }

@@ -11,8 +11,10 @@ func routes() {
 	http.Handle("/login.go", server.LoginHandler)
 	http.Handle("/logout.go", server.LogoutHandler)
 	http.Handle("/account.json", server.AccountHandler)
+	http.Handle("/all-species.json", server.AllSpeciesHandler)
 	http.Handle("/trainer/", server.TrainerHandler)
-	http.Handle("/choose-profile.go", server.ChooseProfileHandler)
+	http.Handle("/choose-trainer.go", server.ChooseTrainerHandler)
+	http.Handle("/create-trainer.go", server.CreateTrainerHandler)
 	http.Handle("/change-password.go", server.ChangePasswordHandler)
 	http.Handle("/websocket.go", server.WebsocketHandler)
 }

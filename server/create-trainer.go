@@ -27,11 +27,15 @@ var CreateTrainerHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.
 	name := r.FormValue("name")
 	class, err := strconv.ParseInt(r.FormValue("class"), 10, 0)
 	if err != nil {
-		http.Redirect(w, r, "/create-trainer", http.StatusMovedPermanently)
-		return
+		w.WriteHeader(500)
+		w.Write([]byte(err.Error()))
 	}
 
-	trainer, err := objects.CreateTrainer(name, int(class))
+	if objects.CreateTrainer == nil {
+		w.Write([]byte("SHIT"))
+	}
+
+	trainer, err := objects.CreateTrainer(session.Username, name, int(class))
 	if err != nil {
 		w.WriteHeader(500)
 		w.Write([]byte(err.Error()))
@@ -45,9 +49,11 @@ var CreateTrainerHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.
 		return
 	}
 
-	pokemon, err := objects.MakePokemon(int(speciesId))
+	pokemonname := r.FormValue("pokemonname")
+
+	pokemon, err := objects.MakePokemon(pokemonname, int(speciesId))
 	pokemon.ORIGINALTRAINER = trainer.ID
 	err = objects.SavePokemon(pokemon)
 
-	http.Redirect(w, r, "/login", http.StatusMovedPermanently)
+	http.Redirect(w, r, "/dashboard", http.StatusMovedPermanently)
 })

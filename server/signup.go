@@ -28,5 +28,5 @@ var SignupHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request
 		"Username": account.Username,
 	}).Info("Account created")
 
-	http.Redirect(w, r, "/login", http.StatusMovedPermanently)
+	http.Redirect(w, r, "/dashboard", http.StatusMovedPermanently)
 })

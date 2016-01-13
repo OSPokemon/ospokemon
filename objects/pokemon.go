@@ -24,7 +24,7 @@ type Pokemon struct {
 var Pokemons = make(map[int]*Pokemon)
 
 var LoadPokemon func(pokemonId int) (*Pokemon, error)
-var MakePokemon func(speciesId int) (*Pokemon, error) // called Make because its not supposed to database
+var MakePokemon func(name string, speciesId int) (*Pokemon, error) // called Make because its not supposed to database
 var SavePokemon func(pokemon *Pokemon) error
 
 // Pokemon is an entity

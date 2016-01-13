@@ -39,6 +39,7 @@ var TrainerHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Reques
 	resp["Name"] = trainer.Name()
 	resp["Map"] = trainer.Map()
 	resp["Pokemon"] = trainer.Pokemon()
+	resp["Money"] = trainer.Money()
 	resp["Portrait"] = trainer.Graphics()["portrait"]
 
 	trainerJson, _ := json.Marshal(resp)

@@ -1,6 +1,7 @@
 package db
 
 import (
+	"github.com/ospokemon/api-go"
 	"github.com/ospokemon/ospokemon/engine"
 	"github.com/ospokemon/ospokemon/objects"
 	"github.com/ospokemon/ospokemon/physics"
@@ -8,14 +9,15 @@ import (
 
 func LoadTrainer(trainerId int) (*objects.Trainer, error) {
 	trainer := &objects.Trainer{
-		STATS:     make(map[string]*engine.Stat),
-		COLLISION: engine.CLSNfluid,
-		GRAPHICS:  make(map[engine.AnimationType]string),
+		BasicTrainer: ospokemon.MakeBasicTrainer("", 0),
+		STATS:        make(map[string]*engine.Stat),
+		COLLISION:    engine.CLSNfluid,
+		GRAPHICS:     make(map[engine.AnimationType]string),
 	}
 	rect := physics.Rect{physics.Point{}, physics.Vector{1, 0}, 64, 64}
 
-	row := Connection.QueryRow("SELECT id, name, class, x, y, map FROM trainers WHERE id=?", trainerId)
-	err := row.Scan(&trainer.BasicTrainer.ID, &trainer.NAME, &trainer.CLASS, &rect.Anchor.X, &rect.Anchor.Y, &trainer.MAP)
+	row := Connection.QueryRow("SELECT id, username, name, class, money, x, y, map FROM trainers WHERE id=?", trainerId)
+	err := row.Scan(&trainer.BasicTrainer.ID, &trainer.ACCOUNTNAME, &trainer.NAME, &trainer.CLASS, &trainer.MONEY, &rect.Anchor.X, &rect.Anchor.Y, &trainer.MAP)
 	if err != nil {
 		return nil, err
 	}

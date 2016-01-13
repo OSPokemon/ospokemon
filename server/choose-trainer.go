@@ -5,7 +5,7 @@ import (
 	"strconv"
 )
 
-var ChooseProfileHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+var ChooseTrainerHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		w.WriteHeader(404)
 		return
