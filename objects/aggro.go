@@ -23,12 +23,12 @@ import (
 // 	Target     int
 // }
 
-// type AiPokemonEntity struct {
-// 	PokemonEntity
+// type AiPokemon struct {
+// 	Pokemon
 // 	Profile *AiProfile
 // }
 
-// func (e *AiPokemonEntity) Script() world.AiScript {
+// func (e *AiPokemon) Script() world.AiScript {
 // 	switch e.Profile.AggressionLevel {
 // 	case AGGROpassive:
 // 		return UpdateAggressiveAi

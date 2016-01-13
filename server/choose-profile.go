@@ -19,7 +19,7 @@ var ChooseProfileHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.
 		return
 	}
 
-	playerId, err := strconv.ParseInt(r.FormValue("PlayerId"), 10, 0)
+	TrainerId, err := strconv.ParseInt(r.FormValue("TrainerId"), 10, 0)
 
 	if err != nil {
 		w.WriteHeader(500)
@@ -30,16 +30,16 @@ var ChooseProfileHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.
 	session := Sessions[sessionId]
 	account := Accounts[session.Username]
 
-	validPlayerId := false
-	for _, id2 := range account.PlayerIds {
-		validPlayerId = validPlayerId || int(playerId) == id2
+	validTrainerId := false
+	for _, id2 := range account.TrainerIds {
+		validTrainerId = validTrainerId || int(TrainerId) == id2
 	}
 
-	if !validPlayerId {
+	if !validTrainerId {
 		w.WriteHeader(500)
 		w.Write([]byte("Cannot control that profile"))
 	}
 
-	account.PlayerId = int(playerId)
+	account.TrainerId = int(TrainerId)
 	http.Redirect(w, r, "/play", http.StatusMovedPermanently)
 })

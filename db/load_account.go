@@ -9,7 +9,7 @@ func LoadAccount(username string) (*server.Account, error) {
 	row := Connection.QueryRow("SELECT username, password, register FROM accounts WHERE username=?", username)
 
 	account := &server.Account{
-		PlayerIds:   make([]int, 0),
+		TrainerIds:  make([]int, 0),
 		Permissions: make(map[string]bool),
 	}
 	t := 0
@@ -20,15 +20,15 @@ func LoadAccount(username string) (*server.Account, error) {
 	}
 	account.Register = time.Unix(int64(t), 0)
 
-	rows, err := Connection.Query("SELECT playerid FROM players WHERE username=?", username)
+	rows, err := Connection.Query("SELECT id FROM trainers WHERE username=?", username)
 	if err != nil {
 		return nil, err
 	}
 
 	for rows.Next() {
-		var playerId int
-		rows.Scan(&playerId)
-		account.PlayerIds = append(account.PlayerIds, playerId)
+		var TrainerId int
+		rows.Scan(&TrainerId)
+		account.TrainerIds = append(account.TrainerIds, TrainerId)
 	}
 
 	rows, err = Connection.Query("SELECT permission FROM accounts_permissions WHERE username=?", username)

@@ -10,8 +10,8 @@ type Account struct {
 	Password    string
 	Register    time.Time
 	SessionId   int
-	PlayerIds   []int
-	PlayerId    int
+	TrainerIds  []int
+	TrainerId   int
 	Permissions map[string]bool
 }
 

@@ -26,8 +26,8 @@ var WebsocketHandler = websocket.Handler(func(conn *websocket.Conn) {
 		return
 	}
 
-	if account.PlayerId < 1 {
-		log.Info("Websocket connection rejected: PlayerId missing")
+	if account.TrainerId < 1 {
+		log.Info("Websocket connection rejected: TrainerId missing")
 		return
 	}
 
