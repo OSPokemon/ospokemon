@@ -16,12 +16,21 @@ var CreateTrainerHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.
 	if sessionId < 1 {
 		w.WriteHeader(500)
 		w.Write([]byte("SessionId missing"))
+		return
 	}
 
 	session := Sessions[sessionId]
 	if session == nil {
 		w.WriteHeader(500)
 		w.Write([]byte("Session missing"))
+		return
+	}
+
+	account := Accounts[session.Username]
+	if account == nil {
+		w.WriteHeader(500)
+		w.Write([]byte("Account missing"))
+		return
 	}
 
 	name := r.FormValue("name")
@@ -29,10 +38,7 @@ var CreateTrainerHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.
 	if err != nil {
 		w.WriteHeader(500)
 		w.Write([]byte(err.Error()))
-	}
-
-	if objects.CreateTrainer == nil {
-		w.Write([]byte("SHIT"))
+		return
 	}
 
 	trainer, err := objects.CreateTrainer(session.Username, name, int(class))
@@ -54,6 +60,13 @@ var CreateTrainerHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.
 	pokemon, err := objects.MakePokemon(pokemonname, int(speciesId))
 	pokemon.ORIGINALTRAINER = trainer.ID
 	err = objects.SavePokemon(pokemon)
+	if err != nil {
+		w.WriteHeader(500)
+		w.Write([]byte(err.Error()))
+		return
+	}
 
-	http.Redirect(w, r, "/dashboard", http.StatusMovedPermanently)
+	account.TrainerIds = append(account.TrainerIds, trainer.Id())
+
+	// http.Redirect(w, r, "/dashboard", http.StatusMovedPermanently)
 })

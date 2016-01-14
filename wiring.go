@@ -18,6 +18,7 @@ func wiring() {
 	objects.LoadSpecies = db.LoadSpecies
 	objects.LoadTrainer = db.LoadTrainer
 	objects.CreateTrainer = db.CreateTrainer
+	objects.LoadPokemon = db.LoadPokemon
 	objects.MakePokemon = linker.MakePokemon
 	objects.SavePokemon = db.SavePokemon
 	objects.LoadClass = db.LoadClass

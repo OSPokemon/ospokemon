@@ -1,6 +1,7 @@
 package engine
 
 import (
+	log "github.com/Sirupsen/logrus"
 	"time"
 )
 
@@ -24,16 +25,17 @@ type Spell struct {
 	Script      SpellScript
 }
 
-func GetSpell(spellId int) (*Spell, error) {
-	if Spells[spellId] != nil {
-		return Spells[spellId], nil
+func GetSpell(spellId int) *Spell {
+	if Spells[spellId] == nil {
+		if spell, err := LoadSpell(spellId); err == nil {
+			Spells[spellId] = spell
+		} else {
+			log.WithFields(log.Fields{
+				"SpellId": spellId,
+				"Error":   err.Error(),
+			}).Info("Spell lookup failed")
+		}
 	}
 
-	spell, err := LoadSpell(spellId)
-
-	if err == nil {
-		Spells[spellId] = spell
-	}
-
-	return spell, err
+	return Spells[spellId]
 }
