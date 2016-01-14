@@ -24,15 +24,10 @@ func LoadTrainer(trainerId int) (*objects.Trainer, error) {
 
 	trainer.SHAPE = rect
 
-	rows, err := Connection.Query("SELECT anim, image FROM trainer_animations WHERE trainerclass=?", trainer.CLASS)
-	if err != nil {
-		return nil, err
-	}
-
-	for rows.Next() {
-		var anim, image string
-		rows.Scan(&anim, &image)
-		trainer.GRAPHICS[engine.AnimationType(anim)] = image
+	// loadTrainerGraphics
+	class := objects.GetClass(trainer.Class())
+	for animationType, image := range class.Graphics {
+		trainer.GRAPHICS[animationType] = image
 	}
 
 	// loadTrainerGraphics(trainer)

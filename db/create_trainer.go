@@ -5,11 +5,12 @@ import (
 	"github.com/ospokemon/ospokemon/engine"
 	"github.com/ospokemon/ospokemon/objects"
 	"github.com/ospokemon/ospokemon/physics"
+	"strings"
 )
 
-func CreateTrainer(username, name string, class int) (*objects.Trainer, error) {
+func CreateTrainer(username, name string, classId int) (*objects.Trainer, error) {
 	trainer := &objects.Trainer{
-		BasicTrainer: ospokemon.MakeBasicTrainer(name, class),
+		BasicTrainer: ospokemon.MakeBasicTrainer(name, classId),
 		STATS:        make(map[string]*engine.Stat),
 		COLLISION:    engine.CLSNfluid,
 		SHAPE:        physics.Rect{physics.Point{}, physics.Vector{1, 0}, 64, 64},
@@ -27,19 +28,34 @@ func CreateTrainer(username, name string, class int) (*objects.Trainer, error) {
 	}
 	trainer.SetId(int(trainerId))
 
-	// trainer graphics
-	rows, err := Connection.Query("SELECT anim, image FROM trainer_animations WHERE trainerclass=?", trainer.CLASS)
-	if err != nil {
-		return nil, err
+	// loadTrainerGraphics
+	class := objects.GetClass(trainer.Class())
+	for animationType, image := range class.Graphics {
+		trainer.GRAPHICS[animationType] = image
 	}
-	for rows.Next() {
-		var anim, image string
-		rows.Scan(&anim, &image)
-		trainer.GRAPHICS[engine.AnimationType(anim)] = image
+
+	// loadTrainerStats
+	for statName, val := range class.Stats {
+		if strings.HasSuffix(statName, "-regen") {
+			statName = strings.TrimSuffix(statName, "-regen")
+
+			if stat := trainer.STATS[statName]; stat != nil {
+				stat.RegenBase = val
+			} else {
+				trainer.STATS[statName] = &engine.Stat{
+					RegenBase: val,
+				}
+			}
+		} else if stat := trainer.STATS[statName]; stat != nil {
+			stat.Base = val
+		} else {
+			trainer.STATS[statName] = &engine.Stat{
+				Base: val,
+			}
+		}
 	}
 
 	// loadTrainerGraphics(trainer)
-	// loadTrainerStats(trainer)
 	// loadTrainerPokemon(trainer)
 	// loadTrainerAbilities(trainer)
 

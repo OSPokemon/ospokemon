@@ -19,7 +19,7 @@ var ChooseTrainerHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.
 		return
 	}
 
-	TrainerId, err := strconv.ParseInt(r.FormValue("TrainerId"), 10, 0)
+	TrainerId, err := strconv.ParseInt(r.FormValue("trainer"), 10, 0)
 
 	if err != nil {
 		w.WriteHeader(500)
