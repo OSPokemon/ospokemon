@@ -15,7 +15,6 @@ func LoadPokemon(pokemonId int) (*objects.Pokemon, error) {
 		STATS:        make(map[string]*engine.Stat),
 		COLLISION:    engine.CLSNfluid,
 	}
-
 	err := row.Scan(&pokemon.ID, &pokemon.NAME, &pokemon.SPECIES, &pokemon.EXPERIENCE, &pokemon.ORIGINALTRAINER, &pokemon.ITEM)
 	if err != nil {
 		return nil, err

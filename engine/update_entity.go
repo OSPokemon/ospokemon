@@ -19,10 +19,11 @@ func UpdateEntity(m *Map, e Entity, now time.Time, t time.Duration) {
 }
 
 func UpdateApplicatorEntity(m *Map, applicator ApplicatorEntity, now time.Time, t time.Duration) {
-	for _, e := range m.Entities {
-		if e == applicator {
+	for _, entityId2 := range m.Entities {
+		if *applicator.EntityId() == entityId2 {
 			continue
 		}
+		e := Entities[entityId2]
 		if *e.Collision() == CLSNnone {
 			continue
 		}

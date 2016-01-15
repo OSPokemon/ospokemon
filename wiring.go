@@ -13,6 +13,7 @@ func wiring() {
 	server.LoadAccount = db.LoadAccount
 	server.ChangePassword = db.ChangePassword
 	server.ConnectClient = linker.ConnectClient
+	server.DisconnectClient = linker.DisconnectClient
 	server.ReceiveMessage = engine.ReceiveMessage
 	objects.GetSpeciesIds = db.GetSpeciesIds
 	objects.LoadSpecies = db.LoadSpecies
@@ -23,4 +24,5 @@ func wiring() {
 	objects.SavePokemon = db.SavePokemon
 	objects.LoadClass = db.LoadClass
 	objects.GetClassIds = db.GetClassIds
+	engine.LoadMap = db.LoadMap
 }

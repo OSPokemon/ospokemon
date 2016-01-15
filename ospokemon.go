@@ -29,8 +29,10 @@ func Loop(d time.Duration) {
 	for now := range time.Tick(d) {
 		for _, m := range engine.Maps {
 			engine.UpdateMap(m, now)
+			m.Lock()
 			view, cview := snapshot.Make(m, now)
-			server.PushSnapshot(view, cview)
+			server.PushSnapshot(m.Name, m.Clients, view, cview)
+			m.Unlock()
 		}
 	}
 }

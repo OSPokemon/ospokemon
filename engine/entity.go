@@ -9,6 +9,7 @@ type AiScript func(*Map, Entity, time.Time)
 
 type Entity interface {
 	EntityId() *int
+	Map() *string
 	Graphic() *string
 	Collision() *Collision
 	Shape() physics.Shape
@@ -50,3 +51,5 @@ type ApplicatorEntity interface {
 	applicatorEntity
 	Entity
 }
+
+var Entities = make(map[int]Entity)

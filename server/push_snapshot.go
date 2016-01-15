@@ -5,9 +5,10 @@ import (
 	"strconv"
 )
 
-func PushSnapshot(base map[string]interface{}, cviews map[string]interface{}) {
+func PushSnapshot(name string, clientIds []int, base map[string]interface{}, cviews map[string]interface{}) {
 
-	for _, client := range Clients {
+	for _, clientId := range clientIds {
+		client := Clients[clientId]
 		view := make(map[string]interface{})
 		view["world"] = copyView(base)
 

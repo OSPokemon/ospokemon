@@ -13,10 +13,11 @@ func MoveEntity(m *Map, e LivingEntity, v physics.Vector) {
 	nextShape := e.Shape().Move(v)
 
 	if *e.Collision() != CLSNnone {
-		for _, e2 := range m.Entities {
-			if e == e2 {
+		for _, entityId2 := range m.Entities {
+			if *e.EntityId() == entityId2 {
 				continue
 			}
+			e2 := Entities[entityId2]
 			if *e2.Collision() == CLSNnone {
 				continue
 			}

@@ -29,6 +29,7 @@ func LoadTrainer(trainerId int) (*objects.Trainer, error) {
 	for animationType, image := range class.Graphics {
 		trainer.GRAPHICS[animationType] = image
 	}
+	*trainer.Graphic() = trainer.Graphics()[engine.ANIMwalk_down]
 
 	// loadTrainerGraphics(trainer)
 	// loadTrainerStats(trainer)

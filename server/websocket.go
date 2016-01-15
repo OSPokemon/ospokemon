@@ -35,6 +35,7 @@ var WebsocketHandler = websocket.Handler(func(conn *websocket.Conn) {
 
 	session.ClientId = client.ClientId
 	client.SessionId = session.SessionId
+	Clients[client.ClientId] = client
 
 	ConnectClient(client)
 	listenDispatch(client.Conn, session.Username)

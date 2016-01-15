@@ -11,7 +11,8 @@ func Make(m *engine.Map, now time.Time) (map[string]interface{}, map[string]inte
 	view := make(map[string]interface{})
 	cview := make(map[string]interface{})
 
-	for entityId, entity := range m.Entities {
+	for _, entityId := range m.Entities {
+		entity := engine.Entities[entityId]
 		view[strconv.Itoa(entityId)] = MakeBasicView(entityId, entity, now)
 		cview[strconv.Itoa(entityId)] = MakeFullView(entityId, entity, now)
 	}
@@ -32,6 +33,7 @@ func MakeBasicView(id int, e engine.Entity, now time.Time) map[string]interface{
 	}
 
 	view["Name"] = entity.Name()
+	view["Portrait"] = entity.Graphics()[engine.ANIMportrait]
 
 	view["Action"] = MakeActionView(entity.Action(), now)
 
