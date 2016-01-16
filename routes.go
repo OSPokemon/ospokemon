@@ -14,6 +14,7 @@ func routes() {
 	http.Handle("/all-classes.json", server.AllClassesHandler)
 	http.Handle("/all-species.json", server.AllSpeciesHandler)
 	http.Handle("/trainer/", server.TrainerHandler)
+	http.Handle("/pokemon/", server.PokemonHandler)
 	http.Handle("/choose-trainer.go", server.ChooseTrainerHandler)
 	http.Handle("/create-trainer.go", server.CreateTrainerHandler)
 	http.Handle("/change-password.go", server.ChangePasswordHandler)

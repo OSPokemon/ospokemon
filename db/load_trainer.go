@@ -31,9 +31,15 @@ func LoadTrainer(trainerId int) (*objects.Trainer, error) {
 	}
 	*trainer.Graphic() = trainer.Graphics()[engine.ANIMwalk_down]
 
-	// loadTrainerGraphics(trainer)
-	// loadTrainerStats(trainer)
 	// loadTrainerPokemon(trainer)
+	rows, err := Connection.Query("SELECT id FROM pokemon WHERE trainer=?", trainer.Id())
+	for rows.Next() {
+		var id int
+		rows.Scan(&id)
+		trainer.POKEMON = append(trainer.POKEMON, id)
+	}
+
+	// loadTrainerStats(trainer)
 	// loadTrainerAbilities(trainer)
 
 	return trainer, nil

@@ -14,10 +14,16 @@ func LoadPokemon(pokemonId int) (*objects.Pokemon, error) {
 		BasicPokemon: ospokemon.MakeBasicPokemon("", 0),
 		STATS:        make(map[string]*engine.Stat),
 		COLLISION:    engine.CLSNfluid,
+		GRAPHICS:     make(map[engine.AnimationType]string),
 	}
 	err := row.Scan(&pokemon.ID, &pokemon.NAME, &pokemon.SPECIES, &pokemon.EXPERIENCE, &pokemon.ORIGINALTRAINER, &pokemon.ITEM)
 	if err != nil {
 		return nil, err
+	}
+
+	species := objects.GetSpecies(pokemon.Species())
+	for anim, image := range species.GRAPHICS {
+		pokemon.GRAPHICS[anim] = image
 	}
 
 	rows, err := Connection.Query("SELECT stat, value, regen, regenbase, max, base FROM pokemon_stats WHERE pokemonid=?", pokemonId)
