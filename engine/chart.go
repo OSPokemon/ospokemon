@@ -10,7 +10,7 @@ const EVNT_ChartUpdate = "ospokemon/engine/Chart.Update"
 
 type Chart struct {
 	Stats map[string]*Stat
-	Buffs []Buff
+	Buffs []*Buff
 }
 
 func (c *Chart) Id() string {
@@ -23,8 +23,13 @@ func (c *Chart) Update(u *Universe, e *Entity, d time.Duration) {
 		s.TempRegen = s.Regen
 	}
 
-	for _, b := range c.Buffs {
-		b.Update(u, e, c, d)
+	for i := 0; i < len(c.Buffs); i++ {
+		if !c.Buffs[i].Update(u, e, c, d) {
+			copy(c.Buffs[i:], c.Buffs[i+1:])
+			c.Buffs[len(c.Buffs)-1] = nil
+			c.Buffs = c.Buffs[:len(c.Buffs)-1]
+			i--
+		}
 	}
 
 	for n, s := range c.Stats {

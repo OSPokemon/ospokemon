@@ -14,7 +14,7 @@ type Buff struct {
 	time.Duration
 }
 
-func (b *Buff) Update(u *Universe, e *Entity, c *Chart, d time.Duration) {
+func (b *Buff) Update(u *Universe, e *Entity, c *Chart, d time.Duration) bool {
 	stat := c.Stats[b.Name]
 	stat.TempMax += b.BonusMax
 	stat.TempRegen += b.BonusRegen
@@ -23,4 +23,6 @@ func (b *Buff) Update(u *Universe, e *Entity, c *Chart, d time.Duration) {
 	util.Event.Fire(EVNT_BuffUpdate, u, e, c, b)
 	u.Fire(EVNT_BuffUpdate, u, e, c, b)
 	e.Fire(EVNT_BuffUpdate, u, e, c, b)
+
+	return b.Duration > 0
 }
