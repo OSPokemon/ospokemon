@@ -21,11 +21,15 @@ func (a *Action) Update(u *Universe, e *Entity, d time.Duration) {
 		return
 	}
 
-	if *a.Timer < a.CastTime && *a.Timer+d >= a.CastTime {
+	*a.Timer += d
+
+	if *a.Timer-d <= a.CastTime && *a.Timer >= a.CastTime {
 		a.Cast(u, e)
 	}
 
-	*a.Timer = *a.Timer + d
+	if *a.Timer > a.CastTime+a.CoolDown {
+		a.Timer = nil
+	}
 }
 
 func (a *Action) Cast(u *Universe, e *Entity) {
