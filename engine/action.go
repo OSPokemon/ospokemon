@@ -8,12 +8,13 @@ import (
 const EVNT_ActionCast = "ospokemon/engine/Action.Cast"
 
 type Action struct {
-	Name     string
-	Image    string
-	ScriptId string
-	CastTime time.Duration
-	CoolDown time.Duration
-	Timer    *time.Duration
+	Name       string
+	Image      string
+	ScriptId   string
+	CastTime   time.Duration
+	CoolDown   time.Duration
+	Timer      *time.Duration
+	TargetData map[string]interface{}
 }
 
 func (a *Action) Update(u *Universe, e *Entity, d time.Duration) {
@@ -33,6 +34,10 @@ func (a *Action) Update(u *Universe, e *Entity, d time.Duration) {
 }
 
 func (a *Action) Cast(u *Universe, e *Entity) {
+	script := Scripts[a.ScriptId]
+
+	script(u, e, a.TargetData)
+
 	util.Event.Fire(EVNT_ActionCast, u, e, a)
 	u.Fire(EVNT_ActionCast, u, e, a)
 	e.Fire(EVNT_ActionCast, u, e, a)
