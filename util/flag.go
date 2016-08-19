@@ -2,6 +2,7 @@ package util
 
 import (
 	"flag"
+	"time"
 )
 
 var FLAG_LogLevel = "info"
@@ -17,6 +18,7 @@ var FLAG_DatabasePath = "/var/lib/ospokemon/ospokemon.db"
 var FLAG_LaunchDaemon = false
 var FLAG_KillDaemon = false
 var FLAG_LaunchInteract = false
+var FLAG_SessionLife = 3 * time.Minute
 
 func init() {
 	flag.StringVar(&FLAG_LogLevel, "log", FLAG_LogLevel, "One of [debug,info,warn,error,fatal,panic]")
@@ -32,6 +34,7 @@ func init() {
 	flag.BoolVar(&FLAG_LaunchDaemon, "daemon", FLAG_LaunchDaemon, "Launch daemon mode")
 	flag.BoolVar(&FLAG_KillDaemon, "kill", FLAG_KillDaemon, "Kill existing daemon")
 	flag.BoolVar(&FLAG_LaunchInteract, "interact", FLAG_LaunchInteract, "Launch interactive mode")
+	flag.DurationVar(&FLAG_SessionLife, "sessionlife", FLAG_SessionLife, "Session lifetime")
 	flag.Parse()
 
 	loginit()
@@ -51,4 +54,5 @@ func LogFlags() {
 	Log.Debug("FLAG_LaunchDaemon: ", FLAG_LaunchDaemon)
 	Log.Debug("FLAG_KillDaemon: ", FLAG_KillDaemon)
 	Log.Debug("FLAG_LaunchInteract: ", FLAG_LaunchInteract)
+	Log.Debug("FLAG_SessionLife: ", FLAG_SessionLife)
 }
