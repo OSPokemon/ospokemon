@@ -5,4 +5,4 @@ import (
 	"github.com/ospokemon/ospokemon/util"
 )
 
-var dialer = gomail.NewDialer(util.FLAG_MailServer, util.FLAG_MailPort, util.FLAG_MailUser, util.FLAG_MailPassword)
+var dialer = gomail.NewDialer(util.Opt("mailserver"), util.OptInt("mailport"), util.Opt("mailuser"), util.Opt("mailpass"))

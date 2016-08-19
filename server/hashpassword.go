@@ -6,7 +6,7 @@ import (
 )
 
 func hashpassword(password string) string {
-	hash := md5.Sum([]byte(password + util.FLAG_PasswordSalt))
+	hash := md5.Sum([]byte(password + util.Opt("passwordsalt")))
 	password = string(hash[:])
 	return password
 }

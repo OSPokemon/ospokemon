@@ -1,0 +1,16 @@
+# OSPokemon Settings File
+log=info
+logpath=/var/log/ospokemon/ospokemon.log
+port=80
+webpath=/srv/http/ospokemon.io/
+mailserver=mail.ospokemon.io
+mailport=25
+mailuser=auto
+mailpass=mailpass
+mailpath=/srv/smtp/mail.ospokemon.io/
+dbpath=/var/lib/ospokemon/ospokemon.db
+daemon=false
+kill=false
+interact=false
+sessionlife=180
+passwordsalt=ospokemonsalt

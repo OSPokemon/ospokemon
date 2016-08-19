@@ -7,7 +7,7 @@ import (
 var Log = logrus.New()
 
 func loginit() {
-	switch FLAG_LogLevel {
+	switch Opt("log") {
 	case "debug":
 		Log.Level = logrus.DebugLevel
 		break
@@ -28,7 +28,7 @@ func loginit() {
 		break
 	default:
 		Log.Level = logrus.InfoLevel
-		Log.Warn("Log level invalid: ", FLAG_LogLevel)
+		Log.Warn("Log level invalid: ", Opt("log"))
 		break
 	}
 }

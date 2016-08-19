@@ -18,7 +18,7 @@ func NewSession(username string) *Session {
 	return &Session{
 		Username:  username,
 		SessionId: uint(sessionIdGen.Next()),
-		Expire:    time.Now().Add(util.FLAG_SessionLife),
+		Expire:    time.Now().Add(util.OptDuration("sessionlife")),
 	}
 }
 
