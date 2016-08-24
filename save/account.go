@@ -6,6 +6,7 @@ import (
 
 const EVNT_AccountCreate = "ospokemon/save/Account.Create"
 const EVNT_AccountLogin = "ospokemon/save/Account.Login"
+const EVNT_AccountLogout = "ospokemon/save/Account.Logout"
 
 type Account struct {
 	Username    string
