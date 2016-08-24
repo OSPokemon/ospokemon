@@ -2,7 +2,7 @@ package util
 
 type Eventer map[string]map[int]func(...interface{})
 
-func (e Eventer) Event(event string, eventer func(...interface{})) int {
+func (e Eventer) On(event string, eventer func(...interface{})) int {
 	if e[event] == nil {
 		e[event] = make(map[int]func(...interface{}))
 	}

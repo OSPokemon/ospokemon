@@ -66,6 +66,11 @@ func OptDuration(name string) time.Duration {
 	return d
 }
 
+func OptBool(name string) bool {
+	b, _ := strconv.ParseBool(Opt(name))
+	return b
+}
+
 func readfile(path string) {
 	if file, e := ioutil.ReadFile(path); e != nil {
 		Log.Warn(e.Error())
