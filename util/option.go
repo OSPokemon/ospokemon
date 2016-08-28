@@ -24,6 +24,7 @@ var options = map[string]*option{
 	"mailpass":     &option{"mailpass", "Outbound email password"},
 	"mailpath":     &option{"/srv/smtp/mail.ospokemon.io/", "Outbound email template path"},
 	"dbpath":       &option{"/var/lib/ospokemon/ospokemon.db", "Database sqlite3 path"},
+	"patchpath":    &option{"", "Database migrations path"},
 	"daemon":       &option{"false", "Launch daemon mode"},
 	"kill":         &option{"false", "Kill existing daemon"},
 	"interact":     &option{"false", "Launch interactive mode"},

@@ -1,14 +1,16 @@
 package main
 
 import (
+	"github.com/ospokemon/ospokemon/save"
 	"github.com/ospokemon/ospokemon/server"
 	"github.com/ospokemon/ospokemon/util"
 )
 
-const APP_VERSION = "0.0"
-
 func main() {
-	util.Log.Info("OSPokemon ", APP_VERSION)
+	util.Log.Info("OSPokemon")
 	util.LogOptions()
-	server.Launch()
+
+	if save.CheckPatch() {
+		server.Launch()
+	}
 }

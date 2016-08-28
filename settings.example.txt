@@ -9,6 +9,7 @@ mailuser=auto
 mailpass=mailpass
 mailpath=/srv/smtp/mail.ospokemon.io/
 dbpath=/var/lib/ospokemon/ospokemon.db
+patchpath=
 daemon=false
 kill=false
 interact=false
