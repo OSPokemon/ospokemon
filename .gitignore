@@ -1,3 +1,4 @@
 # Git Ignore File
 ospokemon
-settings.kaikiwit.txt
+ospokemon.db
+settings.txt
