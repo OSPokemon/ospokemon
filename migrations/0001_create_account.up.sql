@@ -1,6 +1,6 @@
 CREATE TABLE accounts (
-	username text,
-	email text,
-	password text,
-	register int
+	username TEXT,
+	email TEXT,
+	password TEXT,
+	register INTEGER
 );

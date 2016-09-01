@@ -15,12 +15,8 @@ func AccountCreate(args ...interface{}) {
 	a := args[0].(*save.Account)
 	w := args[1].(http.ResponseWriter)
 
-	_, err := save.Connection.Exec(`INSERT INTO accounts (
-		username,
-		email,
-		password,
-		register
-	) values (?, ?, ?, ?)`,
+	_, err := save.Connection.Exec(
+		"INSERT INTO accounts (username, email, password, register) values (?, ?, ?, ?)",
 		a.Username,
 		a.Email,
 		a.Password,
@@ -31,6 +27,7 @@ func AccountCreate(args ...interface{}) {
 		util.Log.Error(err)
 		w.Write([]byte(err.Error()))
 	} else {
+		save.Accounts[a.Username] = a
 		util.Event.Fire(save.EVNT_AccountLogin, a.Username, a.Password, w)
 	}
 }
