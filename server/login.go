@@ -22,7 +22,7 @@ var LoginHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request)
 
 	util.Log.WithFields(map[string]interface{}{
 		"Username": username,
-	}).Warn("ospokemon/server/Login: " + save.EVNT_AccountLogin)
+	}).Warn("ospokemon/server/Login:")
 
 	util.Event.Fire(save.EVNT_AccountLogin, username, password, w)
 })

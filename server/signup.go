@@ -12,17 +12,16 @@ var SignupHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	account := &save.Account{
+	a := &save.Account{
 		Username: r.FormValue("username"),
 		Email:    r.FormValue("email"),
 		Password: hashpassword(r.FormValue("password")),
 	}
 
 	util.Log.WithFields(map[string]interface{}{
-		"Username": account.Username,
-		"Email":    account.Email,
-	}).Warn("ospokemon/server/Signup: " + save.EVNT_AccountCreate)
+		"Username": a.Username,
+		"Email":    a.Email,
+	}).Warn("ospokemon/server/Signup:")
 
-	util.Event.Fire(save.EVNT_AccountCreate, account, w)
-	util.Event.Fire(save.EVNT_AccountLogin, account.Username, account.Password, w)
+	util.Event.Fire(save.EVNT_AccountCreate, a, w)
 })
