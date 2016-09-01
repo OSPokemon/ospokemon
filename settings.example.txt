@@ -2,12 +2,12 @@
 log=info
 logpath=/var/log/ospokemon/ospokemon.log
 port=80
-webpath=/srv/http/ospokemon.io/
-mailserver=mail.ospokemon.io
+webpath=/srv/http/ospokemon.com/
+mailserver=mail.ospokemon.com
 mailport=25
 mailuser=auto
 mailpass=mailpass
-mailpath=/srv/smtp/mail.ospokemon.io/
+mailpath=/srv/smtp/mail.ospokemon.com/
 dbpath=/var/lib/ospokemon/ospokemon.db
 patchpath=
 daemon=false
