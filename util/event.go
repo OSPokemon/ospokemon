@@ -21,7 +21,7 @@ func (e Eventer) Off(event string, id int) {
 func (e Eventer) Fire(event string, data ...interface{}) {
 	for _, eventer := range e[event] {
 		if eventer != nil {
-			eventer(data)
+			eventer(data...)
 		}
 	}
 }
