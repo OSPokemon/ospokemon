@@ -42,6 +42,7 @@ func init() {
 	}
 
 	loginit()
+	logoptions()
 }
 
 func setupflags() map[string]*string {
@@ -95,7 +96,7 @@ func bindflags(read map[string]*string) {
 	}
 }
 
-func LogOptions() {
+func logoptions() {
 	for key, option := range options {
 		Log.Debug(key + ": " + option.Value)
 	}

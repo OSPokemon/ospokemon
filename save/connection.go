@@ -8,7 +8,7 @@ import (
 
 var Connection *sql.DB
 
-func Connect(database string) {
+func init() {
 	var err error
 	Connection, err = sql.Open("sqlite3", util.Opt("dbpath"))
 

@@ -9,7 +9,6 @@ import (
 
 func main() {
 	util.Log.Info("OSPokemon")
-	util.LogOptions()
 
 	if save.CheckPatch() {
 		server.Launch()
