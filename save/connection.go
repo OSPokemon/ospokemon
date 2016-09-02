@@ -2,6 +2,7 @@ package save
 
 import (
 	"database/sql"
+	"github.com/Sirupsen/logrus"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/ospokemon/ospokemon/util"
 )
@@ -13,6 +14,6 @@ func init() {
 	Connection, err = sql.Open("sqlite3", util.Opt("dbpath"))
 
 	if err != nil {
-		util.Log.Error(err)
+		logrus.Error(err)
 	}
 }

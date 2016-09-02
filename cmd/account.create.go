@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/save"
 	"github.com/ospokemon/ospokemon/util"
 	"net/http"
@@ -24,7 +25,7 @@ func AccountCreate(args ...interface{}) {
 	)
 
 	if err != nil {
-		util.Log.Error(err)
+		logrus.Error(err)
 		w.Write([]byte(err.Error()))
 	} else {
 		save.Accounts[a.Username] = a

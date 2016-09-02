@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/save"
 	"github.com/ospokemon/ospokemon/util"
 	"net/http"
@@ -18,7 +19,7 @@ var SignupHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request
 		Password: hashpassword(r.FormValue("password")),
 	}
 
-	util.Log.WithFields(map[string]interface{}{
+	logrus.WithFields(map[string]interface{}{
 		"Username": a.Username,
 		"Email":    a.Email,
 	}).Warn("ospokemon/server/Signup:")

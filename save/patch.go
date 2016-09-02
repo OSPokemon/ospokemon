@@ -1,6 +1,7 @@
 package save
 
 import (
+	"github.com/Sirupsen/logrus"
 	_ "github.com/mattes/migrate/driver/sqlite3"
 	"github.com/mattes/migrate/migrate"
 	"github.com/ospokemon/ospokemon/util"
@@ -13,7 +14,7 @@ func CheckPatch() bool {
 		Patch()
 		return false
 	} else if patch, _ := migrate.Version("sqlite3://"+util.Opt("dbpath"), util.Opt("patchpath")); patch != PATCH {
-		util.Log.WithFields(map[string]interface{}{
+		logrus.WithFields(logrus.Fields{
 			"Found":    patch,
 			"Expected": PATCH,
 		}).Fatal("Database patch mismatch")
@@ -28,7 +29,7 @@ func Patch() {
 
 	if !ok {
 		for _, err := range errors {
-			util.Log.Error(err)
+			logrus.Error(err)
 		}
 	}
 }

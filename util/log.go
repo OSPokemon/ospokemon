@@ -4,31 +4,29 @@ import (
 	"github.com/Sirupsen/logrus"
 )
 
-var Log = logrus.New()
-
 func loginit() {
 	switch Opt("log") {
 	case "debug":
-		Log.Level = logrus.DebugLevel
+		logrus.SetLevel(logrus.DebugLevel)
 		break
 	case "info":
-		Log.Level = logrus.InfoLevel
+		logrus.SetLevel(logrus.InfoLevel)
 		break
 	case "warn":
-		Log.Level = logrus.WarnLevel
+		logrus.SetLevel(logrus.WarnLevel)
 		break
 	case "error":
-		Log.Level = logrus.ErrorLevel
+		logrus.SetLevel(logrus.ErrorLevel)
 		break
 	case "fatal":
-		Log.Level = logrus.FatalLevel
+		logrus.SetLevel(logrus.FatalLevel)
 		break
 	case "panic":
-		Log.Level = logrus.PanicLevel
+		logrus.SetLevel(logrus.PanicLevel)
 		break
 	default:
-		Log.Level = logrus.InfoLevel
-		Log.Warn("Log level invalid: ", Opt("log"))
+		logrus.SetLevel(logrus.InfoLevel)
+		logrus.Warn("Log level invalid: ", Opt("log"))
 		break
 	}
 }

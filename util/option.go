@@ -2,6 +2,7 @@ package util
 
 import (
 	"flag"
+	"github.com/Sirupsen/logrus"
 	"io/ioutil"
 	"strconv"
 	"strings"
@@ -75,7 +76,7 @@ func OptBool(name string) bool {
 
 func readfile(path string) {
 	if file, e := ioutil.ReadFile(path); e != nil {
-		Log.Warn(e.Error())
+		logrus.Warn(e.Error())
 	} else {
 		for _, line := range strings.Split(string(file), "\n") {
 			if line[0] == "#"[0] {
@@ -98,6 +99,6 @@ func bindflags(read map[string]*string) {
 
 func logoptions() {
 	for key, option := range options {
-		Log.Debug(key + ": " + option.Value)
+		logrus.Debug(key + ": " + option.Value)
 	}
 }
