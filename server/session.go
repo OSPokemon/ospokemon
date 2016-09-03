@@ -2,7 +2,6 @@ package server
 
 import (
 	"github.com/cznic/mathutil"
-	"github.com/ospokemon/ospokemon/save"
 	"github.com/ospokemon/ospokemon/util"
 	"net/http"
 	"strconv"
@@ -21,26 +20,14 @@ func NewSession(username string) *Session {
 	return &Session{
 		Username:  username,
 		SessionId: uint(sessionIdGen.Next()),
-		Expire:    time.Now().Add(util.OptDuration("sessionlife")),
+		Expire:    time.Now().Add(time.Duration(util.OptInt("sessionlife")) * time.Second),
 	}
 }
 
 func (s *Session) WriteSessionId(w http.ResponseWriter) {
-	w.Header().Set("Set-Cookie", "SessionId="+strconv.Itoa(int(s.SessionId)))
-}
-
-func Expire(args ...interface{}) {
-	sessionId := args[0].(uint)
-	s := args[1].(*Session)
-	Sessions[sessionId] = nil
-	s.SessionId = 0
-	util.Event.Fire(save.EVNT_AccountLogout, s.Username)
+	w.Header().Set("Set-Cookie", "SessionId="+strconv.Itoa(int(s.SessionId))+"; Path=/;")
 }
 
 var Sessions = make(map[uint]*Session)
 
 var sessionIdGen, _ = mathutil.NewFC32(0, 999999, true)
-
-func init() {
-	util.Event.On(EVNT_SessionExpire, Expire)
-}
