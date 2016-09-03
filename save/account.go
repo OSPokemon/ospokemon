@@ -5,6 +5,7 @@ import (
 )
 
 const EVNT_AccountCreate = "ospokemon/save/Account.Create"
+const EVNT_AccountAuth = "ospokemon/save/Account.Auth"
 const EVNT_AccountLogin = "ospokemon/save/Account.Login"
 const EVNT_AccountLogout = "ospokemon/save/Account.Logout"
 

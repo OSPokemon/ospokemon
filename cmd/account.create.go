@@ -14,7 +14,10 @@ func init() {
 
 func AccountCreate(args ...interface{}) {
 	a := args[0].(*save.Account)
-	w := args[1].(http.ResponseWriter)
+	r := args[1].(*http.Request)
+	w := args[2].(http.ResponseWriter)
+
+	// TODO: check for existing account
 
 	_, err := save.Connection.Exec(
 		"INSERT INTO accounts (username, email, password, register) values (?, ?, ?, ?)",
@@ -27,8 +30,13 @@ func AccountCreate(args ...interface{}) {
 	if err != nil {
 		logrus.Error(err)
 		w.Write([]byte(err.Error()))
-	} else {
-		save.Accounts[a.Username] = a
-		util.Event.Fire(save.EVNT_AccountLogin, a.Username, a.Password, w)
+		return
 	}
+
+	logrus.WithFields(map[string]interface{}{
+		"Username": a.Username,
+		"Email":    a.Email,
+	}).Warn("cmd/AccountCreate")
+
+	util.Event.Fire(save.EVNT_AccountAuth, a.Username, a.Password, r, w)
 }
