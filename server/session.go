@@ -28,6 +28,10 @@ func (s *Session) WriteSessionId(w http.ResponseWriter) {
 	w.Header().Set("Set-Cookie", "SessionId="+strconv.Itoa(int(s.SessionId))+"; Path=/;")
 }
 
+func (s *Session) Refresh() {
+	s.Expire = time.Now().Add(time.Duration(util.OptInt("sessionlife")) * time.Second)
+}
+
 var Sessions = make(map[uint]*Session)
 
 var sessionIdGen, _ = mathutil.NewFC32(0, 999999, true)

@@ -18,6 +18,8 @@ var LoginHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request)
 			"SessionId": s.SessionId,
 		}).Warn("server/LoginHandler: Redirect session login")
 
+		s.Refresh()
+
 		http.Redirect(w, r, "/play/", http.StatusMovedPermanently)
 		return
 	}
