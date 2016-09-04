@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/save"
 	"github.com/ospokemon/ospokemon/util"
 	"net/http"
@@ -12,9 +13,9 @@ var LoginHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	if sessionId := readsession(r); sessionId != nil {
+	if s := readsession(r); s != nil {
 		logrus.WithFields(logrus.Fields{
-			"SessionId": sessionId,
+			"SessionId": s.SessionId,
 		}).Warn("server/LoginHandler: Redirect session login")
 
 		http.Redirect(w, r, "/play/", http.StatusMovedPermanently)
