@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-const ENVT_UniverseGenerateId = "ospokemon/engine/Universe.GenerateId"
+const ENVT_UniverseGenerateId = "engine/Universe.GenerateId"
 
 type Universe struct {
 	Id uint

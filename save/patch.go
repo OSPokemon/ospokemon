@@ -17,7 +17,7 @@ func CheckPatch() bool {
 		logrus.WithFields(logrus.Fields{
 			"Found":    patch,
 			"Expected": PATCH,
-		}).Fatal("Database patch mismatch")
+		}).Fatal("save.CheckPatch: Database patch mismatch")
 		return false
 	}
 

@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-const EVNT_EngineUpdate = "ospokemon/engine/Update"
+const EVNT_EngineUpdate = "engine/Update"
 
 func Run(d time.Duration) {
 	for _, universe := range Multiverse {

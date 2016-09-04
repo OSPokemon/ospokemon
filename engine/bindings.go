@@ -5,9 +5,9 @@ import (
 	"time"
 )
 
-const COMP_Bindings = "ospokemon/engine/Bindings"
-const EVNT_BindingsBind = "ospokemon/engine/Bindings.Bind"
-const EVNT_BindingsUpdate = "ospokemon/engine/Bindings.Update"
+const COMP_Bindings = "engine/Bindings"
+const EVNT_BindingsBind = "engine/Bindings.Bind"
+const EVNT_BindingsUpdate = "engine/Bindings.Update"
 
 type Bindings map[string]*Action
 

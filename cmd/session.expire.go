@@ -20,7 +20,7 @@ func SessionExpire(args ...interface{}) {
 	logrus.WithFields(logrus.Fields{
 		"SessionId": sessionId,
 		"Username":  s.Username,
-	}).Warn("server/SessionExpire")
+	}).Warn("server.SessionExpire")
 
 	util.Event.Fire(save.EVNT_AccountLogout, s.Username)
 }

@@ -27,7 +27,7 @@ func AccountAuth(args ...interface{}) {
 	if a == nil {
 		logrus.WithFields(logrus.Fields{
 			"Username": username,
-		}).Warn("cmd/AccountAuth: Failure: Username not found")
+		}).Warn("cmd.AccountAuth: Failure: Username not found")
 
 		http.Redirect(w, r, "/login/?usernamenotfound", http.StatusMovedPermanently)
 		return
@@ -37,7 +37,7 @@ func AccountAuth(args ...interface{}) {
 		logrus.WithFields(logrus.Fields{
 			"Username": a.Username,
 			"Email":    a.Email,
-		}).Warn("cmd/AccountAuth: Failure: Incorrect password")
+		}).Warn("cmd.AccountAuth: Failure: Incorrect password")
 
 		http.Redirect(w, r, "/login/?passwordwrong", http.StatusMovedPermanently)
 		return
@@ -54,12 +54,12 @@ func AccountAuth(args ...interface{}) {
 		logrus.WithFields(logrus.Fields{
 			"Username": a.Username,
 			"Session":  a.SessionId,
-		}).Warn("cmd/AccountAuth: Success")
+		}).Warn("cmd.AccountAuth: Success")
 	} else {
 		logrus.WithFields(logrus.Fields{
 			"Username": username,
 			"Session":  a.SessionId,
-		}).Warn("cmd/AccountAuth: Success: Rewrite session")
+		}).Warn("cmd.AccountAuth: Success: Rewrite session")
 	}
 
 	s.WriteSessionId(w)

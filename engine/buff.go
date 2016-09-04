@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-const EVNT_BuffUpdate = "ospokemon/engine/Buff.Update"
+const EVNT_BuffUpdate = "engine/Buff.Update"
 
 type Buff struct {
 	Name       string

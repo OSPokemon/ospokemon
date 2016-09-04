@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-const COMP_Location = "ospokemon/engine/Location"
+const COMP_Location = "engine/Location"
 
 type Location struct {
 	space.Shape

@@ -17,5 +17,5 @@ func AccountLogout(args ...interface{}) {
 
 	logrus.WithFields(logrus.Fields{
 		"Username": username,
-	}).Warn("cmd/AccountLogout")
+	}).Warn("cmd.AccountLogout")
 }

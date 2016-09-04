@@ -36,7 +36,7 @@ func AccountCreate(args ...interface{}) {
 	logrus.WithFields(map[string]interface{}{
 		"Username": a.Username,
 		"Email":    a.Email,
-	}).Warn("cmd/AccountCreate")
+	}).Warn("cmd.AccountCreate")
 
 	util.Event.Fire(save.EVNT_AccountAuth, a.Username, a.Password, r, w)
 }
