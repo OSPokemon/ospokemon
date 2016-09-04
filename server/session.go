@@ -3,6 +3,7 @@ package server
 import (
 	"github.com/cznic/mathutil"
 	"github.com/ospokemon/ospokemon/util"
+	"golang.org/x/net/websocket"
 	"net/http"
 	"strconv"
 	"time"
@@ -13,6 +14,7 @@ const EVNT_SessionExpire = "server/Session.Expire"
 type Session struct {
 	Username  string
 	SessionId uint
+	Websocket *websocket.Conn
 	Expire    time.Time
 }
 

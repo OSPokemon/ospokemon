@@ -14,6 +14,7 @@ func init() {
 func SessionExpire(args ...interface{}) {
 	sessionId := args[0].(uint)
 	s := args[1].(*server.Session)
+
 	s.SessionId = 0
 	delete(server.Sessions, sessionId)
 
@@ -21,6 +22,10 @@ func SessionExpire(args ...interface{}) {
 		"SessionId": sessionId,
 		"Username":  s.Username,
 	}).Warn("server.SessionExpire")
+
+	if s.Websocket != nil {
+		util.Event.Fire(server.EVNT_WebsocketDisconnect, s)
+	}
 
 	util.Event.Fire(save.EVNT_AccountLogout, s.Username)
 }
