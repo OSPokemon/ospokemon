@@ -28,8 +28,6 @@ var WebsocketHandler = websocket.Handler(func(conn *websocket.Conn) {
 	util.Event.Fire(EVNT_WebsocketConnect, s)
 
 	listenDispatch(s)
-
-	util.Event.Fire(EVNT_WebsocketDisconnect, s)
 })
 
 func listenDispatch(s *Session) {
@@ -38,10 +36,7 @@ func listenDispatch(s *Session) {
 		err := websocket.JSON.Receive(s.Websocket, &message)
 
 		if err != nil {
-			if err.Error() != "EOF" {
-				logrus.Error(err)
-			}
-
+			util.Event.Fire(EVNT_WebsocketDisconnect, s, err.Error())
 			return
 		} else {
 			go util.Event.Fire(EVNT_WebsocketMessage, s, message)

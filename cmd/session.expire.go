@@ -23,9 +23,6 @@ func SessionExpire(args ...interface{}) {
 		"Username":  s.Username,
 	}).Warn("server.SessionExpire")
 
-	if s.Websocket != nil {
-		util.Event.Fire(server.EVNT_WebsocketDisconnect, s)
-	}
-
+	util.Event.Fire(server.EVNT_WebsocketDisconnect, s, server.EVNT_SessionExpire)
 	util.Event.Fire(save.EVNT_AccountLogout, s.Username)
 }
