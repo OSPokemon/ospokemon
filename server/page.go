@@ -14,6 +14,7 @@ var PageHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) 
 
 		logrus.WithFields(logrus.Fields{
 			"SessionId": s.SessionId,
+			"Path":      r.RequestURI,
 		}).Debug("server/PageHandler: Refresh Session")
 	}
 
