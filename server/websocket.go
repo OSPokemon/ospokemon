@@ -32,7 +32,7 @@ var WebsocketHandler = websocket.Handler(func(conn *websocket.Conn) {
 
 func listenDispatch(s *Session) {
 	for {
-		var message map[string]interface{}
+		var message WebsocketMessage
 		err := websocket.JSON.Receive(s.Websocket, &message)
 
 		if err != nil {
