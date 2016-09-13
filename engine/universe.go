@@ -20,12 +20,18 @@ type Universe struct {
 	bodyIdGen *mathutil.FC32
 }
 
-func (u *Universe) GenerateId() uint {
-	if u.bodyIdGen == nil {
-		bodyIdGen, _ := mathutil.NewFC32(0, 999999, true)
-		u.bodyIdGen = bodyIdGen
-	}
+func MakeUniverse() *Universe {
+	bodyIdGen, _ := mathutil.NewFC32(0, 999999, true)
 
+	return &Universe{
+		Space:     MakeSpace(),
+		Entities:  make(map[uint]Entity),
+		Eventer:   make(util.Eventer),
+		bodyIdGen: bodyIdGen,
+	}
+}
+
+func (u *Universe) GenerateId() uint {
 	return uint(u.bodyIdGen.Next())
 }
 
