@@ -6,7 +6,10 @@ import (
 	"time"
 )
 
-const ENVT_UniverseGenerateId = "engine/Universe.GenerateId"
+const EVNT_UniverseLoad = "engine/Universe.Load"
+const EVNT_UniverseAdd = "engine/Universe.Add"
+const EVNT_UniverseRemove = "engine/Universe.Remove"
+const EVNT_UniverseUpdate = "engine/Universe.Update"
 
 type Universe struct {
 	Id uint
@@ -23,18 +26,15 @@ func (u *Universe) GenerateId() uint {
 		u.bodyIdGen = bodyIdGen
 	}
 
-	id := uint(u.bodyIdGen.Next())
-
-	util.Event.Fire(ENVT_UniverseGenerateId, u, id)
-	u.Fire(ENVT_UniverseGenerateId, u, id)
-
-	return id
+	return uint(u.bodyIdGen.Next())
 }
 
 func (u *Universe) Update(d time.Duration) {
 	for _, e := range u.Entities {
 		e.Update(u, d)
 	}
+
+	util.Event.Fire(EVNT_UniverseUpdate, u)
 }
 
 var Multiverse = make(map[uint]*Universe)
