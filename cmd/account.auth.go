@@ -23,6 +23,7 @@ func AccountAuth(args ...interface{}) {
 
 	if a == nil {
 		a = queryaccount(username)
+		save.Accounts[a.Username] = a
 	}
 	if a == nil {
 		logrus.WithFields(logrus.Fields{
@@ -48,7 +49,6 @@ func AccountAuth(args ...interface{}) {
 	if s == nil {
 		s = server.NewSession(a.Username)
 		a.SessionId = s.SessionId
-		save.Accounts[a.Username] = a
 		server.Sessions[s.SessionId] = s
 
 		logrus.WithFields(logrus.Fields{
@@ -79,7 +79,7 @@ func queryaccount(username string) *save.Account {
 	if err := row.Scan(&a.Username, &a.Email, &a.Password, &timebuff); err == nil {
 		a.Register = time.Unix(timebuff, 0)
 	} else {
-		logrus.Error(err)
+		logrus.Error("cmd.AccountAuth: " + err.Error())
 		a = nil
 	}
 

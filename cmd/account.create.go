@@ -28,7 +28,7 @@ func AccountCreate(args ...interface{}) {
 	)
 
 	if err != nil {
-		logrus.Error(err)
+		logrus.Error("cmd.AccountCreate: " + err.Error())
 		w.Write([]byte(err.Error()))
 		return
 	}
