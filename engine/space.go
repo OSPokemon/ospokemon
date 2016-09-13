@@ -8,12 +8,24 @@ import (
 const EVNT_SpaceDivide = "engine/Space.Divide"
 
 type Space struct {
-	Name string
 	space.Rect
 	Division *space.Line
 	Sub      *[2]*Space
 	Entities []Entity
 	util.Eventer
+}
+
+func MakeSpace() *Space {
+	return &Space{
+		Rect: space.Rect{
+			Anchor:    space.Point{},
+			Dimension: space.Vector{},
+		},
+		Division: nil,
+		Sub:      nil,
+		Entities: make([]Entity, 0),
+		Eventer:  make(util.Eventer),
+	}
 }
 
 func (s *Space) Divide() {
@@ -55,33 +67,15 @@ func (s *Space) createDivision() {
 
 	s.Sub = &[2]*Space{}
 
-	s.Sub[0] = &Space{
-		Name: s.Name + ".1",
-		Rect: space.Rect{
-			Anchor: s.Anchor.Copy(),
-			Dimension: space.Vector{
-				DX: s.Division.P2.X - s.Anchor.X,
-				DY: s.Division.P2.Y - s.Anchor.Y,
-			},
-		},
-		Division: nil,
-		Sub:      nil,
-		Entities: make([]Entity, 0),
-	}
+	s.Sub[0] = MakeSpace()
+	s.Sub[0].Rect.Anchor = s.Anchor.Copy()
+	s.Sub[0].Rect.Dimension.DX = s.Division.P2.X - s.Anchor.X
+	s.Sub[0].Rect.Dimension.DY = s.Division.P2.Y - s.Anchor.Y
 
-	s.Sub[1] = &Space{
-		Name: s.Name + ".2",
-		Rect: space.Rect{
-			Anchor: s.Division.P1.Copy(),
-			Dimension: space.Vector{
-				DX: s.Division.P2.X - s.Anchor.X,
-				DY: s.Division.P2.Y - s.Anchor.Y,
-			},
-		},
-		Division: nil,
-		Sub:      nil,
-		Entities: make([]Entity, 0),
-	}
+	s.Sub[1] = MakeSpace()
+	s.Sub[1].Rect.Anchor = s.Division.P1.Copy()
+	s.Sub[1].Rect.Dimension.DX = s.Division.P2.X - s.Anchor.X
+	s.Sub[1].Rect.Dimension.DY = s.Division.P2.Y - s.Anchor.Y
 }
 
 func (s *Space) assignDivision() {
