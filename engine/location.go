@@ -8,6 +8,7 @@ import (
 const COMP_Location = "engine/Location"
 
 type Location struct {
+	UniverseId uint
 	space.Shape
 }
 
