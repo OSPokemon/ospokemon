@@ -1,5 +1,5 @@
 CREATE TABLE accounts (
-	username TEXT,
+	username TEXT PRIMARY KEY,
 	email TEXT,
 	password TEXT,
 	register INTEGER
