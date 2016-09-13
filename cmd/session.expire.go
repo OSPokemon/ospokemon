@@ -12,17 +12,19 @@ func init() {
 }
 
 func SessionExpire(args ...interface{}) {
-	sessionId := args[0].(uint)
-	s := args[1].(*server.Session)
+	s := args[0].(*server.Session)
 
+	if s.Websocket != nil {
+		util.Event.Fire(server.EVNT_WebsocketDisconnect, s)
+	}
+
+	delete(server.Sessions, s.SessionId)
 	s.SessionId = 0
-	delete(server.Sessions, sessionId)
 
 	logrus.WithFields(logrus.Fields{
-		"SessionId": sessionId,
+		"SessionId": s.SessionId,
 		"Username":  s.Username,
 	}).Warn("server.SessionExpire")
 
-	util.Event.Fire(server.EVNT_WebsocketDisconnect, s, server.EVNT_SessionExpire)
 	util.Event.Fire(save.EVNT_AccountLogout, s.Username)
 }

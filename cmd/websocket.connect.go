@@ -16,5 +16,5 @@ func WebsocketConnect(args ...interface{}) {
 	logrus.WithFields(logrus.Fields{
 		"SessionId": s.SessionId,
 		"Username":  s.Username,
-	}).Warn("server.WebsocketConnect")
+	}).Info("cmd.WebsocketConnect")
 }

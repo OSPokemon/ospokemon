@@ -7,9 +7,9 @@ import (
 
 func PollSessionExpire() {
 	for now := range time.Tick(1 * time.Second) {
-		for sessionId, session := range Sessions {
+		for _, session := range Sessions {
 			if session.Expire.Before(now) {
-				util.Event.Fire(EVNT_SessionExpire, sessionId, session)
+				util.Event.Fire(EVNT_SessionExpire, session)
 			}
 		}
 	}

@@ -27,19 +27,5 @@ var WebsocketHandler = websocket.Handler(func(conn *websocket.Conn) {
 
 	util.Event.Fire(EVNT_WebsocketConnect, s)
 
-	listenDispatch(s)
+	s.Listen()
 })
-
-func listenDispatch(s *Session) {
-	for {
-		var message WebsocketMessage
-		err := websocket.JSON.Receive(s.Websocket, &message)
-
-		if err != nil {
-			util.Event.Fire(EVNT_WebsocketDisconnect, s, err.Error())
-			return
-		} else {
-			go util.Event.Fire(EVNT_WebsocketMessage, s, message)
-		}
-	}
-}

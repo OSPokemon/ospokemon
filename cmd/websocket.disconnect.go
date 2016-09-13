@@ -12,17 +12,6 @@ func init() {
 
 func WebsocketDisconnect(args ...interface{}) {
 	s := args[0].(*server.Session)
-	err := args[1].(string)
-
-	if s.Websocket == nil {
-		return
-	}
-
-	if err != "EOF" && err != server.EVNT_SessionExpire {
-		logrus.WithFields(logrus.Fields{
-			"SessionId": s.SessionId,
-		}).Error(err)
-	}
 
 	s.Websocket.Close()
 	s.Websocket = nil
