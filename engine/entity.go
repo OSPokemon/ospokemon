@@ -6,19 +6,16 @@ import (
 )
 
 type Entity struct {
-	Id         uint
-	Components map[string]Component
+	Id uint
+	Components
 	util.Eventer
 }
 
-func (e *Entity) Component(c Component) {
-	id := c.Id()
-
-	if e.Components[id] != nil {
-		util.Log.Error("Duplicate component id: ", id)
+func MakeEntity() *Entity {
+	return &Entity{
+		Components: make(Components),
+		Eventer:    make(util.Eventer),
 	}
-
-	e.Components[id] = c
 }
 
 func (e *Entity) Update(u *Universe, d time.Duration) {
