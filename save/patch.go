@@ -7,24 +7,19 @@ import (
 	"github.com/ospokemon/ospokemon/util"
 )
 
-const PATCH uint64 = 1
+func CheckPatch() uint64 {
+	patch, err := migrate.Version("sqlite3://"+util.Opt("dbpath"), util.Opt("patchpath"))
 
-func CheckPatch() bool {
-	if util.Opt("patchpath") != "" {
-		Patch()
-		return false
-	} else if patch, _ := migrate.Version("sqlite3://"+util.Opt("dbpath"), util.Opt("patchpath")); patch != PATCH {
-		logrus.WithFields(logrus.Fields{
-			"Found":    patch,
-			"Expected": PATCH,
-		}).Fatal("save.CheckPatch: Database patch mismatch")
-		return false
+	if err != nil {
+		logrus.Error(err)
 	}
 
-	return true
+	return patch
 }
 
 func Patch() {
+	oldpatch := CheckPatch()
+
 	errors, ok := migrate.UpSync("sqlite3://"+util.Opt("dbpath"), util.Opt("patchpath"))
 
 	if !ok {
@@ -32,4 +27,11 @@ func Patch() {
 			logrus.Error(err)
 		}
 	}
+
+	newpatch := CheckPatch()
+
+	logrus.WithFields(logrus.Fields{
+		"OldPatch": oldpatch,
+		"NewPatch": newpatch,
+	}).Warn("save.Patch")
 }
