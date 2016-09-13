@@ -38,5 +38,8 @@ func AccountCreate(args ...interface{}) {
 		"Email":    a.Email,
 	}).Warn("cmd.AccountCreate")
 
+	save.Players[a.Username] = save.MakePlayer(a.Username)
+	util.Event.Fire(save.EVNT_PlayerPush, a.Username)
+
 	util.Event.Fire(save.EVNT_AccountAuth, a.Username, a.Password, r, w)
 }
