@@ -36,6 +36,5 @@ func WebsocketConnect(args ...interface{}) {
 		"Username":  p.Username,
 	}).Info("cmd.WebsocketConnect")
 
-	l := p.Entity.Component(engine.COMP_Location).(*engine.Location)
-	util.Event.Fire(engine.EVNT_UniverseAdd, l.UniverseId, p.Entity)
+	util.Event.Fire(engine.EVNT_UniverseAdd, p.Entity)
 }

@@ -7,6 +7,7 @@ import (
 	"golang.org/x/net/websocket"
 	"net/http"
 	"strconv"
+	"sync"
 	"time"
 )
 
@@ -17,6 +18,7 @@ type Session struct {
 	SessionId uint
 	Websocket *websocket.Conn
 	Expire    time.Time
+	sync.Mutex
 }
 
 func NewSession(username string) *Session {
@@ -36,7 +38,7 @@ func (s *Session) Refresh() {
 }
 
 func (s *Session) Listen() {
-	for {
+	for s.Websocket != nil {
 		var message WebsocketMessage
 		err := websocket.JSON.Receive(s.Websocket, &message)
 

@@ -18,12 +18,10 @@ var WebsocketHandler = websocket.Handler(func(conn *websocket.Conn) {
 		return
 	}
 
-	if s.Websocket != nil {
-		logrus.Warn("server.WebsocketHandler: Failure: Websocket already connected")
-		return
-	}
-
 	s.Websocket = conn
+
+	s.Lock()
+	defer s.Unlock()
 
 	util.Event.Fire(EVNT_WebsocketConnect, s)
 

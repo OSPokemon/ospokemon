@@ -14,10 +14,7 @@ func init() {
 
 func PlayerPush(args ...interface{}) {
 	username := args[0].(string)
-
 	p := save.Players[username]
-
-	util.Event.Fire(save.EVNT_PlayerDelete, username)
 
 	if err := playerpushall(p); err != nil {
 		logrus.Error("cmd.PlayerPush: " + err.Error())
