@@ -23,7 +23,7 @@ func AccountAuth(args ...interface{}) {
 
 	if a == nil {
 		a = queryaccount(username)
-		save.Accounts[a.Username] = a
+		save.Accounts[username] = a
 	}
 	if a == nil {
 		logrus.WithFields(logrus.Fields{
