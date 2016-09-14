@@ -45,6 +45,8 @@ func MakePlayer(username string) *Player {
 		},
 	})
 
+	p.Entity.AddComponent(make(engine.Bindings))
+
 	return p
 }
 

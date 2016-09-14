@@ -33,6 +33,9 @@ func playerpushall(p *save.Player) error {
 	if err := playerpushlocation(p); err != nil {
 		return err
 	}
+	if err := playerpushbindings(p); err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -64,4 +67,27 @@ func playerpushlocation(p *save.Player) error {
 	)
 
 	return err
+}
+
+func playerpushbindings(p *save.Player) error {
+	b := p.Entity.Component(engine.COMP_Bindings).(engine.Bindings)
+
+	for key, action := range b {
+		_, err := save.Connection.Exec(
+			"INSERT INTO bindings_players (username, key, name, image, script, casttime, cooldown) VALUES (?, ?, ?, ?, ?, ?, ?)",
+			p.Username,
+			key,
+			action.Name,
+			action.Image,
+			action.ScriptId,
+			action.CastTime,
+			action.Cooldown,
+		)
+
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }

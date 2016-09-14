@@ -7,6 +7,7 @@ import (
 	"github.com/ospokemon/ospokemon/save"
 	"github.com/ospokemon/ospokemon/space"
 	"github.com/ospokemon/ospokemon/util"
+	"time"
 )
 
 func init() {
@@ -38,6 +39,9 @@ func playerpullall(p *save.Player) error {
 	if err := playerpulllocation(p); err != nil {
 		return err
 	}
+	if err := playerpullbindings(p); err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -66,6 +70,37 @@ func playerpulllocation(p *save.Player) error {
 
 	if err := row.Scan(&l.UniverseId, &r.Anchor.X, &r.Anchor.Y, &r.Dimension.DX, &r.Dimension.DY); err != nil {
 		return errors.New("queryplayerlocation: " + err.Error())
+	}
+
+	return nil
+}
+
+func playerpullbindings(p *save.Player) error {
+	rows, err := save.Connection.Query(
+		"SELECT key, name, image, script, casttime, cooldown FROM bindings_players WHERE username=?",
+		p.Username,
+	)
+
+	if err != nil {
+		return err
+	} else {
+		defer rows.Close()
+	}
+
+	b := p.Entity.Component(engine.COMP_Bindings).(engine.Bindings)
+
+	for rows.Next() {
+		var keybuff string
+		var casttimebuff, cooldownbuff int64
+		action := engine.MakeAction()
+
+		if err := rows.Scan(&keybuff, &action.Name, &action.Image, &action.ScriptId, &casttimebuff, &cooldownbuff); err == nil {
+			action.CastTime = time.Duration(casttimebuff)
+			action.Cooldown = time.Duration(cooldownbuff)
+			b[keybuff] = action
+		} else {
+			return err
+		}
 	}
 
 	return nil

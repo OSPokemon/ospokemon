@@ -8,7 +8,7 @@ import (
 	"github.com/ospokemon/ospokemon/util"
 )
 
-const PATCH uint64 = 4
+const PATCH uint64 = 5
 
 func main() {
 	logrus.WithFields(logrus.Fields{
