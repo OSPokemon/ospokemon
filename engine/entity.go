@@ -6,7 +6,8 @@ import (
 )
 
 type Entity struct {
-	Id uint
+	Id    uint
+	Image string
 	Components
 	util.Eventer
 }
