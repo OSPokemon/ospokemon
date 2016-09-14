@@ -6,11 +6,11 @@ import (
 	"time"
 )
 
-const EVNT_UniversePull = "engine/Universe.Pull"
-const EVNT_UniversePush = "engine/Universe.Push"
-const EVNT_UniverseAdd = "engine/Universe.Add"
-const EVNT_UniverseRemove = "engine/Universe.Remove"
-const EVNT_UniverseUpdate = "engine/Universe.Update"
+const EVNT_UniversePull = "engine.Universe.Pull"
+const EVNT_UniversePush = "engine.Universe.Push"
+const EVNT_UniverseAdd = "engine.Universe.Add"
+const EVNT_UniverseRemove = "engine.Universe.Remove"
+const EVNT_UniverseUpdate = "engine.Universe.Update"
 
 type Universe struct {
 	Id uint

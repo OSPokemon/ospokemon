@@ -7,9 +7,9 @@ import (
 )
 
 const COMP_Player = "save/Player"
-const EVNT_PlayerPush = "save/Player.Push"
-const EVNT_PlayerPull = "save/Player.Pull"
-const EVNT_PlayerDelete = "save/Player.Delete"
+const EVNT_PlayerPush = "save,Player.Push"
+const EVNT_PlayerPull = "save.Player.Pull"
+const EVNT_PlayerDelete = "save.Player.Delete"
 
 type Player struct {
 	Username   string

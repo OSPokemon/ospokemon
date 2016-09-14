@@ -1,6 +1,6 @@
 package util
 
-const EVNT_EventFire = "util/Event.Fire"
+const EVNT_EventFire = "util.Event.Fire"
 
 type Eventer map[string]map[int]func(...interface{})
 

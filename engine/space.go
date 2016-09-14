@@ -5,7 +5,7 @@ import (
 	"github.com/ospokemon/ospokemon/util"
 )
 
-const EVNT_SpaceDivide = "engine/Space.Divide"
+const EVNT_SpaceDivide = "engine.Space.Divide"
 
 type Space struct {
 	space.Rect

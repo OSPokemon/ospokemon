@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-const EVNT_SessionExpire = "server/Session.Expire"
+const EVNT_SessionExpire = "server.Session.Expire"
 
 type Session struct {
 	Username  string

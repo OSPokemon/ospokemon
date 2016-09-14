@@ -6,9 +6,9 @@ import (
 	"golang.org/x/net/websocket"
 )
 
-const EVNT_WebsocketConnect = "server/Websocket.Connect"
-const EVNT_WebsocketMessage = "server/Websocket.Message"
-const EVNT_WebsocketDisconnect = "server/Websocket.Disconnect"
+const EVNT_WebsocketConnect = "server.Websocket.Connect"
+const EVNT_WebsocketMessage = "server.Websocket.Message"
+const EVNT_WebsocketDisconnect = "server.Websocket.Disconnect"
 
 var WebsocketHandler = websocket.Handler(func(conn *websocket.Conn) {
 	s := readsession(conn.Request())

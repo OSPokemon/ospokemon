@@ -6,7 +6,7 @@ import (
 )
 
 const COMP_Chart = "engine/Chart"
-const EVNT_ChartUpdate = "engine/Chart.Update"
+const EVNT_ChartUpdate = "engine.Chart.Update"
 
 type Chart struct {
 	Stats map[string]*Stat

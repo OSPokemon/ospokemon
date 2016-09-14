@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-const EVNT_ActionCast = "engine/Action.Cast"
+const EVNT_ActionCast = "engine.Action.Cast"
 
 type Action struct {
 	Name       string

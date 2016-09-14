@@ -6,8 +6,8 @@ import (
 )
 
 const COMP_Bindings = "engine/Bindings"
-const EVNT_BindingsBind = "engine/Bindings.Bind"
-const EVNT_BindingsUpdate = "engine/Bindings.Update"
+const EVNT_BindingsBind = "engine.Bindings.Bind"
+const EVNT_BindingsUpdate = "engine.Bindings.Update"
 
 type Bindings map[string]*Action
 

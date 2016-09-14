@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-const EVNT_StatUpdate = "engine/Stat.Update"
+const EVNT_StatUpdate = "engine.Stat.Update"
 
 type Stat struct {
 	Value     float64
