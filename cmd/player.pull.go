@@ -15,10 +15,9 @@ func init() {
 
 func PlayerPull(args ...interface{}) {
 	username := args[0].(string)
+	p := save.MakePlayer(username)
 
-	p, err := playerpullall(username)
-
-	if err != nil {
+	if err := playerpullall(p); err != nil {
 		logrus.WithFields(logrus.Fields{
 			"Username": username,
 		}).Error("cmd.PlayerPull: " + err.Error())
@@ -32,18 +31,15 @@ func PlayerPull(args ...interface{}) {
 	}).Info("cmd.PlayerPull")
 }
 
-func playerpullall(username string) (*save.Player, error) {
-	p := save.MakePlayer(username)
-
+func playerpullall(p *save.Player) error {
 	if err := playerpull(p); err != nil {
-		return nil, err
+		return err
 	}
-
 	if err := playerpulllocation(p); err != nil {
-		return nil, err
+		return err
 	}
 
-	return p, nil
+	return nil
 }
 
 func playerpull(p *save.Player) error {
