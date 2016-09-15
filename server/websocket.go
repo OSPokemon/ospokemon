@@ -25,5 +25,5 @@ var WebsocketHandler = websocket.Handler(func(conn *websocket.Conn) {
 
 	util.Event.Fire(EVNT_WebsocketConnect, s)
 
-	s.Listen()
+	Listen(s)
 })

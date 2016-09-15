@@ -1,7 +1,6 @@
 package server
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/cznic/mathutil"
 	"github.com/ospokemon/ospokemon/util"
 	"golang.org/x/net/websocket"
@@ -35,24 +34,6 @@ func (s *Session) WriteSessionId(w http.ResponseWriter) {
 
 func (s *Session) Refresh() {
 	s.Expire = time.Now().Add(time.Duration(util.OptInt("sessionlife")) * time.Second)
-}
-
-func (s *Session) Listen() {
-	for s.Websocket != nil {
-		var message WebsocketMessage
-		err := websocket.JSON.Receive(s.Websocket, &message)
-
-		if err != nil {
-			if s.Websocket != nil {
-				logrus.Warn("server.Session.listen: " + err.Error())
-				util.Event.Fire(EVNT_WebsocketDisconnect, s)
-			}
-
-			return
-		} else {
-			go util.Event.Fire(EVNT_WebsocketMessage, s, message)
-		}
-	}
 }
 
 var Sessions = make(map[uint]*Session)
