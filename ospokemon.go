@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/Sirupsen/logrus"
 	_ "github.com/ospokemon/ospokemon/cmd"
+	"github.com/ospokemon/ospokemon/engine"
 	"github.com/ospokemon/ospokemon/save"
 	"github.com/ospokemon/ospokemon/server"
 	"github.com/ospokemon/ospokemon/util"
@@ -28,5 +29,6 @@ func main() {
 		return
 	}
 
+	go engine.Run()
 	server.Launch()
 }
