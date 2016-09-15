@@ -1,6 +1,6 @@
-CREATE TABLE bindings_players (
+CREATE TABLE actions_players (
 	username TEXT,
-	key TEXT,
 	spellid INTEGER,
+	timer INTEGER,
 	FOREIGN KEY(username) REFERENCES players(username) ON DELETE CASCADE
 );

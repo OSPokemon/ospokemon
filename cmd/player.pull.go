@@ -75,9 +75,9 @@ func playerpulllocation(p *save.Player) error {
 	return nil
 }
 
-func playerpullbindings(p *save.Player) error {
+func playerpullactions(p *save.Player) error {
 	rows, err := save.Connection.Query(
-		"SELECT key, name, image, script, casttime, cooldown FROM bindings_players WHERE username=?",
+		"SELECT spellid, timer FROM actions_players WHERE username=?",
 		p.Username,
 	)
 
@@ -87,20 +87,57 @@ func playerpullbindings(p *save.Player) error {
 		defer rows.Close()
 	}
 
+	a := p.Entity.Component(engine.COMP_Actions).(engine.Actions)
+
+	for rows.Next() {
+		var spellidbuff uint
+		var timebuff uint64
+		err = rows.Scan(spellidbuff, timebuff)
+
+		if err != nil {
+			return err
+		}
+
+		action := engine.MakeAction(spellidbuff)
+
+		if timebuff > 0 {
+			t := time.Duration(timebuff)
+			action.Timer = &t
+		}
+
+		a[action.SpellId] = action
+	}
+
+	return nil
+}
+
+func playerpullbindings(p *save.Player) error {
+	rows, err := save.Connection.Query(
+		"SELECT key, spellid FROM bindings_players WHERE username=?",
+		p.Username,
+	)
+
+	if err != nil {
+		return err
+	} else {
+		defer rows.Close()
+	}
+
+	a := p.Entity.Component(engine.COMP_Actions).(engine.Actions)
 	b := p.Entity.Component(engine.COMP_Bindings).(engine.Bindings)
 
 	for rows.Next() {
 		var keybuff string
-		var casttimebuff, cooldownbuff int64
-		action := engine.MakeAction()
+		var spellidbuff uint
+		binding := &engine.Binding{}
+		err = rows.Scan(&keybuff, &spellidbuff)
 
-		if err := rows.Scan(&keybuff, &action.Name, &action.Image, &action.ScriptId, &casttimebuff, &cooldownbuff); err == nil {
-			action.CastTime = time.Duration(casttimebuff)
-			action.Cooldown = time.Duration(cooldownbuff)
-			b[keybuff] = action
-		} else {
+		if err != nil {
 			return err
 		}
+
+		binding.Action = a[spellidbuff]
+		b[keybuff] = binding
 	}
 
 	return nil

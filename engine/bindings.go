@@ -6,28 +6,34 @@ import (
 )
 
 const COMP_Bindings = "engine/Bindings"
-const EVNT_BindingsBind = "engine.Bindings.Bind"
-const EVNT_BindingsUpdate = "engine.Bindings.Update"
 
-type Bindings map[string]*Action
+type Binding struct {
+	*Action
+	Timer *time.Duration
+}
 
-func (b *Bindings) Id() string {
+type Bindings map[string]*Binding
+
+func (b Bindings) Id() string {
 	return COMP_Bindings
 }
 
-func (b Bindings) Update(u *Universe, e *Entity, d time.Duration) {
-	for _, a := range b {
-		a.Update(u, e, d)
+func (b Binding) Update(u *Universe, e *Entity, d time.Duration) {
+	if b.Action.Timer != nil {
+		b.Timer = nil
+		return
 	}
 
-	util.Event.Fire(EVNT_BindingsUpdate, u, e, b)
-	u.Fire(EVNT_BindingsUpdate, u, e, b)
-	e.Fire(EVNT_BindingsUpdate, u, e, b)
+	if *b.Timer < d {
+		b.Timer = nil
+		util.Event.Fire(EVNT_ActionCast, u, e, b.Action)
+	} else {
+		*b.Timer -= d
+	}
 }
 
-func (b Bindings) Bind(s string, e *Entity, a *Action) {
-	b[s] = a
-
-	util.Event.Fire(EVNT_BindingsBind, e, b, a)
-	e.Fire(EVNT_BindingsBind, e, b, a)
+func (b Bindings) Update(u *Universe, e *Entity, d time.Duration) {
+	for _, binding := range b {
+		binding.Update(u, e, d)
+	}
 }
