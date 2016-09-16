@@ -6,7 +6,7 @@ import (
 )
 
 func Run() {
-	d := time.Duration(util.OptInt("sessionlife")) * time.Millisecond
+	d := time.Duration(util.OptInt("refresh")) * time.Millisecond
 
 	for range time.Tick(d) {
 		for _, universe := range Multiverse {

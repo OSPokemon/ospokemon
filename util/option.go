@@ -37,7 +37,6 @@ func init() {
 	}
 
 	loginit()
-	logoptions()
 }
 
 func setupflags() map[string]*string {
@@ -73,12 +72,18 @@ func readfile(path string) {
 		logrus.Warn(e.Error())
 	} else {
 		for _, line := range strings.Split(string(file), "\n") {
-			if line[0] == "#"[0] {
+			if line == "" || line[0] == "#"[0] {
 				continue
 			}
 
 			setting := strings.Split(line, "=")
-			if len(setting) == 2 && setting[1] != "" {
+			if options[setting[0]] == nil {
+				logrus.WithFields(logrus.Fields{
+					"Setting": setting,
+				}).Warn("Setting name not recognized")
+				continue
+			}
+			if len(setting) == 2 {
 				options[setting[0]].Value = setting[1]
 			}
 		}
@@ -88,11 +93,5 @@ func readfile(path string) {
 func bindflags(read map[string]*string) {
 	for key, value := range read {
 		options[key].Value = *value
-	}
-}
-
-func logoptions() {
-	for key, option := range options {
-		logrus.Debug(key + ": " + option.Value)
 	}
 }
