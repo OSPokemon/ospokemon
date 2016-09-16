@@ -36,6 +36,10 @@ func (s *Session) Refresh() {
 	s.Expire = time.Now().Add(time.Duration(util.OptInt("sessionlife")) * time.Second)
 }
 
+func (s *Session) Send(message string) {
+	websocket.Message.Send(s.Websocket, message)
+}
+
 var Sessions = make(map[uint]*Session)
 
 var sessionIdGen, _ = mathutil.NewFC32(0, 999999, true)

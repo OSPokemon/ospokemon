@@ -42,7 +42,7 @@ func (u *Universe) Update(d time.Duration) {
 		e.Update(u, d)
 	}
 
-	util.Event.Fire(EVNT_UniverseUpdate, u)
+	util.Event.Fire(EVNT_UniverseUpdate, u, d)
 }
 
 var Multiverse = make(map[uint]*Universe)
