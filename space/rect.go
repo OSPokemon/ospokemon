@@ -25,6 +25,13 @@ func (r Rect) Move(v Vector) Shape {
 	}
 }
 
+func (r Rect) Snapshot() map[string]interface{} {
+	return map[string]interface{}{
+		"anchor":    r.Anchor.Snapshot(),
+		"dimension": r.Dimension.Snapshot(),
+	}
+}
+
 func (r Rect) MakeCorners() []Point {
 	vectorx := Vector{DX: r.Dimension.DX}
 	vectory := Vector{DY: r.Dimension.DY}

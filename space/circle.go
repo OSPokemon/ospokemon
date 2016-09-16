@@ -22,3 +22,10 @@ func (c Circle) Move(v Vector) Shape {
 		Radius: c.Radius,
 	}
 }
+
+func (c Circle) Snapshot() map[string]interface{} {
+	return map[string]interface{}{
+		"anchor": c.Anchor.Snapshot(),
+		"radius": c.Radius,
+	}
+}

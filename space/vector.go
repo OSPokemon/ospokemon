@@ -23,6 +23,13 @@ func (v Vector) Copy() Vector {
 	}
 }
 
+func (v Vector) Snapshot() map[string]interface{} {
+	return map[string]interface{}{
+		"dx": v.DX,
+		"dy": v.DY,
+	}
+}
+
 func (v Vector) Multiply(f float64) Vector {
 	return Vector{
 		DY: v.DY * f,

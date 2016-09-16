@@ -18,3 +18,10 @@ func (p Point) Move(v Vector) Point {
 		Y: p.Y + v.DY,
 	}
 }
+
+func (p Point) Snapshot() map[string]interface{} {
+	return map[string]interface{}{
+		"x": p.X,
+		"y": p.Y,
+	}
+}
