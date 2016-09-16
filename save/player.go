@@ -7,7 +7,7 @@ import (
 )
 
 const COMP_Player = "save/Player"
-const EVNT_PlayerPush = "save,Player.Push"
+const EVNT_PlayerPush = "save.Player.Push"
 const EVNT_PlayerPull = "save.Player.Pull"
 const EVNT_PlayerDelete = "save.Player.Delete"
 
@@ -21,6 +21,15 @@ type Player struct {
 
 func (p *Player) Id() string {
 	return COMP_Player
+}
+
+func (p *Player) Snapshot() map[string]interface{} {
+	return map[string]interface{}{
+		"username":   p.Username,
+		"level":      p.Level,
+		"experience": p.Experience,
+		"money":      p.Money,
+	}
 }
 
 func (p *Player) Update(*engine.Universe, *engine.Entity, time.Duration) {

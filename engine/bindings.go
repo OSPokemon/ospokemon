@@ -37,3 +37,14 @@ func (b Bindings) Update(u *Universe, e *Entity, d time.Duration) {
 		binding.Update(u, e, d)
 	}
 }
+
+func (b Binding) Snapshot() map[string]interface{} {
+	return map[string]interface{}{
+		"action": b.Action.Snapshot(),
+		"timer":  *b.Timer,
+	}
+}
+
+func (b Bindings) Snapshot() map[string]interface{} {
+	return nil
+}

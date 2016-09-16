@@ -39,3 +39,14 @@ func (a Actions) Update(u *Universe, e *Entity, d time.Duration) {
 		action.Update(u, e, d)
 	}
 }
+
+func (a Action) Snapshot() map[string]interface{} {
+	return map[string]interface{}{
+		"spellid": a.SpellId,
+		"timer":   *a.Timer,
+	}
+}
+
+func (a Actions) Snapshot() map[string]interface{} {
+	return nil
+}

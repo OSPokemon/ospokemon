@@ -9,6 +9,7 @@ type Components map[string]Component
 type Component interface {
 	Id() string
 	Update(*Universe, *Entity, time.Duration)
+	Snapshot() map[string]interface{}
 }
 
 func (c *Components) AddComponent(comp Component) {

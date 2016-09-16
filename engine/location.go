@@ -16,6 +16,13 @@ func (l *Location) Id() string {
 	return COMP_Location
 }
 
+func (l *Location) Snapshot() map[string]interface{} {
+	return map[string]interface{}{
+		"universe": l.UniverseId,
+		"shape":    l.Shape.Snapshot(),
+	}
+}
+
 func (l *Location) Update(u *Universe, e *Entity, d time.Duration) {
 	// TODO
 }

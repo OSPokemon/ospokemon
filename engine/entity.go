@@ -24,3 +24,20 @@ func (e *Entity) Update(u *Universe, d time.Duration) {
 		c.Update(u, e, d)
 	}
 }
+
+func (e *Entity) Snapshot() map[string]interface{} {
+	c := make(map[string]interface{})
+	m := map[string]interface{}{
+		"id":    e.Id,
+		"image": e.Image,
+		"comp":  c,
+	}
+
+	for key, comp := range e.Components {
+		if compsnap := comp.Snapshot(); compsnap != nil {
+			c[key] = compsnap
+		}
+	}
+
+	return m
+}
