@@ -18,10 +18,10 @@ var WebsocketHandler = websocket.Handler(func(conn *websocket.Conn) {
 		return
 	}
 
-	s.Websocket = conn
-
 	s.Lock()
 	defer s.Unlock()
+
+	s.Websocket = conn
 
 	util.Event.Fire(EVNT_WebsocketConnect, s)
 
