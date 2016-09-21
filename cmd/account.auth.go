@@ -52,13 +52,13 @@ func AccountAuth(args ...interface{}) {
 		server.Sessions[s.SessionId] = s
 
 		logrus.WithFields(logrus.Fields{
-			"Username": a.Username,
-			"Session":  a.SessionId,
+			"Username":  a.Username,
+			"SessionId": a.SessionId,
 		}).Warn("cmd.AccountAuth: Success")
 	} else {
 		logrus.WithFields(logrus.Fields{
-			"Username": username,
-			"Session":  a.SessionId,
+			"Username":  a.Username,
+			"SessionId": a.SessionId,
 		}).Warn("cmd.AccountAuth: Success: Rewrite session")
 	}
 
