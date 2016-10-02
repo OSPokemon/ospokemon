@@ -32,9 +32,9 @@ func UniverseUpdate(args ...interface{}) {
 	}
 
 	for _, entity := range u.Entities {
-		p, ok := entity.Component(save.COMP_Player).(*save.Player)
+		p := entity.Component(save.COMP_Player).(*save.Player)
 
-		if !ok {
+		if p == nil {
 			continue
 		}
 
