@@ -41,9 +41,14 @@ func (a Actions) Update(u *Universe, e *Entity, d time.Duration) {
 }
 
 func (a Action) Snapshot() map[string]interface{} {
+	timebuff := 0
+	if a.Timer != nil {
+		timebuff = int(*a.Timer)
+	}
+
 	return map[string]interface{}{
 		"spellid": a.SpellId,
-		"timer":   *a.Timer,
+		"timer":   timebuff,
 	}
 }
 
