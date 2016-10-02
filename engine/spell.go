@@ -10,7 +10,7 @@ const EVNT_SpellPull = "engine.Spell.Pull"
 type Spell struct {
 	Id       uint
 	Image    string
-	ScriptId string
+	ScriptId uint
 	CastTime time.Duration
 	Cooldown time.Duration
 	Data     map[string]string
