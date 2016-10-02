@@ -5,11 +5,12 @@ import (
 	_ "github.com/ospokemon/ospokemon/cmd"
 	"github.com/ospokemon/ospokemon/engine"
 	"github.com/ospokemon/ospokemon/save"
+	_ "github.com/ospokemon/ospokemon/script"
 	"github.com/ospokemon/ospokemon/server"
 	"github.com/ospokemon/ospokemon/util"
 )
 
-const PATCH uint64 = 6
+const PATCH uint64 = 8
 
 func main() {
 	logrus.WithFields(logrus.Fields{

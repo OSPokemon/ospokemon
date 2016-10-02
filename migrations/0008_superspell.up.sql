@@ -1,0 +1,1 @@
+INSERT INTO spells(id, image, script, cast, cooldown) VALUES (0, "spells/super", 0, 1000, 3000);
