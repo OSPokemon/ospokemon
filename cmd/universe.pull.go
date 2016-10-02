@@ -14,27 +14,27 @@ func init() {
 
 func UniversePull(args ...interface{}) {
 	universeid := args[0].(uint)
-
-	u, err := universepullall(universeid)
-
-	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"UniverseId": universeid,
-		}).Error("cmd.UniversePull: " + err.Error())
-		return
-	}
-
-	engine.Multiverse[universeid] = u
-
-	logrus.WithFields(logrus.Fields{
+	log := logrus.WithFields(logrus.Fields{
 		"UniverseId": universeid,
-	}).Info("cmd.UniversePull")
+	})
+
+	if err := universepull(universeid); err != nil {
+		log.Error("cmd.UniversePull: " + err.Error())
+	} else {
+		log.Info("cmd.UniversePull")
+	}
+}
+
+func universepull(universeid uint) error {
+	u, err := universepullall(universeid)
+	engine.Multiverse[universeid] = u
+	return err
 }
 
 func universepullall(universeid uint) (*engine.Universe, error) {
 	u := engine.MakeUniverse(universeid)
 
-	if err := universepull(u); err != nil {
+	if err := universepullbase(u); err != nil {
 		return nil, err
 	}
 
@@ -45,7 +45,7 @@ func universepullall(universeid uint) (*engine.Universe, error) {
 	return u, nil
 }
 
-func universepull(u *engine.Universe) error {
+func universepullbase(u *engine.Universe) error {
 	row := save.Connection.QueryRow(
 		"SELECT x, y, dx, dy FROM universes WHERE id=?",
 		u.Id,

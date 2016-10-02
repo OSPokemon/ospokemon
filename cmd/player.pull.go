@@ -16,27 +16,32 @@ func init() {
 
 func PlayerPull(args ...interface{}) {
 	username := args[0].(string)
-	p := save.MakePlayer(username)
-
-	if err := playerpullall(p); err != nil {
-		logrus.WithFields(logrus.Fields{
-			"Username": username,
-		}).Error("cmd.PlayerPull: " + err.Error())
-		return
-	}
-
-	save.Players[username] = p
-
-	logrus.WithFields(logrus.Fields{
+	log := logrus.WithFields(logrus.Fields{
 		"Username": username,
-	}).Info("cmd.PlayerPull")
+	})
+
+	if err := playerpull(username); err != nil {
+		log.Error("cmd.PlayerPull: " + err.Error())
+	} else {
+		log.Info("cmd.PlayerPull")
+	}
+}
+
+func playerpull(username string) error {
+	p := save.MakePlayer(username)
+	err := playerpullall(p)
+	save.Players[p.Username] = p
+	return err
 }
 
 func playerpullall(p *save.Player) error {
-	if err := playerpull(p); err != nil {
+	if err := playerpullbase(p); err != nil {
 		return err
 	}
 	if err := playerpulllocation(p); err != nil {
+		return err
+	}
+	if err := playerpullactions(p); err != nil {
 		return err
 	}
 	if err := playerpullbindings(p); err != nil {
@@ -46,7 +51,7 @@ func playerpullall(p *save.Player) error {
 	return nil
 }
 
-func playerpull(p *save.Player) error {
+func playerpullbase(p *save.Player) error {
 	row := save.Connection.QueryRow(
 		"SELECT level, experience, money FROM players WHERE username=?",
 		p.Username,
@@ -92,7 +97,7 @@ func playerpullactions(p *save.Player) error {
 	for rows.Next() {
 		var spellidbuff uint
 		var timebuff uint64
-		err = rows.Scan(spellidbuff, timebuff)
+		err = rows.Scan(&spellidbuff, &timebuff)
 
 		if err != nil {
 			return err

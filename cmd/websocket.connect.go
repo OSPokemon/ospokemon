@@ -14,27 +14,31 @@ func init() {
 
 func WebsocketConnect(args ...interface{}) {
 	s := args[0].(*server.Session)
+	log := logrus.WithFields(logrus.Fields{
+		"SessionId": s.SessionId,
+		"Username":  s.Username,
+	})
+
+	if err := websocketconnect(s); err != nil {
+		log.Error("cmd.WebsocketConnect: " + err.Error())
+	} else {
+		log.Info("cmd.WebsocketConnect")
+	}
+}
+
+func websocketconnect(s *server.Session) error {
+	if save.Players[s.Username] == nil {
+		if err := playerpull(s.Username); err != nil {
+			return err
+		}
+	}
 
 	p := save.Players[s.Username]
+	l := p.Entity.Component(engine.COMP_Location).(*engine.Location)
 
-	if p == nil {
-		util.Event.Fire(save.EVNT_PlayerPull, s.Username)
-		p = save.Players[s.Username]
-	}
-	if p == nil {
-		logrus.WithFields(logrus.Fields{
-			"SessionId": s.SessionId,
-			"Username":  s.Username,
-		}).Error("cmd.WebsocketConnect: Player not found")
-
-		util.Event.Fire(server.EVNT_WebsocketDisconnect, s)
-		return
+	if err := universeadd(p.Entity, l); err != nil {
+		return err
 	}
 
-	logrus.WithFields(logrus.Fields{
-		"SessionId": s.SessionId,
-		"Username":  p.Username,
-	}).Info("cmd.WebsocketConnect")
-
-	util.Event.Fire(engine.EVNT_UniverseAdd, p.Entity)
+	return nil
 }

@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/engine"
 	"github.com/ospokemon/ospokemon/util"
@@ -12,22 +13,28 @@ func init() {
 
 func UniverseRemove(args ...interface{}) {
 	e := args[0].(*engine.Entity)
-	entityid := e.Id
 	l := e.Component(engine.COMP_Location).(*engine.Location)
+	log := logrus.WithFields(logrus.Fields{
+		"Universe": l.UniverseId,
+		"Entity":   e.Id,
+	})
+
+	if err := universeremove(e, l); err != nil {
+		log.Error("cmd.UniverseRemove: " + err.Error())
+	} else {
+		log.Info("cmd.UniverseRemove")
+	}
+}
+
+func universeremove(e *engine.Entity, l *engine.Location) error {
 	u := engine.Multiverse[l.UniverseId]
 
 	if u == nil {
-		logrus.WithFields(logrus.Fields{
-			"UniverseId": l.UniverseId,
-		}).Warn("cmd.UniverseRemove: Failure: Universe not found")
-		return
+		return errors.New("Universe not found")
 	}
 
-	delete(u.Entities, entityid)
+	delete(u.Entities, e.Id)
 	e.Id = 0
 
-	logrus.WithFields(logrus.Fields{
-		"UniverseId": u.Id,
-		"EntityId":   entityid,
-	}).Info("cmd.UniverseRemove")
+	return nil
 }

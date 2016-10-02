@@ -12,15 +12,18 @@ func init() {
 
 func PlayerDelete(args ...interface{}) {
 	username := args[0].(string)
-
-	_, err := save.Connection.Exec("DELETE FROM players WHERE username=?", username)
-
-	if err != nil {
-		logrus.Error("cmd.PlayerDelete: " + err.Error())
-		return
-	}
-
-	logrus.WithFields(map[string]interface{}{
+	log := logrus.WithFields(map[string]interface{}{
 		"Username": username,
-	}).Warn("cmd.PlayerDelete")
+	})
+
+	if err := playerdelete(username); err != nil {
+		log.Error("cmd.PlayerDelete: " + err.Error())
+	} else {
+		log.Warn("cmd.PlayerDelete")
+	}
+}
+
+func playerdelete(username string) error {
+	_, err := save.Connection.Exec("DELETE FROM players WHERE username=?", username)
+	return err
 }

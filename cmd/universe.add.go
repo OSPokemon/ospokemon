@@ -13,24 +13,28 @@ func init() {
 func UniverseAdd(args ...interface{}) {
 	e := args[0].(*engine.Entity)
 	l := e.Component(engine.COMP_Location).(*engine.Location)
+	log := logrus.WithFields(logrus.Fields{
+		"Universe": l.UniverseId,
+		"Entity":   e.Id,
+	})
+
+	if err := universeadd(e, l); err != nil {
+		log.Error("cmd.UniverseAdd: " + err.Error())
+	} else {
+		log.Info("cmd.UniverseAdd")
+	}
+}
+
+func universeadd(e *engine.Entity, l *engine.Location) error {
+	if engine.Multiverse[l.UniverseId] == nil {
+		if err := universepull(l.UniverseId); err != nil {
+			return err
+		}
+	}
+
 	u := engine.Multiverse[l.UniverseId]
-
-	if u == nil {
-		util.Event.Fire(engine.EVNT_UniversePull, l.UniverseId)
-		u = engine.Multiverse[l.UniverseId]
-	}
-	if u == nil {
-		logrus.WithFields(logrus.Fields{
-			"UniverseId": l.UniverseId,
-		}).Warn("cmd.UniverseAdd: Failure: Universe not found")
-		return
-	}
-
 	e.Id = u.GenerateId()
 	u.Entities[e.Id] = e
 
-	logrus.WithFields(logrus.Fields{
-		"UniverseId": u.Id,
-		"EntityId":   e.Id,
-	}).Info("cmd.UniverseAdd")
+	return nil
 }

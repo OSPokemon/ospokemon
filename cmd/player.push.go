@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/engine"
 	"github.com/ospokemon/ospokemon/save"
@@ -14,20 +15,30 @@ func init() {
 
 func PlayerPush(args ...interface{}) {
 	username := args[0].(string)
+	log := logrus.WithFields(logrus.Fields{
+		"Username": username,
+	})
+
+	if err := playerpush(username); err != nil {
+		log.Error("cmd.PlayerPush: " + err.Error())
+	} else {
+		log.Warn("cmd.PlayerPush")
+	}
+}
+
+func playerpush(username string) error {
 	p := save.Players[username]
 
-	if err := playerpushall(p); err != nil {
-		logrus.Error("cmd.PlayerPush: " + err.Error())
-		return
+	if p == nil {
+		return errors.New("Player already pushed")
 	}
 
-	logrus.WithFields(map[string]interface{}{
-		"Username": p.Username,
-	}).Warn("cmd.PlayerPush")
+	save.Players[p.Username] = nil
+	return playerpushall(p)
 }
 
 func playerpushall(p *save.Player) error {
-	if err := playerpush(p); err != nil {
+	if err := playerpushbase(p); err != nil {
 		return err
 	}
 	if err := playerpushlocation(p); err != nil {
@@ -40,7 +51,7 @@ func playerpushall(p *save.Player) error {
 	return nil
 }
 
-func playerpush(p *save.Player) error {
+func playerpushbase(p *save.Player) error {
 	_, err := save.Connection.Exec(
 		"INSERT INTO players (username, level, experience, money) values (?, ?, ?, ?)",
 		p.Username,

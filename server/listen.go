@@ -1,7 +1,6 @@
 package server
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/util"
 	"golang.org/x/net/websocket"
 )
@@ -13,7 +12,6 @@ func Listen(s *Session) {
 
 		if err != nil {
 			if s.Websocket != nil {
-				logrus.Warn("server.Listen: " + err.Error())
 				util.Event.Fire(EVNT_WebsocketDisconnect, s)
 			}
 
