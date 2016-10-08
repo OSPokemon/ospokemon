@@ -19,8 +19,7 @@ func (b Bindings) Id() string {
 }
 
 func (b Binding) Update(u *Universe, e *Entity, d time.Duration) {
-	if b.Action.Timer != nil {
-		b.Timer = nil
+	if b.Action.Timer == nil {
 		return
 	}
 
@@ -39,9 +38,14 @@ func (b Bindings) Update(u *Universe, e *Entity, d time.Duration) {
 }
 
 func (b Binding) Snapshot() map[string]interface{} {
+	timebuff := 0
+	if b.Timer != nil {
+		timebuff = int(*b.Timer)
+	}
+
 	return map[string]interface{}{
 		"action": b.Action.Snapshot(),
-		"timer":  *b.Timer,
+		"timer":  timebuff,
 	}
 }
 
