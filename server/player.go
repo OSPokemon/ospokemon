@@ -31,7 +31,9 @@ var PlayerHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request
 	bdata := make(map[string]interface{})
 	bindings := p.Entity.Component(engine.COMP_Bindings).(engine.Bindings)
 	for key, binding := range bindings {
-		bdata[key] = binding.Snapshot()
+		bindingsnap := binding.Snapshot()
+		bindingsnap["key"] = key
+		bdata[key] = bindingsnap
 	}
 
 	adata := make(map[string]interface{})
