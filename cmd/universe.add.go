@@ -2,7 +2,9 @@ package cmd
 
 import (
 	"github.com/Sirupsen/logrus"
+	"github.com/ospokemon/ospokemon/comp"
 	"github.com/ospokemon/ospokemon/engine"
+	"github.com/ospokemon/ospokemon/save"
 	"github.com/ospokemon/ospokemon/util"
 )
 
@@ -12,7 +14,7 @@ func init() {
 
 func UniverseAdd(args ...interface{}) {
 	e := args[0].(*engine.Entity)
-	l := e.Component(engine.COMP_Location).(*engine.Location)
+	l := e.Component(comp.LOCATION).(*comp.Location)
 	log := logrus.WithFields(logrus.Fields{
 		"Universe": l.UniverseId,
 		"Entity":   e.Id,
@@ -25,9 +27,12 @@ func UniverseAdd(args ...interface{}) {
 	}
 }
 
-func universeadd(e *engine.Entity, l *engine.Location) error {
+func universeadd(e *engine.Entity, l *comp.Location) error {
+
 	if engine.Multiverse[l.UniverseId] == nil {
-		if err := universepull(l.UniverseId); err != nil {
+		if u, err := save.UniversesGet(l.UniverseId); err == nil {
+			engine.Multiverse[u.Id] = u
+		} else {
 			return err
 		}
 	}

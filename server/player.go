@@ -3,7 +3,7 @@ package server
 import (
 	"encoding/json"
 	"github.com/Sirupsen/logrus"
-	"github.com/ospokemon/ospokemon/engine"
+	"github.com/ospokemon/ospokemon/comp"
 	"github.com/ospokemon/ospokemon/save"
 	"net/http"
 	"strconv"
@@ -29,7 +29,7 @@ var PlayerHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request
 	}
 
 	bdata := make(map[string]interface{})
-	bindings := p.Entity.Component(engine.COMP_Bindings).(engine.Bindings)
+	bindings := p.Entity.Component(comp.BINDINGS).(comp.Bindings)
 	for key, binding := range bindings {
 		bindingsnap := binding.Snapshot()
 		bindingsnap["key"] = key
@@ -37,12 +37,13 @@ var PlayerHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request
 	}
 
 	adata := make(map[string]interface{})
-	actions := p.Entity.Component(engine.COMP_Actions).(engine.Actions)
+	actions := p.Entity.Component(comp.ACTIONS).(comp.Actions)
 	for spellid, action := range actions {
 		adata[strconv.Itoa(int(spellid))] = action.Snapshot()
 	}
 
-	m := p.Snapshot()
+	pcomp := comp.Player(*p)
+	m := pcomp.Snapshot()
 	m["bindings"] = bdata
 	m["actions"] = adata
 

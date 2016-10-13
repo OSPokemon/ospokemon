@@ -6,7 +6,6 @@ import (
 	"github.com/ospokemon/ospokemon/server"
 	"github.com/ospokemon/ospokemon/util"
 	"net/http"
-	"time"
 )
 
 func init() {
@@ -22,16 +21,17 @@ func AccountAuth(args ...interface{}) {
 	a := save.Accounts[username]
 
 	if a == nil {
-		a = queryaccount(username)
-		save.Accounts[username] = a
-	}
-	if a == nil {
-		logrus.WithFields(logrus.Fields{
-			"Username": username,
-		}).Warn("cmd.AccountAuth: Failure: Username not found")
+		if account, err := save.AccountsGet(username); err == nil {
+			a = account
+			save.Accounts[username] = a
+		} else {
+			logrus.WithFields(logrus.Fields{
+				"Username": username,
+			}).Warn("cmd.AccountAuth: Failure: Username not found")
 
-		http.Redirect(w, r, "/login/?usernamenotfound", http.StatusMovedPermanently)
-		return
+			http.Redirect(w, r, "/login/?usernamenotfound", http.StatusMovedPermanently)
+			return
+		}
 	}
 
 	if a.Password != password {
@@ -50,38 +50,15 @@ func AccountAuth(args ...interface{}) {
 		s = server.NewSession(a.Username)
 		a.SessionId = s.SessionId
 		server.Sessions[s.SessionId] = s
-
-		logrus.WithFields(logrus.Fields{
-			"Username":  a.Username,
-			"SessionId": a.SessionId,
-		}).Warn("cmd.AccountAuth: Success")
-	} else {
-		logrus.WithFields(logrus.Fields{
-			"Username":  a.Username,
-			"SessionId": a.SessionId,
-		}).Warn("cmd.AccountAuth: Success: Rewrite session")
 	}
+
+	util.Event.Fire(save.EVNT_AccountLogin, a, s, r, w)
 
 	s.WriteSessionId(w)
 	http.Redirect(w, r, "/play/", http.StatusMovedPermanently)
 
-	util.Event.Fire(save.EVNT_AccountLogin, a, s, r, w)
-}
-
-func queryaccount(username string) *save.Account {
-	a := &save.Account{}
-	row := save.Connection.QueryRow(
-		"SELECT username, email, password, register FROM accounts WHERE username=?",
-		username,
-	)
-
-	var timebuff int64
-	if err := row.Scan(&a.Username, &a.Email, &a.Password, &timebuff); err == nil {
-		a.Register = time.Unix(timebuff, 0)
-	} else {
-		logrus.Error("cmd.AccountAuth: " + err.Error())
-		a = nil
-	}
-
-	return a
+	logrus.WithFields(logrus.Fields{
+		"Username":  a.Username,
+		"SessionId": a.SessionId,
+	}).Warn("cmd.AccountAuth")
 }

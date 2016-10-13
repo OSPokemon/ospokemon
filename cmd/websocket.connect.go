@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"github.com/Sirupsen/logrus"
-	"github.com/ospokemon/ospokemon/engine"
+	"github.com/ospokemon/ospokemon/comp"
 	"github.com/ospokemon/ospokemon/save"
 	"github.com/ospokemon/ospokemon/server"
 	"github.com/ospokemon/ospokemon/util"
@@ -28,13 +28,15 @@ func WebsocketConnect(args ...interface{}) {
 
 func websocketconnect(s *server.Session) error {
 	if save.Players[s.Username] == nil {
-		if err := playerpull(s.Username); err != nil {
+		if p, err := save.PlayersGet(s.Username); err != nil {
 			return err
+		} else {
+			save.Players[p.Username] = p
 		}
 	}
 
 	p := save.Players[s.Username]
-	l := p.Entity.Component(engine.COMP_Location).(*engine.Location)
+	l := p.Entity.Component(comp.LOCATION).(*comp.Location)
 
 	if err := universeadd(p.Entity, l); err != nil {
 		return err

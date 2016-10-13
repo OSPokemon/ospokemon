@@ -3,7 +3,7 @@ package cmd
 import (
 	"errors"
 	"github.com/Sirupsen/logrus"
-	"github.com/ospokemon/ospokemon/engine"
+	"github.com/ospokemon/ospokemon/comp"
 	"github.com/ospokemon/ospokemon/save"
 	"github.com/ospokemon/ospokemon/server"
 	"github.com/ospokemon/ospokemon/util"
@@ -35,8 +35,11 @@ func websocketdisconnect(s *server.Session) error {
 	s.Websocket.Close()
 	s.Websocket = nil
 
-	if p := save.Players[s.Username]; p != nil {
-		l := p.Entity.Component(engine.COMP_Location).(*engine.Location)
+	if p := save.Players[s.Username]; p == nil {
+		return errors.New("server.WebsocketDisconnect: Player missing")
+	} else {
+		l := p.Entity.Component(comp.LOCATION).(*comp.Location)
+
 		if err := universeremove(p.Entity, l); err != nil {
 			return err
 		}

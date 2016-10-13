@@ -38,9 +38,11 @@ func accountlogout(a *save.Account) error {
 		}
 	}
 	if p := save.Players[a.Username]; p != nil {
-		if err := playerdelete(p.Username); err != nil {
+		save.Players[a.Username] = nil
+		if err := save.PlayersDelete(p.Username); err != nil {
 			return err
-		} else if err := playerpush(p.Username); err != nil {
+		}
+		if err := save.PlayersInsert(p); err != nil {
 			return err
 		}
 	}

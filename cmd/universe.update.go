@@ -3,6 +3,7 @@ package cmd
 import (
 	"encoding/json"
 	"github.com/Sirupsen/logrus"
+	"github.com/ospokemon/ospokemon/comp"
 	"github.com/ospokemon/ospokemon/engine"
 	"github.com/ospokemon/ospokemon/save"
 	"github.com/ospokemon/ospokemon/server"
@@ -32,7 +33,7 @@ func UniverseUpdate(args ...interface{}) {
 	}
 
 	for _, entity := range u.Entities {
-		p := entity.Component(save.COMP_Player).(*save.Player)
+		p := entity.Component(comp.PLAYER).(*comp.Player)
 
 		if p == nil {
 			continue

@@ -1,11 +1,8 @@
-package engine
+package save
 
 import (
 	"time"
 )
-
-const COMP_Spells = "engine/Spells"
-const EVNT_SpellPull = "engine.Spell.Pull"
 
 type Spell struct {
 	Id       uint
@@ -16,4 +13,4 @@ type Spell struct {
 	Data     map[string]string
 }
 
-type Spells map[uint]*Spell
+var Spells = make(map[uint]*Spell)

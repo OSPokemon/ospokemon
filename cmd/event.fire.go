@@ -12,7 +12,5 @@ func init() {
 func EventFire(args ...interface{}) {
 	event := args[0].(string)
 
-	logrus.WithFields(logrus.Fields{
-		"Event": event,
-	}).Debug("cmd.EventFire")
+	logrus.Debug(event)
 }

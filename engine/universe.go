@@ -6,8 +6,6 @@ import (
 	"time"
 )
 
-const EVNT_UniversePull = "engine.Universe.Pull"
-const EVNT_UniversePush = "engine.Universe.Push"
 const EVNT_UniverseAdd = "engine.Universe.Add"
 const EVNT_UniverseRemove = "engine.Universe.Remove"
 const EVNT_UniverseUpdate = "engine.Universe.Update"
@@ -41,8 +39,6 @@ func (u *Universe) Update(d time.Duration) {
 	for _, e := range u.Entities {
 		e.Update(u, d)
 	}
-
-	util.Event.Fire(EVNT_UniverseUpdate, u, d)
 }
 
 var Multiverse = make(map[uint]*Universe)
