@@ -23,10 +23,10 @@ func SpellsGet(id uint) (*Spell, error) {
 	}
 
 	if t := time.Duration(casttimebuff); casttimebuff > 0 {
-		s.CastTime = t
+		s.CastTime = t * time.Millisecond
 	}
 	if t := time.Duration(cooldownbuff); cooldownbuff > 0 {
-		s.Cooldown = t
+		s.Cooldown = t * time.Millisecond
 	}
 
 	logrus.WithFields(logrus.Fields{
