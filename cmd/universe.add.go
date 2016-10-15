@@ -28,7 +28,6 @@ func UniverseAdd(args ...interface{}) {
 }
 
 func universeadd(e *engine.Entity, l *comp.Location) error {
-
 	if engine.Multiverse[l.UniverseId] == nil {
 		if u, err := save.UniversesGet(l.UniverseId); err == nil {
 			engine.Multiverse[u.Id] = u

@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-const LOCATION = "engine/Location"
+const LOCATION = "Location"
 
 type Location save.Location
 
