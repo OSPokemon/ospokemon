@@ -1,1 +1,1 @@
-INSERT INTO spells(id, image, script, casttime, cooldown) VALUES (1, "/image/spell/0.png", 0, 1000, 3000);
+INSERT INTO spells(id, image, script, casttime, cooldown) VALUES (1, "/image/spell/0.png", 1, 1000, 3000);

@@ -1,6 +1,7 @@
 package save
 
 import (
+	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/engine"
 	"time"
 )
@@ -10,17 +11,35 @@ type Action struct {
 	Timer   *time.Duration
 }
 
-func (a Action) Update(u *engine.Universe, e *engine.Entity, d time.Duration) {
-	if a.Timer != nil {
-		if *a.Timer < d {
-			a.Timer = nil
-		} else {
-			*a.Timer -= d
+func (a *Action) Update(u *engine.Universe, e *engine.Entity, d time.Duration) {
+	if a.Timer == nil {
+		return
+	}
+
+	if spell := Spells[a.SpellId]; spell != nil {
+		if *a.Timer > spell.Cooldown && (*a.Timer-d) <= spell.Cooldown {
+			if script := engine.Scripts[spell.ScriptId]; script != nil {
+				script(u, e, spell.Data)
+			} else {
+				logrus.WithFields(logrus.Fields{
+					"SpellId": a.SpellId,
+				}).Warn("save.Action: Script lookup failed")
+			}
 		}
+	} else {
+		logrus.WithFields(logrus.Fields{
+			"SpellId": a.SpellId,
+		}).Warn("save.Action: Spell lookup failed")
+	}
+
+	if *a.Timer < d {
+		a.Timer = nil
+	} else {
+		*a.Timer -= d
 	}
 }
 
-func (a Action) Snapshot() map[string]interface{} {
+func (a *Action) Snapshot() map[string]interface{} {
 	timebuff := 0
 	if a.Timer != nil {
 		timebuff = int(*a.Timer)
