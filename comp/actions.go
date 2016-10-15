@@ -19,6 +19,9 @@ func init() {
 	util.Event.On(save.EVNT_PlayersInsert, func(args ...interface{}) {
 		actionsplayerinsert(args[0].(*save.Player))
 	})
+	util.Event.On(save.EVNT_PlayersDelete, func(args ...interface{}) {
+		actionsplayerdelete(args[0].(string))
+	})
 }
 
 func (a Actions) Id() string {
@@ -65,4 +68,8 @@ func actionsplayerinsert(p *save.Player) {
 			logrus.Error(err.Error())
 		}
 	}
+}
+
+func actionsplayerdelete(username string) {
+	save.ActionsDeletePlayer(username)
 }
