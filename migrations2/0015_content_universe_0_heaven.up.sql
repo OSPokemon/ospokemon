@@ -1,0 +1,1 @@
+INSERT INTO universes(id, x, y, dx, dy) VALUES (0, -200, -200, 400, 400);

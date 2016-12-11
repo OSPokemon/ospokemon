@@ -1,7 +1,0 @@
-CREATE TABLE universes (
-	id INTEGER PRIMARY KEY,
-	x NUMBER,
-	y NUMBER,
-	dx NUMBER,
-	dy NUMBER
-);

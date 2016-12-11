@@ -2,13 +2,13 @@ package server
 
 import (
 	"github.com/Sirupsen/logrus"
-	"github.com/ospokemon/ospokemon/util"
+	"github.com/ospokemon/ospokemon/option"
 	"net/http"
 )
 
 func Launch() {
 	routes()
 	go PollSessionExpire()
-	e := http.ListenAndServe(":"+util.Opt("port"), nil)
+	e := http.ListenAndServe(":"+option.String("port"), nil)
 	logrus.Error(e)
 }

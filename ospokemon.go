@@ -2,25 +2,21 @@ package main
 
 import (
 	"github.com/Sirupsen/logrus"
-	_ "github.com/ospokemon/ospokemon/cmd"
-	"github.com/ospokemon/ospokemon/engine"
+	_ "github.com/ospokemon/ospokemon/option"
+	"github.com/ospokemon/ospokemon/run"
 	"github.com/ospokemon/ospokemon/save"
 	_ "github.com/ospokemon/ospokemon/script"
 	"github.com/ospokemon/ospokemon/server"
-	"github.com/ospokemon/ospokemon/util"
 )
 
-const PATCH uint64 = 8
+const PATCH uint64 = 4
 
 func main() {
 	logrus.WithFields(logrus.Fields{
 		"Patch": PATCH,
 	}).Info("OSPokemon")
 
-	if util.Opt("patchpath") != "" {
-		save.Patch()
-		return
-	}
+	save.Patch()
 
 	if patch := save.CheckPatch(); patch != PATCH {
 		logrus.WithFields(logrus.Fields{
@@ -30,6 +26,6 @@ func main() {
 		return
 	}
 
-	go engine.Run()
+	go run.Run()
 	server.Launch()
 }

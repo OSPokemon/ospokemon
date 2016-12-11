@@ -30,6 +30,10 @@ func (v Vector) Snapshot() map[string]interface{} {
 	}
 }
 
+func (v Vector) Length() float64 {
+	return math.Sqrt((v.DX * v.DX) + (v.DY * v.DY))
+}
+
 func (v Vector) Multiply(f float64) Vector {
 	return Vector{
 		DY: v.DY * f,
@@ -45,10 +49,10 @@ func (v Vector) Reverse() Vector {
 }
 
 func (v Vector) MakeUnit() Vector {
-	length := math.Sqrt((v.DX * v.DX) + (v.DY * v.DY))
+	length := v.Length()
 
 	if math.IsNaN(length) || length == 0 {
-		length = 1
+		return v.Copy()
 	}
 
 	return Vector{
@@ -59,7 +63,11 @@ func (v Vector) MakeUnit() Vector {
 
 func (v Vector) AsSlope() float64 {
 	if v.DX == 0 {
-		return math.Inf(1)
+		if v.DY > 0 {
+			return math.Inf(1)
+		} else {
+			return math.Inf(-1)
+		}
 	} else {
 		return v.DY / v.DX
 	}

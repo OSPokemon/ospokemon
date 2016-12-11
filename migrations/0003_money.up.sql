@@ -1,0 +1,3 @@
+INSERT INTO items(id, image, script, casttime, cooldown, tradable, stack, value) VALUES (1, "/img/item/coin.png", 0, 0, 0, 1, 1000, 1);
+INSERT INTO items(id, image, script, casttime, cooldown, tradable, stack, value) VALUES (2, "/img/item/coinbag.png", 0, 0, 0, 1, 1000, 100);
+INSERT INTO items(id, image, script, casttime, cooldown, tradable, stack, value) VALUES (3, "/img/item/coinbucket.png", 0, 0, 0, 1, 1000, 10000);

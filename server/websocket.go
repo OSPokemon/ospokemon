@@ -2,13 +2,9 @@ package server
 
 import (
 	"github.com/Sirupsen/logrus"
-	"github.com/ospokemon/ospokemon/util"
+	"github.com/ospokemon/ospokemon/save"
 	"golang.org/x/net/websocket"
 )
-
-const EVNT_WebsocketConnect = "server.Websocket.Connect"
-const EVNT_WebsocketMessage = "server.Websocket.Message"
-const EVNT_WebsocketDisconnect = "server.Websocket.Disconnect"
 
 var WebsocketHandler = websocket.Handler(func(conn *websocket.Conn) {
 	s := readsession(conn.Request())
@@ -23,7 +19,20 @@ var WebsocketHandler = websocket.Handler(func(conn *websocket.Conn) {
 
 	s.Websocket = conn
 
-	util.Event.Fire(EVNT_WebsocketConnect, s)
+	p, err := save.GetPlayer(s.Username)
+
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"Username": s.Username,
+		}).Error("server.Websocket: " + err.Error())
+		return
+	}
+
+	p.Entity.AddComponent(s)
+
+	location := p.Entity.Component(save.COMP_Location).(*save.Location)
+	u, _ := save.GetUniverse(location.UniverseId)
+	u.Add(p.Entity)
 
 	Listen(s)
 })

@@ -2,18 +2,16 @@ package spell
 
 import (
 	"github.com/Sirupsen/logrus"
-	"github.com/ospokemon/ospokemon/comp"
-	"github.com/ospokemon/ospokemon/engine"
+	"github.com/ospokemon/ospokemon/run"
 	"github.com/ospokemon/ospokemon/save"
-	"github.com/ospokemon/ospokemon/util"
 )
 
 func init() {
-	engine.Scripts[1] = Super
+	run.Scripts[1] = Super
 }
 
-func Super(u *engine.Universe, e *engine.Entity, data map[string]string) {
-	p := e.Component(comp.PLAYER).(*comp.Player)
+func Super(u *save.Universe, e *save.Entity, data map[string]string) {
+	p := e.Component(save.COMP_Player).(*save.Player)
 
 	_, err := save.Connection.Exec("DELETE FROM actions_players WHERE username=?",
 		p.Username,
@@ -37,6 +35,4 @@ func Super(u *engine.Universe, e *engine.Entity, data map[string]string) {
 		"Universe": u.Id,
 		"Entity":   e.Id,
 	}).Warn("script.Super")
-
-	util.Event.Fire(save.EVNT_PlayerPull, p.Username)
 }

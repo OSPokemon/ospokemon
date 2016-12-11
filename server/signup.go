@@ -2,7 +2,6 @@ package server
 
 import (
 	"github.com/ospokemon/ospokemon/save"
-	"github.com/ospokemon/ospokemon/util"
 	"net/http"
 )
 
@@ -12,11 +11,13 @@ var SignupHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	a := &save.Account{
-		Username: r.FormValue("username"),
-		Email:    r.FormValue("email"),
-		Password: hashpassword(r.FormValue("password")),
+	account := save.MakeAccount(r.FormValue("username"))
+	account.Password = hashpassword(r.FormValue("password"))
+
+	if err := account.Insert(); err != nil {
+		w.Write([]byte(err.Error()))
+		return
 	}
 
-	util.Event.Fire(save.EVNT_AccountCreate, a, r, w)
+	http.Redirect(w, r, "/login/", http.StatusMovedPermanently)
 })

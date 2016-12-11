@@ -1,0 +1,11 @@
+DROP TABLE accounts;
+DROP TABLE universes;
+DROP TABLE spells;
+DROP TABLE classes;
+DROP TABLE animations_classes;
+DROP TABLE players;
+DROP TABLE locations_players;
+DROP TABLE actions_players;
+DROP TABLE bags_players;
+DROP TABLE itemslots_players;
+DROP TABLE bindings_players;

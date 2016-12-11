@@ -1,11 +1,11 @@
 # OSPokemon Settings File
 log=info
-logpath=/var/log/ospokemon/ospokemon.log
-port=80
-webpath=/srv/http/ospokemon.com/
-dbpath=/var/lib/ospokemon/ospokemon.db
-patchpath=
+logpath=ospokemon.log
+port=8080
+webpath=www
+dbpath=ospokemon.db
+patchpath=migrations
 interact=false
 refresh=250
 sessionlife=180
-passwordsalt=ospokemonsalt
+passwordsalt=salt

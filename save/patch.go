@@ -4,34 +4,23 @@ import (
 	"github.com/Sirupsen/logrus"
 	_ "github.com/mattes/migrate/driver/sqlite3"
 	"github.com/mattes/migrate/migrate"
-	"github.com/ospokemon/ospokemon/util"
+	"github.com/ospokemon/ospokemon/option"
 )
 
 func CheckPatch() uint64 {
-	patch, err := migrate.Version("sqlite3://"+util.Opt("dbpath"), util.Opt("patchpath"))
-
-	if err != nil {
-		logrus.Error(err)
-	}
+	patch, _ := migrate.Version("sqlite3://"+option.String("dbpath"), "migrations")
 
 	return patch
 }
 
 func Patch() {
-	oldpatch := CheckPatch()
-
-	errors, ok := migrate.UpSync("sqlite3://"+util.Opt("dbpath"), util.Opt("patchpath"))
+	errors, ok := migrate.UpSync("sqlite3://"+option.String("dbpath"), "migrations")
 
 	if !ok {
 		for _, err := range errors {
-			logrus.Error(err)
+			logrus.WithFields(logrus.Fields{
+				"Path": option.String("dbpath"),
+			}).Error(err.Error())
 		}
 	}
-
-	newpatch := CheckPatch()
-
-	logrus.WithFields(logrus.Fields{
-		"OldPatch": oldpatch,
-		"NewPatch": newpatch,
-	}).Warn("save.Patch")
 }

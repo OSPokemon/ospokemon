@@ -12,14 +12,14 @@ func (r Rect) Center() Point {
 }
 
 func (r Rect) Copy() Shape {
-	return Rect{
+	return &Rect{
 		Anchor:    r.Anchor.Copy(),
 		Dimension: r.Dimension.Copy(),
 	}
 }
 
 func (r Rect) Move(v Vector) Shape {
-	return Rect{
+	return &Rect{
 		Anchor:    r.Anchor.Move(v),
 		Dimension: r.Dimension,
 	}
