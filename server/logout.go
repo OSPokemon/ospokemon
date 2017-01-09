@@ -8,7 +8,8 @@ import (
 var LogoutHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	if s := readsession(r); s != nil {
 		a := save.Accounts[s.Username]
-		a.Update()
+		a.Delete()
+		a.Insert()
 		delete(save.Accounts, s.Username)
 		delete(Sessions, s.SessionId)
 

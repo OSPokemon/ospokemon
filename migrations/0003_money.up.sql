@@ -1,3 +1,5 @@
-INSERT INTO items(id, image, script, casttime, cooldown, tradable, stack, value) VALUES (1, "/img/item/coin.png", 0, 0, 0, 1, 1000, 1);
-INSERT INTO items(id, image, script, casttime, cooldown, tradable, stack, value) VALUES (2, "/img/item/coinbag.png", 0, 0, 0, 1, 1000, 100);
-INSERT INTO items(id, image, script, casttime, cooldown, tradable, stack, value) VALUES (3, "/img/item/coinbucket.png", 0, 0, 0, 1, 1000, 10000);
+INSERT INTO items(id, script, casttime, cooldown, tradable, stack, value) VALUES (1, 0, 0, 0, 1, 1000000000, 1);
+INSERT INTO animations_items(item, key, value) VALUES (1, "portrait", "/img/item/coin.png");
+INSERT INTO animations_items(item, key, value) VALUES (1, "stack-1", "/img/item/coin.png");
+INSERT INTO animations_items(item, key, value) VALUES (1, "stack-1000", "/img/item/coinbag.png");
+INSERT INTO animations_items(item, key, value) VALUES (1, "stack-1000000", "/img/item/coinbucket.png");

@@ -2,6 +2,7 @@ package spell
 
 import (
 	"github.com/Sirupsen/logrus"
+	"github.com/ospokemon/ospokemon/part"
 	"github.com/ospokemon/ospokemon/run"
 	"github.com/ospokemon/ospokemon/save"
 )
@@ -11,7 +12,7 @@ func init() {
 }
 
 func Super(u *save.Universe, e *save.Entity, data map[string]string) {
-	p := e.Component(save.COMP_Player).(*save.Player)
+	p := e.Parts[part.PLAYER].(*save.Player)
 
 	_, err := save.Connection.Exec("DELETE FROM actions_players WHERE username=?",
 		p.Username,

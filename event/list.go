@@ -13,6 +13,27 @@ const PlayerQuery = "save.Player.Query"
 const PlayerInsert = "save.Player.Insert"
 const PlayerDelete = "save.Player.Delete"
 
+const PokemonMake = "save.Pokemon.Make"
+const PokemonQuery = "save.Pokemon.Query"
+const PokemonInsert = "save.Pokemon.Insert"
+const PokemonDelete = "save.Pokemon.Delete"
+
+const ActionMake = "save.Action.Make"
+
+const ActionsPlayerQuery = "save.Actions.PlayerQuery"
+const ActionsPlayerInsert = "save.Actions.PlayerInsert"
+const ActionsPlayerDelete = "save.Actions.PlayerDelete"
+
+const ActionsPokemonQuery = "save.Actions.PokemonQuery"
+
+const ItemslotMake = "save.Itemslot.Make"
+
+const ItembagPlayerQuery = "save.Itembag.PlayerQuery"
+const ItembagPlayerInsert = "save.Itembag.PlayerInsert"
+const ItembagPlayerDelete = "save.Itembag.PlayerDelete"
+
+const ItemslotEntityQuery = "save.Itemslot.EntityQuery"
+
 const UniverseMake = "save.Universe.Make"
 const UniverseQuery = "save.Universe.Query"
 

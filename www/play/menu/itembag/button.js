@@ -14,8 +14,13 @@
 		}
 		$(this).removeClass('empty')
 
-		if (this.pos != data.pos) {
-			this.pos = data.pos
+		if (this.log) {
+			console.log(data)
+			this.log = false
+		}
+
+		if (this.itemid !== data.item.id) {
+			this.itemid = data.item.id
 		}
 
 		var span = $('span', this)
@@ -24,8 +29,8 @@
 		}
 
 		var img = $('img', this)
-		if (img.attr("src") != data.item.image) {
-			img.attr("src", data.item.image)
+		if (img.attr("src") != data.imaging.image) {
+			img.attr("src", data.imaging.image)
 		}
 
 		return this

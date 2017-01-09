@@ -4,7 +4,6 @@ import (
 	"github.com/cznic/mathutil"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/space"
-	"strconv"
 	"time"
 )
 
@@ -72,22 +71,6 @@ func (u *Universe) Update(d time.Duration) {
 	}
 }
 
-func (u *Universe) Snapshot() map[string]interface{} {
-	data := make(map[string]interface{})
-
-	for entityId, entity := range u.Entities {
-		key := strconv.Itoa(int(entityId))
-
-		if entity == nil {
-			data[key] = nil
-		} else {
-			data[key] = entity.Snapshot()
-		}
-	}
-
-	return data
-}
-
 func (u *Universe) Add(e *Entity) {
 	e.Id = u.GenerateId()
 	u.Entities[e.Id] = e
@@ -104,7 +87,7 @@ func (u *Universe) Query() error {
 		u.Id,
 	)
 
-	if err := row.Scan(&u.Space.Rect.Dimension.DX, &u.Space.Rect.Dimension.DY, &u.Private); err != nil {
+	if err := row.Scan(&u.Space.Dimension.DX, &u.Space.Dimension.DY, &u.Private); err != nil {
 		return err
 	}
 

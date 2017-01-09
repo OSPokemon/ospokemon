@@ -1,13 +1,25 @@
 ({
 	class: 'menu.actions.button',
 	build: function(data) {
-		this.data = data
 		$(this).draggable({ revert: "invalid" })
+		this.update(data)
 		return this
 	},
-	refresh: function() {
-		$('span', this).text(this.data.spellid)
-		$('img', this).attr("src", this.data.image)
+	update: function(data) {
+		if (this.log) {
+			console.log(data)
+			this.log = false
+		}
+
+		if (this.spellid != data.spell) {
+			this.spellid = data.spell
+		}
+
+		var img = $('img', this)
+		if (img.attr("src") != data.imaging.image) {
+			img.attr("src", data.imaging.image)
+		}
+
 		return this
 	}
 })

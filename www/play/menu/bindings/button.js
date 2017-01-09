@@ -17,21 +17,30 @@
 
 		var img = $('img', this)
 
-		if (img.attr("src") != data.image) {
-			img.attr("src", data.image)
+		if (this.log) {
+			console.log(data)
+			this.log = false
 		}
 
 		var key = $('.key', this)
-
 		if (key.text() != data.key) {
 			this.key = data.key
 			key.text(data.key)
 		}
 
-		var amount = $('.amount', this)
+		if (data.imaging) {
+			if (img.attr("src") != data.imaging.image) {
+				img.attr("src", data.imaging.image)
+			}
+		}
 
-		if (amount.text() != data.amount) {
-			amount.text(data.amount)
+		if (data.itemslot) {
+			var amount = $('.amount', this)
+
+			if (amount.text() != data.itemslot.amount) {
+				amount.text(data.itemslot.amount)
+			}
+		} else if (data.action) {
 		}
 	},
 	drop: function(event, ui) {
@@ -42,12 +51,17 @@
 		var bind = ui.draggable[0]
 
 		if (bind.class == 'menu.bag.button') {
+			bind.style = ""
 			ospokemon.websocket.Send('Binding.Set', {
 				'key': this.key,
-				'bagslot': bind.pos
+				'itemid': bind.itemid
 			})
 		} else if (bind.class == 'menu.actions.button') {
-			console.log('wassup')
+			bind.style = ""
+			ospokemon.websocket.Send('Binding.Set', {
+				'key': this.key,
+				'spellid': bind.spellid
+			})
 		} else {
 			console.error('binding type not recognized')
 		}

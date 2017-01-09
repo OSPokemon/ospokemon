@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/ospokemon/ospokemon/part"
 	"github.com/ospokemon/ospokemon/save"
 	"golang.org/x/net/websocket"
 )
@@ -12,11 +13,11 @@ func Listen(s *Session) {
 
 		if err != nil {
 			p, _ := save.GetPlayer(s.Username)
-			location := p.Entity.Component(save.COMP_Location).(*save.Location)
-			u, _ := save.GetUniverse(location.UniverseId)
+			e := p.Parts[part.ENTITY].(*save.Entity)
+			u, _ := save.GetUniverse(e.UniverseId)
 
-			p.Entity.RemoveComponent(s)
-			u.Remove(p.Entity)
+			e.RemovePart(s)
+			u.Remove(e)
 
 			s.Websocket.Close()
 			return

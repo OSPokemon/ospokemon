@@ -4,4 +4,6 @@ import (
 	"time"
 )
 
-type Updater func(*Universe, *Entity, time.Duration) map[string]interface{}
+type Updater interface {
+	Update(*Universe, *Entity, time.Duration)
+}

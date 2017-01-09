@@ -1,0 +1,16 @@
+package part
+
+const ACCOUNT = "account"
+const ACTION = "action"
+const ACTIONS = "actions"
+const IMAGING = "imaging"
+const ITEMBAG = "itembag"
+const BINDINGS = "bindings"
+const ENTITY = "entity"
+const ITEMSLOT = "itemslot"
+const PLAYER = "player"
+const UNIVERSE = "universe"
+const POKEMON = "pokemon"
+const MENUS = "menus"
+const MOVEMENT = "movement"
+const SESSION = "session"

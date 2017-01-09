@@ -3,47 +3,72 @@ package save
 import (
 	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
+	"github.com/ospokemon/ospokemon/part"
 	"strconv"
 	"time"
 )
 
-const COMP_Actions = "save.Actions"
-
-type Actions map[uint]*time.Duration
+type Actions map[uint]*Action
 
 func init() {
 	event.On(event.PlayerMake, func(args ...interface{}) {
 		p := args[0].(*Player)
 		actions := make(Actions)
-		p.Entity.AddComponent(actions)
+		p.AddPart(actions)
 	})
 
 	event.On(event.PlayerQuery, func(args ...interface{}) {
 		p := args[0].(*Player)
-		actions := p.Entity.Component(COMP_Actions).(Actions)
-		actions.QueryPlayer(p.Username)
+		actions := p.Parts[part.ACTIONS].(Actions)
+		err := actions.QueryPlayer(p.Username)
+
+		if err != nil {
+			logrus.Error(err.Error())
+		}
+
+		if len(actions) < 1 {
+			for spellid, action := range MakeActionsDefault() {
+				actions[spellid] = action
+			}
+		}
 	})
 
 	event.On(event.PlayerInsert, func(args ...interface{}) {
 		p := args[0].(*Player)
-		actions := p.Entity.Component(COMP_Actions).(Actions)
-		actions.InsertPlayer(p.Username)
+		actions := p.Parts[part.ACTIONS].(Actions)
+		err := actions.InsertPlayer(p.Username)
+
+		if err != nil {
+			logrus.Error(err.Error())
+		}
 	})
 
 	event.On(event.PlayerDelete, func(args ...interface{}) {
 		p := args[0].(*Player)
-		actions := p.Entity.Component(COMP_Actions).(Actions)
-		actions.DeletePlayer(p.Username)
+		actions := p.Parts[part.ACTIONS].(Actions)
+		err := actions.DeletePlayer(p.Username)
+
+		if err != nil {
+			logrus.Error(err.Error())
+		}
 	})
 
 	event.On(event.BindingDown, func(args ...interface{}) {
-		p := args[0].(*Player)
+		// p := args[0].(*Player)
 		binding := args[1].(*Binding)
 
-		if binding.SpellId > 0 {
-			p.Entity.Component(COMP_Actions).(Actions).Cast(binding)
+		if action, ok := binding.Parts[part.ACTION].(*Action); ok {
+			action.Cast(binding)
 		}
 	})
+}
+
+func MakeActionsDefault() Actions {
+	action0 := MakeAction()
+	action0.Parts[part.IMAGING].(*Imaging).Image = "/img/action/0.png"
+	return Actions{
+		0: action0,
+	}
 }
 
 func (a Actions) clear() {
@@ -52,55 +77,31 @@ func (a Actions) clear() {
 	}
 }
 
-func (a Actions) Cast(b *Binding) {
-	if a[b.SpellId] != nil {
-		return
-	} else if spell, err := GetSpell(b.SpellId); spell != nil {
-		timer := spell.CastTime + spell.Cooldown
-		a[b.SpellId] = &timer
-		b.Timer = &timer
-	} else if err != nil {
-		logrus.Error(err.Error())
+func (a Actions) Part() string {
+	return part.ACTIONS
+}
+
+func (actions Actions) Update(u *Universe, e *Entity, d time.Duration) {
+	for _, action := range actions {
+		action.Update(u, e, d)
 	}
 }
 
-func (a Actions) Id() string {
-	return COMP_Actions
-}
-
-func (a Actions) Update(u *Universe, e *Entity, d time.Duration) {
-	for spellid, timer := range a {
-		if timer == nil {
-			continue
-		}
-
-		if *timer < d {
-			a[spellid] = nil
-		}
-		*timer = *timer - d
-	}
-}
-
-func (a Actions) Snapshot() map[string]interface{} {
-	return nil
-}
-
-func (a Actions) SnapshotDetail() map[string]interface{} {
+func (a Actions) Json(expand bool) (string, map[string]interface{}) {
 	data := make(map[string]interface{})
-	for spellid, _ := range a {
 
-		key := strconv.Itoa(int(spellid))
-		if spell, _ := GetSpell(spellid); spell != nil {
-			data[key] = spell.Snapshot()
-		} else {
-			data[key] = spellid
+	if expand {
+		for spellId, action := range a {
+			key := strconv.Itoa(int(spellId))
+			_, actionData := action.Json(true)
+			data[key] = actionData
 		}
 	}
 
-	return data
+	return "actions", data
 }
 
-func (a Actions) QueryPlayer(username string) error {
+func (actions Actions) QueryPlayer(username string) error {
 	rows, err := Connection.Query(
 		"SELECT spellid, timer FROM actions_players WHERE username=?",
 		username,
@@ -110,32 +111,36 @@ func (a Actions) QueryPlayer(username string) error {
 		return err
 	}
 
-	a.clear()
+	actions.clear()
 	for rows.Next() {
-		var spellidbuff uint
+		action := MakeAction()
 		var timerbuff uint64
 
-		err = rows.Scan(&spellidbuff, &timerbuff)
+		err = rows.Scan(&action.Spell, &timerbuff)
 		if err != nil {
 			return err
 		}
 
 		if t := time.Duration(timerbuff); timerbuff > 0 {
-			a[spellidbuff] = &t
+			action.Timer = &t
 		} else {
-			a[spellidbuff] = nil
+			action.Timer = nil
 		}
+
+		actions[action.Spell] = action
 	}
 	rows.Close()
+
+	event.Fire(event.ActionsPlayerQuery, username, actions)
 
 	return nil
 }
 
-func (a Actions) InsertPlayer(username string) error {
-	for spellid, timer := range a {
+func (actions Actions) InsertPlayer(username string) error {
+	for spellid, action := range actions {
 		timerbuff := 0
-		if timer != nil {
-			timerbuff = int(*timer)
+		if action.Timer != nil {
+			timerbuff = int(*action.Timer)
 		}
 
 		_, err := Connection.Exec(

@@ -3,7 +3,7 @@
 	build: function() {
 		ospokemon.menu.player = this
 
-		$(this).draggable()
+		$(this).draggable().resizable()
 
 		ospokemon.event.On('Update', this.update)
 
@@ -19,6 +19,8 @@
 			}
 			return
 		}
+
+		ospokemon.menu.player.data = data
 
 		if ($(ospokemon.menu.player).is(':hidden')) {
 			$(ospokemon.menu.player).slideDown('slow')

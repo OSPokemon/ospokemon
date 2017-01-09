@@ -41,12 +41,12 @@ func GetItem(id uint) (*Item, error) {
 
 func (i *Item) Query() error {
 	row := Connection.QueryRow(
-		"SELECT image, script, casttime, cooldown, tradable, stack, value FROM items WHERE id=?",
+		"SELECT script, casttime, cooldown, tradable, stack, value FROM items WHERE id=?",
 		i.Id,
 	)
 
 	var casttimebuff, cooldownbuff, tradeablebuff int64
-	if err := row.Scan(&i.Image, &i.ScriptId, &casttimebuff, &cooldownbuff, &tradeablebuff, &i.Stack, &i.Value); err != nil {
+	if err := row.Scan(&i.ScriptId, &casttimebuff, &cooldownbuff, &tradeablebuff, &i.Stack, &i.Value); err != nil {
 		return err
 	}
 
@@ -60,7 +60,42 @@ func (i *Item) Query() error {
 		i.Tradable = true
 	}
 
+	rows, err := Connection.Query(
+		"SELECT key, value FROM animations_items WHERE item=?",
+		i.Id,
+	)
+	if err != nil {
+		return err
+	}
+
+	for rows.Next() {
+		var keybuff, valuebuff string
+		err = rows.Scan(&keybuff, &valuebuff)
+		if err != nil {
+			return err
+		}
+		i.Animations[keybuff] = valuebuff
+	}
+	rows.Close()
+
 	// TODO get item data
+	// rows, err = Connection.Query(
+	// 	"SELECT key, value FROM items_data WHERE item=?",
+	// 	i.Id,
+	// )
+	// if err != nil {
+	// 	return err
+	// }
+
+	// for rows.Next() {
+	// 	var keybuff, valuebuff string
+	// 	err = rows.Scan(&keybuff, &valuebuff)
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// 	i.Data[keybuff] = valuebuff
+	// }
+	// rows.Close()
 
 	return nil
 }

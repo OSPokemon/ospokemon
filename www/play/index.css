@@ -7,6 +7,8 @@ body {
 
 .universe {
 	position: relative;
+	transition: 0.5s linear;
+	height: 100%;
 }
 
 .menu {
@@ -37,32 +39,34 @@ body {
 	height: 48px;
 }
 
-/* Action bar */
-.menu-actionbar {
+/* Bindings bar */
+.menu-bindings {
 	position: absolute;
 	bottom: 0px;
 	left: 0px;
 }
-.menu-actionbar-button {
+.menu-bindings-button {
 	position: relative;
 	display: inline-block;
 	width: 48px;
 	height: 48px;
 	vertical-align: top;
 }
-.menu-actionbar-button span {
+.menu-bindings-button span {
 	position: absolute;
 	font-weight:bold;
-	top: 0px;
 	right: 0px;
 }
-.menu-actionbar-button img {
+.menu-bindings-button .key {
+	top: 0px;
+}
+.menu-bindings-button .amount {
+	bottom: 0px;
+}
+.menu-bindings-button img {
 }
 
 /* Bag menu */
-.menu-bag {
-	display: none;
-}
 .menu-bag-button {
 	display: inline-block;
 	position: relative;
@@ -82,13 +86,6 @@ body {
 }
 
 /* Player menu */
-
-.menu-player {
-	/*display: none;*/
-}
-.menu-player .panel-title {
-	display: inline;
-}
 .menu-player-experience {
 	/* width: 500px; */
 	min-width: 200px;
@@ -104,13 +101,22 @@ body {
 	float: right;
 }
 
+/* Actions Menu */
+.menu-actions-button {
+	display: inline-block;
+	position: relative;
+	vertical-align: top;
+	height: 48px;
+	width: 48px;
+}
+
 /* Bootstrap fix */
 
 .panel {
 	display: none;
 	position: absolute;
-	left: 250px;
-	top: 250;
+	left: 100px;
+	top: 100px;
 }
 .panel-heading {
 	padding: 0px;

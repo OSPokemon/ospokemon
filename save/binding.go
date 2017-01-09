@@ -1,40 +1,39 @@
 package save
 
 import (
+	"github.com/ospokemon/ospokemon/part"
 	"time"
 )
 
 type Binding struct {
 	Key      string
-	SpellId  uint
-	BagSlot  int
 	SystemId string
-	Image    string
-	Timer    *time.Duration
+	part.Parts
 }
 
-func MakeBinding(key string) *Binding {
+func MakeBinding() *Binding {
 	return &Binding{
-		Key:     key,
-		BagSlot: -1,
+		Parts: make(part.Parts),
 	}
 }
 
 func (b *Binding) Update(u *Universe, e *Entity, d time.Duration) {
 }
 
-func (b *Binding) Snapshot() map[string]interface{} {
-	timebuff := 0
-	if b.Timer != nil {
-		timebuff = int(*b.Timer)
+func (b *Binding) Json(expand bool) (string, map[string]interface{}) {
+	data := map[string]interface{}{
+		"key":      b.Key,
+		"systemid": b.SystemId,
 	}
 
-	return map[string]interface{}{
-		"key":      b.Key,
-		"image":    b.Image,
-		"spellid":  b.SpellId,
-		"bagslot":  b.BagSlot,
-		"systemid": b.SystemId,
-		"timer":    timebuff,
+	if expand {
+		for _, part := range b.Parts {
+			if jsoner, ok := part.(Jsoner); ok {
+				key, partData := jsoner.Json(false)
+				data[key] = partData
+			}
+		}
 	}
+
+	return "binding", data
 }

@@ -1,1 +1,0 @@
-DELETE FROM universes WHERE id=0;

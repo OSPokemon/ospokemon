@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/cznic/mathutil"
 	"github.com/ospokemon/ospokemon/option"
+	"github.com/ospokemon/ospokemon/part"
 	"github.com/ospokemon/ospokemon/run"
 	"github.com/ospokemon/ospokemon/save"
 	"golang.org/x/net/websocket"
@@ -12,8 +13,6 @@ import (
 	"sync"
 	"time"
 )
-
-const COMP_Session = "server.Session"
 
 type Session struct {
 	Username  string
@@ -31,31 +30,47 @@ func NewSession(username string) *Session {
 	}
 }
 
-func (s *Session) Id() string {
-	return COMP_Session
+func (s *Session) Part() string {
+	return part.SESSION
 }
 
 func (s *Session) Update(u *save.Universe, e *save.Entity, d time.Duration) {
 	p := save.Players[s.Username]
 
 	data := make(map[string]interface{})
+	universeData := make(map[string]interface{})
 
-	data["username"] = p.Username
-	data["universe"] = u.Snapshot()
-	data["bindings"] = p.Entity.Component(save.COMP_Bindings).(save.Bindings).SnapshotDetail()
+	data["universe"] = universeData
+	data["username"] = s.Username
 
-	menus := p.Entity.Component(run.COMP_Menus).(*run.Menus)
-	if menus.Player {
-		data["player"] = p.SnapshotDetail()
+	data["entityid"] = p.Parts[part.ENTITY].(*save.Entity).Id
+
+	for entityId, entity := range u.Entities {
+		if entity == nil {
+			continue
+		}
+
+		key := strconv.Itoa(int(entityId))
+		_, entityData := entity.Json(true)
+		universeData[key] = entityData
 	}
-	if menus.Bag {
-		data["bag"] = p.Entity.Component(save.COMP_Bag).(*save.Bag).SnapshotDetail()
+
+	menus := p.Parts[part.MENUS].(*run.Menus)
+	if menus.Player {
+		key, playerData := p.Json(true)
+		data[key] = playerData
+	}
+	if menus.Itembag {
+		key, itembagData := p.Parts[part.ITEMBAG].(*save.Itembag).Json(true)
+		data[key] = itembagData
 	}
 	if menus.Actions {
-		data["actions"] = p.Entity.Component(save.COMP_Actions).(save.Actions).SnapshotDetail()
+		key, actionsData := p.Parts[part.ACTIONS].(save.Actions).Json(true)
+		data[key] = actionsData
 	}
 
-	// data["animations"] = p.Entity.Component(COMP_Animations).(Animations).Snapshot()
+	_, bindingsData := p.Parts[part.BINDINGS].(save.Bindings).Json(true)
+	data["bindings"] = bindingsData
 
 	snapshot, _ := json.Marshal(map[string]interface{}{
 		"event": "Update",
@@ -63,10 +78,6 @@ func (s *Session) Update(u *save.Universe, e *save.Entity, d time.Duration) {
 	})
 
 	s.Send(string(snapshot))
-}
-
-func (s *Session) Snapshot() map[string]interface{} {
-	return nil
 }
 
 func (s *Session) WriteSessionId(w http.ResponseWriter) {

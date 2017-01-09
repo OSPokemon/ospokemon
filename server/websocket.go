@@ -2,6 +2,7 @@ package server
 
 import (
 	"github.com/Sirupsen/logrus"
+	"github.com/ospokemon/ospokemon/part"
 	"github.com/ospokemon/ospokemon/save"
 	"golang.org/x/net/websocket"
 )
@@ -28,11 +29,16 @@ var WebsocketHandler = websocket.Handler(func(conn *websocket.Conn) {
 		return
 	}
 
-	p.Entity.AddComponent(s)
+	p.AddPart(s)
 
-	location := p.Entity.Component(save.COMP_Location).(*save.Location)
-	u, _ := save.GetUniverse(location.UniverseId)
-	u.Add(p.Entity)
+	e := p.Parts[part.ENTITY].(*save.Entity)
 
-	Listen(s)
+	if u, err := save.GetUniverse(e.UniverseId); err != nil {
+		logrus.WithFields(logrus.Fields{
+			"Universe": e.UniverseId,
+		}).Error(err.Error())
+	} else {
+		u.Add(e)
+		Listen(s)
+	}
 })

@@ -2,16 +2,14 @@ package run
 
 import (
 	"github.com/ospokemon/ospokemon/event"
+	"github.com/ospokemon/ospokemon/part"
 	"github.com/ospokemon/ospokemon/save"
 	"strings"
-	"time"
 )
-
-const COMP_Menus = "menus"
 
 type Menus struct {
 	Player  bool
-	Bag     bool
+	Itembag bool
 	Actions bool
 }
 
@@ -20,7 +18,7 @@ func init() {
 		p := args[0].(*save.Player)
 		menus := &Menus{}
 
-		p.Entity.AddComponent(menus)
+		p.AddPart(menus)
 	})
 
 	event.On(event.BindingDown, func(args ...interface{}) {
@@ -28,7 +26,7 @@ func init() {
 		b := args[1].(*save.Binding)
 
 		if strings.HasPrefix(b.SystemId, "menu") {
-			m := p.Entity.Component(COMP_Menus).(*Menus)
+			m := p.Parts[part.MENUS].(*Menus)
 			m.Toggle(b.SystemId[5:])
 		}
 	})
@@ -37,20 +35,13 @@ func init() {
 func (m *Menus) Toggle(name string) {
 	if name == "player" {
 		m.Player = !m.Player
-	} else if name == "bag" {
-		m.Bag = !m.Bag
+	} else if name == "itembag" {
+		m.Itembag = !m.Itembag
 	} else if name == "actions" {
 		m.Actions = !m.Actions
 	}
 }
 
-func (m *Menus) Id() string {
-	return COMP_Menus
-}
-
-func (m *Menus) Update(u *save.Universe, e *save.Entity, d time.Duration) {
-}
-
-func (m *Menus) Snapshot() map[string]interface{} {
-	return nil
+func (m *Menus) Part() string {
+	return part.MENUS
 }

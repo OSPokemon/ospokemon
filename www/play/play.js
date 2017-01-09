@@ -86,32 +86,30 @@ ospokemon.element = {
 	}
 }
 
-ospokemon.event = {}
+ospokemon.event = {
+	On: function(event, f) {
+		ospokemon.event[event] = ospokemon.event[event] || []
+		ospokemon.event[event].push(f)
+		return ospokemon.event[event].length - 1
+	},
+	Off: function(event, id) {
+		ospokemon.event[event][id] = false
+	},
+	Fire: function() {
+		var args = Array.prototype.slice.call(arguments)
+		var event = args.shift()
 
-ospokemon.event.On = function(event, f) {
-	ospokemon.event[event] = ospokemon.event[event] || []
-	ospokemon.event[event].push(f)
-	return ospokemon.event[event].length - 1
-}
+		if (!ospokemon.event[event]) {
+			// console.log('no handlers for event: '+event)
+			return
+		}
 
-ospokemon.event.Off = function(event, id) {
-	ospokemon.event[event][id] = false
-}
+		for (var i = 0; i < ospokemon.event[event].length; i++) {
+			var f = ospokemon.event[event][i]
 
-ospokemon.event.Fire = function() {
-	var args = Array.prototype.slice.call(arguments)
-	var event = args.shift()
-
-	if (!ospokemon.event[event]) {
-		// console.log('no handlers for event: '+event)
-		return
-	}
-
-	for (var i = 0; i < ospokemon.event[event].length; i++) {
-		var f = ospokemon.event[event][i]
-
-		if (f) {
-			f.apply(null, args)
+			if (f) {
+				f.apply(null, args)
+			}
 		}
 	}
 }
@@ -121,9 +119,17 @@ ospokemon.websocket = new WebSocket('ws://' + window.location.host + '/api/webso
 ospokemon.websocket.onmessage = function (e) {
 	var data = JSON.parse(e.data)
 
-	if (data.event == 'Update' && data.data.username != ospokemon.username) {
-		ospokemon.username = data.data.username
+	if (data.event == 'Update') {
+		if (ospokemon.username != data.data.username) {
+			ospokemon.username = data.data.username
+		}
+	
+		if (ospokemon.log) {
+			console.log(data.data)
+			ospokemon.log = false
+		}
 	}
+
 
 	ospokemon.event.Fire(data.event, data.data)
 }

@@ -3,63 +3,75 @@ package save
 import (
 	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
+	"github.com/ospokemon/ospokemon/part"
 	"strconv"
 	"time"
 )
 
-const COMP_Bag = "save.Bag"
-
-type Bag struct {
+type Itembag struct {
 	Timers map[uint]*time.Duration
-	Slots  []*ItemSlot
+	Slots  []*Itemslot
 }
 
 func init() {
 	event.On(event.PlayerMake, func(args ...interface{}) {
 		p := args[0].(*Player)
-		bag := MakeBag(p.BagSize)
+		bag := MakeItembag(p.BagSize)
 
-		p.Entity.AddComponent(bag)
+		p.AddPart(bag)
 	})
 
 	event.On(event.PlayerQuery, func(args ...interface{}) {
 		p := args[0].(*Player)
-		bag := p.Entity.Component(COMP_Bag).(*Bag)
-		bag.QueryPlayer(p.Username)
+		bag := p.Parts[part.ITEMBAG].(*Itembag)
+		err := bag.QueryPlayer(p.Username)
+
+		if err != nil {
+			logrus.Error(err.Error())
+		}
 	})
 
 	event.On(event.PlayerInsert, func(args ...interface{}) {
 		p := args[0].(*Player)
-		bag := p.Entity.Component(COMP_Bag).(*Bag)
-		bag.InsertPlayer(p.Username)
+		bag := p.Parts[part.ITEMBAG].(*Itembag)
+		err := bag.InsertPlayer(p.Username)
+
+		if err != nil {
+			logrus.Error(err.Error())
+		}
 	})
 
 	event.On(event.PlayerDelete, func(args ...interface{}) {
 		p := args[0].(*Player)
-		bag := p.Entity.Component(COMP_Bag).(*Bag)
-		bag.DeletePlayer(p.Username)
+		bag := p.Parts[part.ITEMBAG].(*Itembag)
+		err := bag.DeletePlayer(p.Username)
+
+		if err != nil {
+			logrus.Error(err.Error())
+		}
 	})
 
 	event.On(event.BindingDown, func(args ...interface{}) {
 		p := args[0].(*Player)
 		binding := args[1].(*Binding)
 
-		if binding.BagSlot > 0 {
-			p.Entity.Component(COMP_Bag).(*Bag).Cast(binding)
+		if itemslot, ok := binding.Parts[part.ITEMSLOT].(*Itemslot); ok {
+			Itembag := p.Parts[part.ITEMBAG].(*Itembag)
+			Itembag.Cast(itemslot)
 		}
 	})
 }
 
-func MakeBag(size uint) *Bag {
-	bag := &Bag{
+func MakeItembag(size uint) *Itembag {
+	bag := &Itembag{
 		Timers: make(map[uint]*time.Duration),
-		Slots:  make([]*ItemSlot, size),
+		Slots:  make([]*Itemslot, size),
 	}
 
 	return bag
 }
 
-func (b *Bag) clear() {
+func (b *Itembag) clear() {
 	for key := range b.Timers {
 		delete(b.Timers, key)
 	}
@@ -68,19 +80,7 @@ func (b *Bag) clear() {
 	}
 }
 
-func (b *Bag) Cast(binding *Binding) {
-	slot := b.Slots[binding.BagSlot]
-	if slot == nil || b.Timers[slot.Item] != nil {
-		return
-	} else if item, err := GetItem(slot.Item); item != nil {
-		timer := item.CastTime + item.Cooldown
-		b.Timers[slot.Item] = &timer
-	} else if err != nil {
-		logrus.Error(err.Error())
-	}
-}
-
-func (b *Bag) Add(slot *ItemSlot) bool {
+func (b *Itembag) Add(slot *Itemslot) bool {
 	item, err := GetItem(slot.Item)
 	if item == nil {
 		if err != nil {
@@ -107,16 +107,11 @@ func (b *Bag) Add(slot *ItemSlot) bool {
 		return true
 	}
 
-	for pos, s := range b.Slots {
+	for id, s := range b.Slots {
 		if s == nil {
-			addSlot := &ItemSlot{
-				Pos:    pos,
-				Item:   slot.Item,
-				Amount: slot.Amount,
-			}
-			b.Slots[pos] = addSlot
-			slot.Item = 0
-			slot.Amount = 0
+			slot.Id = id
+			b.Slots[id] = slot
+			delete(slot.Parts, part.ENTITY)
 			return true
 		}
 	}
@@ -124,36 +119,49 @@ func (b *Bag) Add(slot *ItemSlot) bool {
 	return false
 }
 
-func (b *Bag) Id() string {
-	return COMP_Bag
+func (b *Itembag) Part() string {
+	return part.ITEMBAG
 }
 
-func (b *Bag) Update(u *Universe, e *Entity, d time.Duration) {
-	// TODO
+func (b *Itembag) Cast(slot *Itemslot) {
+	if b.Timers[slot.Item] != nil {
+		return
+	} else if item, err := GetItem(slot.Item); item != nil {
+		timer := item.CastTime + item.Cooldown
+		b.Timers[slot.Item] = &timer
+	} else if err != nil {
+		logrus.Error(err.Error())
+	}
 }
 
-func (b *Bag) Snapshot() map[string]interface{} {
-	return nil
-}
-
-func (b *Bag) SnapshotDetail() map[string]interface{} {
+func (b *Itembag) Json(expand bool) (string, map[string]interface{}) {
 	data := make(map[string]interface{})
 
-	for pos, slot := range b.Slots {
-		key := strconv.Itoa(pos)
-		if slot == nil {
-			data[key] = nil
-			continue
-		}
+	if expand {
+		for pos, slot := range b.Slots {
+			key := strconv.Itoa(pos)
+			if slot == nil {
+				data[key] = nil
+				continue
+			}
 
-		data[key] = slot.Snapshot()
+			_, slotData := slot.Json(true)
+
+			if b.Timers[slot.Item] != nil {
+				slotData["timer"] = *b.Timers[slot.Item]
+			} else {
+				slotData["timer"] = 0
+			}
+
+			data[key] = slotData
+		}
 	}
 
-	return data
+	return "itembag", data
 }
 
-func (b *Bag) QueryPlayer(username string) error {
-	b.clear()
+func (itembag *Itembag) QueryPlayer(username string) error {
+	itembag.clear()
 
 	rows, err := Connection.Query(
 		"SELECT pos, item, amount FROM itemslots_players WHERE username=?",
@@ -164,19 +172,18 @@ func (b *Bag) QueryPlayer(username string) error {
 	}
 
 	for rows.Next() {
-		s := &ItemSlot{}
+		s := MakeItemslot()
 
-		err = rows.Scan(&s.Pos, &s.Item, &s.Amount)
-		if err != nil {
+		if err = rows.Scan(&s.Id, &s.Item, &s.Amount); err != nil {
 			return err
 		}
 
-		b.Slots[s.Pos] = s
+		itembag.Slots[s.Id] = s
 	}
 	rows.Close()
 
 	rows, err = Connection.Query(
-		"SELECT itemid, timer FROM bags_players WHERE username=?",
+		"SELECT itemid, timer FROM itembags_players WHERE username=?",
 		username,
 	)
 	if err != nil {
@@ -193,17 +200,19 @@ func (b *Bag) QueryPlayer(username string) error {
 		}
 
 		if t := time.Duration(timerbuff); timerbuff > 0 {
-			b.Timers[itemidbuff] = &t
+			itembag.Timers[itemidbuff] = &t
 		} else {
-			b.Timers[itemidbuff] = nil
+			itembag.Timers[itemidbuff] = nil
 		}
 	}
 	rows.Close()
 
+	event.Fire(event.ItembagPlayerQuery, username, itembag)
+
 	return nil
 }
 
-func (b *Bag) InsertPlayer(username string) error {
+func (b *Itembag) InsertPlayer(username string) error {
 	for pos, s := range b.Slots {
 		if s == nil {
 			continue
@@ -229,7 +238,7 @@ func (b *Bag) InsertPlayer(username string) error {
 		}
 
 		_, err := Connection.Exec(
-			"INSERT INTO bags_players (username, itemid, timer) VALUES (?, ?, ?)",
+			"INSERT INTO itembags_players (username, itemid, timer) VALUES (?, ?, ?)",
 			username,
 			itemid,
 			timerbuff,
@@ -240,10 +249,12 @@ func (b *Bag) InsertPlayer(username string) error {
 		}
 	}
 
+	event.Fire(event.ItembagPlayerInsert, username, b)
+
 	return nil
 }
 
-func (b *Bag) UpdatePlayer(username string) error {
+func (b *Itembag) UpdatePlayer(username string) error {
 	if err := b.DeletePlayer(username); err != nil {
 		return err
 	} else if err := b.InsertPlayer(username); err != nil {
@@ -253,14 +264,20 @@ func (b *Bag) UpdatePlayer(username string) error {
 	return nil
 }
 
-func (b *Bag) DeletePlayer(username string) error {
+func (b *Itembag) DeletePlayer(username string) error {
 	_, err := Connection.Exec("DELETE FROM itemslots_players WHERE username=?", username)
 
 	if err != nil {
 		return err
 	}
 
-	_, err = Connection.Exec("DELETE FROM bags_players WHERE username=?", username)
+	_, err = Connection.Exec("DELETE FROM itembags_players WHERE username=?", username)
+
+	if err != nil {
+		return err
+	}
+
+	event.Fire(event.ItembagPlayerDelete, username)
 
 	return err
 }

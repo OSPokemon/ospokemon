@@ -6,18 +6,19 @@ import (
 )
 
 type Spell struct {
-	Id       uint
-	Image    string
-	ScriptId uint
-	CastTime time.Duration
-	Cooldown time.Duration
-	Data     map[string]string
+	Id         uint
+	ScriptId   uint
+	CastTime   time.Duration
+	Cooldown   time.Duration
+	Animations map[string]string
+	Data       map[string]string
 }
 
 func MakeSpell(id uint) *Spell {
 	s := &Spell{
-		Id:   id,
-		Data: make(map[string]string),
+		Id:         id,
+		Animations: make(map[string]string),
+		Data:       make(map[string]string),
 	}
 
 	return s
@@ -43,21 +44,21 @@ func GetSpell(id uint) (*Spell, error) {
 
 func (s *Spell) Snapshot() map[string]interface{} {
 	return map[string]interface{}{
-		"id":       s.Id,
-		"image":    s.Image,
-		"casttime": s.CastTime,
-		"cooldown": s.Cooldown,
+		"id":         s.Id,
+		"casttime":   s.CastTime,
+		"cooldown":   s.Cooldown,
+		"animations": s.Animations,
 	}
 }
 
 func (s *Spell) Query() error {
 	row := Connection.QueryRow(
-		"SELECT image, script, casttime, cooldown FROM spells WHERE id=?",
+		"SELECT script, casttime, cooldown FROM spells WHERE id=?",
 		s.Id,
 	)
 
 	var casttimebuff, cooldownbuff int64
-	if err := row.Scan(&s.Image, &s.ScriptId, &casttimebuff, &cooldownbuff); err != nil {
+	if err := row.Scan(&s.ScriptId, &casttimebuff, &cooldownbuff); err != nil {
 		return err
 	}
 
@@ -67,6 +68,24 @@ func (s *Spell) Query() error {
 	if t := time.Duration(cooldownbuff); cooldownbuff > 0 {
 		s.Cooldown = t * time.Millisecond
 	}
+
+	rows, err := Connection.Query(
+		"SELECT key, value FROM animations_spells WHERE item=?",
+		s.Id,
+	)
+	if err != nil {
+		return err
+	}
+
+	for rows.Next() {
+		var keybuff, valuebuff string
+		err = rows.Scan(&keybuff, &valuebuff)
+		if err != nil {
+			return err
+		}
+		s.Animations[keybuff] = valuebuff
+	}
+	rows.Close()
 
 	// TODO get spell data
 

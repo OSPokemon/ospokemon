@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
-	"github.com/ospokemon/ospokemon/run"
+	"github.com/ospokemon/ospokemon/part"
 	"github.com/ospokemon/ospokemon/save"
 )
 
@@ -21,18 +21,16 @@ func ReceiveMessage(s *Session, m *WebsocketMessage) {
 		keyup(p, m.Message)
 	} else if m.Event == "Binding.Set" {
 		bindingset(p, m.Message)
-	} else if m.Event == "Menu.Toggle" {
-		menutoggle(p, m.Message)
 	} else {
 		logrus.WithFields(logrus.Fields{
 			"Message":  m,
 			"Username": p.Username,
-		}).Warn("cmd.WebsocketMessage: Unrecognized message")
+		}).Warn("Websocket: Unrecognized message type")
 	}
 }
 
 func keydown(p *save.Player, key string) {
-	bindings := p.Entity.Component(save.COMP_Bindings).(save.Bindings)
+	bindings := p.Parts[part.BINDINGS].(save.Bindings)
 	binding := bindings[key]
 
 	if binding == nil {
@@ -43,7 +41,7 @@ func keydown(p *save.Player, key string) {
 }
 
 func keyup(p *save.Player, key string) {
-	bindings := p.Entity.Component(save.COMP_Bindings).(save.Bindings)
+	bindings := p.Parts[part.BINDINGS].(save.Bindings)
 	binding := bindings[key]
 
 	if binding == nil {
@@ -57,20 +55,33 @@ func bindingset(p *save.Player, m string) {
 	data := make(map[string]interface{})
 	json.Unmarshal([]byte(m), &data)
 
-	bindings := p.Entity.Component(save.COMP_Bindings).(save.Bindings)
+	key := data["key"].(string)
 
-	binding := save.MakeBinding(data["key"].(string))
+	bindings := p.Parts[part.BINDINGS].(save.Bindings)
 
-	if spellid, ok := data["spellid"]; ok {
-		binding.SpellId = uint(spellid.(float64))
+	binding := save.MakeBinding()
+	binding.Key = key
 
-		// binding image
+	if data["spellid"] != nil {
+		spellId := uint(data["spellid"].(float64))
+		actions := p.Parts[part.ACTIONS].(save.Actions)
 
-	} else if bagslot, ok := data["bagslot"]; ok {
-		binding.BagSlot = int(bagslot.(float64))
+		if action := actions[spellId]; action != nil {
+			action.Parts[part.BINDINGS].(save.Bindings)[binding.Key] = binding
+			binding.Parts = action.Parts
+		}
+	} else if data["itemid"] != nil {
+		itemid := uint(data["itemid"].(float64))
+		itembag := p.Parts[part.ITEMBAG].(*save.Itembag)
 
-		// binding image
+		for _, itemslot := range itembag.Slots {
+			if itemslot == nil || itemid != itemslot.Item {
+				continue
+			}
 
+			itemslot.Parts[part.BINDINGS].(save.Bindings)[binding.Key] = binding
+			binding.Parts = itemslot.Parts
+		}
 	} else if systemid, ok := data["systemid"]; ok {
 		binding.SystemId = systemid.(string)
 
@@ -80,12 +91,8 @@ func bindingset(p *save.Player, m string) {
 		logrus.WithFields(logrus.Fields{
 			"Message":  m,
 			"Username": p.Username,
-		}).Warn("cmd.WebsocketMessage: Unrecognized binding.set message")
+		}).Warn("Websocket: Unrecognized Binding.Set message")
 	}
 
 	bindings[binding.Key] = binding
-}
-
-func menutoggle(p *save.Player, m string) {
-	p.Entity.Component(run.COMP_Menus).(*run.Menus).Toggle(m)
 }

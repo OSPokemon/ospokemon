@@ -6,24 +6,24 @@
 		return this
 	},
 	refresh: function() {
-		if (!this.data.comp) {
+		if (!this.data) {
 			console.log(this)
 			return
 		}
 
 		var image = $('.entity-image', this)
 
-		if (image.attr('src') != this.data.image) {
-			image.attr('src', this.data.image)
+		if (image.attr('src') != this.data.imaging.image) {
+			image.attr('src', this.data.imaging.image)
 		}
 
 		image.css({
-			width: this.data.comp.location.shape.dimension.dx,
-			height: this.data.comp.location.shape.dimension.dy
+			width: this.data.shape.dimension.dx,
+			height: this.data.shape.dimension.dy
 		})
 		$(this).css({
-			left: this.data.comp.location.shape.anchor.x,
-			top: this.data.comp.location.shape.anchor.y
+			left: this.data.shape.anchor.x,
+			top: this.data.shape.anchor.y
 		})
 	}
 })

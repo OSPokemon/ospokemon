@@ -2,6 +2,7 @@ package run
 
 import (
 	"github.com/ospokemon/ospokemon/event"
+	"github.com/ospokemon/ospokemon/part"
 	"github.com/ospokemon/ospokemon/save"
 )
 
@@ -11,12 +12,12 @@ func init() {
 		entity2 := args[1].(*save.Entity)
 		u := args[2].(*save.Universe)
 
-		bag, ok := entity1.Component(save.COMP_Bag).(*save.Bag)
+		bag, ok := entity1.Parts[part.ITEMBAG].(*save.Itembag)
 		if !ok {
 			return
 		}
 
-		addslot, ok := entity2.Component(save.COMP_ItemSlot).(*save.ItemSlot)
+		addslot, ok := entity2.Parts[part.ITEMSLOT].(*save.Itemslot)
 		if !ok {
 			return
 		}

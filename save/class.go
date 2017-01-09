@@ -6,9 +6,9 @@ import (
 )
 
 type Class struct {
-	Id        uint
-	Dimension space.Vector
-	Animations
+	Id         uint
+	Dimension  space.Vector
+	Animations map[string]string
 }
 
 func (c *Class) clearanimations() {

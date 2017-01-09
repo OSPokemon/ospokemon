@@ -2,10 +2,10 @@ package save
 
 import (
 	"github.com/ospokemon/ospokemon/event"
+	"github.com/ospokemon/ospokemon/part"
 	"time"
 )
 
-const COMP_Player = "player"
 const DEFAULT_BAG_SIZE = 6
 
 type Player struct {
@@ -15,7 +15,7 @@ type Player struct {
 	Money      uint
 	Class      uint
 	BagSize    uint
-	Entity     *Entity
+	part.Parts
 }
 
 func init() {
@@ -41,10 +41,10 @@ func MakePlayer(username string) *Player {
 	p := &Player{
 		Username: username,
 		BagSize:  DEFAULT_BAG_SIZE,
-		Entity:   MakeEntity(),
+		Parts:    make(part.Parts),
 	}
 
-	p.Entity.AddComponent(p)
+	p.Parts.AddPart(p)
 
 	event.Fire(event.PlayerMake, p)
 
@@ -69,26 +69,29 @@ func GetPlayer(username string) (*Player, error) {
 	return p, err
 }
 
-func (p *Player) Id() string {
-	return COMP_Player
+func (p *Player) Part() string {
+	return part.PLAYER
 }
 
 func (p *Player) Update(u *Universe, e *Entity, d time.Duration) {
 }
 
-func (p *Player) Snapshot() map[string]interface{} {
-	return map[string]interface{}{
+func (p *Player) Json(expand bool) (string, map[string]interface{}) {
+	data := map[string]interface{}{
 		"username": p.Username,
 		"level":    p.Level,
 	}
-}
 
-func (p *Player) SnapshotDetail() map[string]interface{} {
-	data := p.Snapshot()
-	data["experience"] = p.Experience
-	data["money"] = p.Money
+	if expand {
+		for _, part := range p.Parts {
+			if jsoner, ok := part.(Jsoner); ok {
+				key, partData := jsoner.Json(false)
+				data[key] = partData
+			}
+		}
+	}
 
-	return data
+	return "player", data
 }
 
 func (p *Player) Query() error {

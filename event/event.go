@@ -37,5 +37,5 @@ func (e Eventer) Fire(event string, data ...interface{}) {
 }
 
 func Fire(event string, data ...interface{}) {
-	eventer.Fire(event, data)
+	eventer.Fire(event, data...)
 }

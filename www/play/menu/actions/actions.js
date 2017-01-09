@@ -20,19 +20,16 @@
 			}
 			return
 		}
-
-		if ($(ospokemon.menu.actions).is(':hidden')) {
-			$(ospokemon.menu.actions).slideDown('slow')
-		}
-
-		var actions = $('.panel-body', ospokemon.menu.actions)
-		actions.empty()
+		$(ospokemon.menu.actions).slideDown('slow')
 
 		ospokemon.element.get('menu/actions/button').then(function(el) {
-			$.each(data.actions, function(i, a) {
-				var button = el.build(a)
-				button.refresh()
-				actions.append(button)
+			$.each(data.actions, function(i, action) {
+				if (ospokemon.menu.actions.buttons[i]) {
+					ospokemon.menu.actions.buttons[i].update(action)
+				} else {
+					ospokemon.menu.actions.buttons[i] = el.build(action)
+					$('.panel-body', ospokemon.menu.actions).append(ospokemon.menu.actions.buttons[i])
+				}
 			})
 		})
 

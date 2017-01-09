@@ -22,7 +22,7 @@ func main() {
 		logrus.WithFields(logrus.Fields{
 			"Found":    patch,
 			"Expected": PATCH,
-		}).Fatal("save.CheckPatch: Database patch mismatch")
+		}).Fatal("Database patch mismatch")
 		return
 	}
 

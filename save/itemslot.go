@@ -3,15 +3,29 @@ package save
 import (
 	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
+	"github.com/ospokemon/ospokemon/part"
 	"time"
 )
 
-const COMP_ItemSlot = "item"
-
-type ItemSlot struct {
-	Pos    int
+type Itemslot struct {
+	Id     int
 	Item   uint
 	Amount uint
+	Timer  *time.Duration // TODO
+	part.Parts
+}
+
+func MakeItemslot() *Itemslot {
+	itemslot := &Itemslot{
+		Id:    -1,
+		Parts: make(part.Parts),
+	}
+
+	itemslot.AddPart(itemslot)
+
+	event.Fire(event.ItemslotMake, itemslot)
+
+	return itemslot
 }
 
 func init() {
@@ -19,48 +33,55 @@ func init() {
 		e := args[0].(*Entity)
 		universeId := args[1].(uint)
 
-		comp := &ItemSlot{}
-		if err := comp.QueryEntityUniverse(e.Id, universeId); err != nil {
+		is := MakeItemslot()
+		if err := is.QueryEntityUniverse(e.Id, universeId); err != nil {
 			logrus.WithFields(logrus.Fields{
 				"Entity":   e.Id,
 				"Universe": universeId,
-			}).Error("save.ItemSlot(entity): " + err.Error())
+			}).Error("save.Itemslot(entity): " + err.Error())
 			return
 		}
 
-		e.AddComponent(comp)
-		if item, err := GetItem(comp.Item); item != nil {
-			e.Image = item.Image
-		} else if err != nil {
-			logrus.WithFields(logrus.Fields{
-				"Entity":   e.Id,
-				"Universe": universeId,
-				"Item":     comp.Item,
-			}).Error("save.ItemSlot(item): " + err.Error())
+		for _, part := range is.Parts {
+			e.AddPart(part)
 		}
+		e.AddPart(is)
+		is.Parts = e.Parts
 	})
 }
 
-func (i *ItemSlot) Id() string {
-	return COMP_ItemSlot
+func (i *Itemslot) Part() string {
+	return part.ITEMSLOT
 }
 
-func (i *ItemSlot) Update(u *Universe, e *Entity, d time.Duration) {
+func (i *Itemslot) Update(u *Universe, e *Entity, d time.Duration) {
 }
 
-func (i *ItemSlot) Snapshot() map[string]interface{} {
-	data := make(map[string]interface{})
-
-	if item, _ := GetItem(i.Item); item != nil {
-		data["pos"] = i.Pos
-		data["item"] = item.Snapshot()
-		data["amount"] = i.Amount
+func (i *Itemslot) Json(expand bool) (string, map[string]interface{}) {
+	data := map[string]interface{}{
+		"id":     i.Id,
+		"amount": i.Amount,
 	}
 
-	return data
+	if item, _ := GetItem(i.Item); item != nil {
+		data["item"] = item.Snapshot()
+	} else {
+		data["item"] = i.Item
+	}
+
+	if expand {
+		for _, part := range i.Parts {
+			if jsoner, ok := part.(Jsoner); ok {
+				key, partData := jsoner.Json(false)
+				data[key] = partData
+			}
+		}
+	}
+
+	return "itemslot", data
 }
 
-func (i *ItemSlot) QueryEntityUniverse(entityId uint, universeId uint) error {
+func (i *Itemslot) QueryEntityUniverse(entityId uint, universeId uint) error {
 	row := Connection.QueryRow(
 		"SELECT item, amount FROM entities_items WHERE entity=? AND universe=?",
 		entityId,
@@ -70,6 +91,8 @@ func (i *ItemSlot) QueryEntityUniverse(entityId uint, universeId uint) error {
 	if err := row.Scan(&i.Item, &i.Amount); err != nil {
 		return err
 	}
+
+	event.Fire(event.ItemslotEntityQuery, universeId, entityId, i)
 
 	return nil
 }
