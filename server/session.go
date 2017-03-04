@@ -1,12 +1,12 @@
 package server
 
 import (
-	"encoding/json"
+	encoder "encoding/json"
 	"github.com/cznic/mathutil"
+	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/json"
 	"github.com/ospokemon/ospokemon/option"
 	"github.com/ospokemon/ospokemon/part"
-	"github.com/ospokemon/ospokemon/run"
-	"github.com/ospokemon/ospokemon/save"
 	"golang.org/x/net/websocket"
 	"net/http"
 	"strconv"
@@ -31,11 +31,11 @@ func NewSession(username string) *Session {
 }
 
 func (s *Session) Part() string {
-	return part.SESSION
+	return part.Session
 }
 
-func (s *Session) Update(u *save.Universe, e *save.Entity, d time.Duration) {
-	p := save.Players[s.Username]
+func (s *Session) Update(u *game.Universe, e *game.Entity, d time.Duration) {
+	p := game.Players[s.Username]
 
 	data := make(map[string]interface{})
 	universeData := make(map[string]interface{})
@@ -43,7 +43,7 @@ func (s *Session) Update(u *save.Universe, e *save.Entity, d time.Duration) {
 	data["universe"] = universeData
 	data["username"] = s.Username
 
-	data["entityid"] = p.Parts[part.ENTITY].(*save.Entity).Id
+	data["entityid"] = p.Parts[part.Entity].(*game.Entity).Id
 
 	for entityId, entity := range u.Entities {
 		if entity == nil {
@@ -51,28 +51,38 @@ func (s *Session) Update(u *save.Universe, e *save.Entity, d time.Duration) {
 		}
 
 		key := strconv.Itoa(int(entityId))
-		_, entityData := entity.Json(true)
+		_, entityData := json.Entity(entity)
 		universeData[key] = entityData
 	}
 
-	menus := p.Parts[part.MENUS].(*run.Menus)
-	if menus.Player {
-		key, playerData := p.Json(true)
+	menus := p.Parts[part.Menus].(game.Menus)
+	if menus["player"] {
+		key, playerData := json.Player(p)
 		data[key] = playerData
 	}
-	if menus.Itembag {
-		key, itembagData := p.Parts[part.ITEMBAG].(*save.Itembag).Json(true)
+	if menus["itembag"] {
+		itembag := p.Parts[part.Itembag].(*game.Itembag)
+		key, itembagData := json.Itembag(itembag)
 		data[key] = itembagData
 	}
-	if menus.Actions {
-		key, actionsData := p.Parts[part.ACTIONS].(save.Actions).Json(true)
+	if menus["actions"] {
+		actions := p.Parts[part.Actions].(game.Actions)
+		key, actionsData := json.Actions(actions)
 		data[key] = actionsData
 	}
+	if menus["settings"] {
+		data["settings"] = true
+	}
 
-	_, bindingsData := p.Parts[part.BINDINGS].(save.Bindings).Json(true)
+	bindings := p.Parts[part.Bindings].(game.Bindings)
+	_, bindingsData := json.Bindings(bindings)
 	data["bindings"] = bindingsData
 
-	snapshot, _ := json.Marshal(map[string]interface{}{
+	if dialog, _ := p.Parts[part.Dialog].(*game.Dialog); dialog != nil {
+		data["dialog"] = json.Dialog(dialog)
+	}
+
+	snapshot, _ := encoder.Marshal(map[string]interface{}{
 		"event": "Update",
 		"data":  data,
 	})

@@ -2,7 +2,9 @@ package server
 
 import (
 	"github.com/Sirupsen/logrus"
-	"github.com/ospokemon/ospokemon/save"
+	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/part"
+	"github.com/ospokemon/ospokemon/query"
 	"net/http"
 )
 
@@ -13,31 +15,39 @@ var LoginHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request)
 	}
 
 	if s := readsession(r); s != nil {
-		http.Redirect(w, r, "/play/", http.StatusMovedPermanently)
+		http.Redirect(w, r, "/", http.StatusMovedPermanently)
 		return
 	}
 
 	username := r.FormValue("username")
 	password := hashpassword(r.FormValue("password"))
 
-	if account := save.Accounts[username]; account != nil {
+	if account := game.Accounts[username]; account != nil {
 		if account.Password == password {
-			session := Sessions[account.SessionId]
+			session := account.Parts[part.Session].(*Session)
 			session.WriteSessionId(w)
-			http.Redirect(w, r, "/play/", http.StatusMovedPermanently)
+			http.Redirect(w, r, "/", http.StatusMovedPermanently)
 			return
 		}
 
-		http.Redirect(w, r, "/login/?password", http.StatusMovedPermanently)
+		http.Redirect(w, r, "/login/?password#"+username, http.StatusMovedPermanently)
 		return
 	}
 
-	account := save.MakeAccount(username)
+	account, err := query.GetAccount(username)
 
-	if err := account.Query(); err != nil {
+	if account == nil {
 		logrus.WithFields(logrus.Fields{
 			"Username": username,
-		}).Error("server.Login: " + err.Error())
+		}).Debug("server.Login: account not found")
+
+		http.Redirect(w, r, "/login/?account", http.StatusMovedPermanently)
+		return
+	} else if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"Username": username,
+			"Error":    err.Error(),
+		}).Error("server.Login")
 
 		http.Redirect(w, r, "/login/?account", http.StatusMovedPermanently)
 		return
@@ -45,15 +55,18 @@ var LoginHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request)
 
 	if account.Password == password {
 		session := NewSession(username)
-		account.SessionId = session.SessionId
 		session.WriteSessionId(w)
-		save.Accounts[username] = account
 		Sessions[session.SessionId] = session
 
-		http.Redirect(w, r, "/play/", http.StatusMovedPermanently)
+		player := account.Parts[part.Player].(*game.Player)
+		entity := player.Parts[part.Entity].(*game.Entity)
+
+		entity.AddPart(session)
+
+		http.Redirect(w, r, "/", http.StatusMovedPermanently)
 		return
 	}
 
-	http.Redirect(w, r, "/login/?password", http.StatusMovedPermanently)
+	http.Redirect(w, r, "/login/?password#"+username, http.StatusMovedPermanently)
 	return
 })

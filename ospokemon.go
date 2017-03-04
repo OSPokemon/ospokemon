@@ -3,22 +3,21 @@ package main
 import (
 	"github.com/Sirupsen/logrus"
 	_ "github.com/ospokemon/ospokemon/option"
+	"github.com/ospokemon/ospokemon/query"
 	"github.com/ospokemon/ospokemon/run"
-	"github.com/ospokemon/ospokemon/save"
-	_ "github.com/ospokemon/ospokemon/script"
 	"github.com/ospokemon/ospokemon/server"
 )
 
-const PATCH uint64 = 4
+const PATCH uint64 = 8
 
 func main() {
 	logrus.WithFields(logrus.Fields{
 		"Patch": PATCH,
 	}).Info("OSPokemon")
 
-	save.Patch()
+	query.Patch()
 
-	if patch := save.CheckPatch(); patch != PATCH {
+	if patch := query.CheckPatch(); patch != PATCH {
 		logrus.WithFields(logrus.Fields{
 			"Found":    patch,
 			"Expected": PATCH,

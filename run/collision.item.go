@@ -1,0 +1,50 @@
+package run
+
+import (
+	"github.com/Sirupsen/logrus"
+	"github.com/ospokemon/ospokemon/event"
+	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/part"
+	"github.com/ospokemon/ospokemon/query"
+	"github.com/ospokemon/ospokemon/script"
+)
+
+func init() {
+	event.On(event.Collision, func(args ...interface{}) {
+		entity1 := args[0].(*game.Entity)
+		entity2 := args[1].(*game.Entity)
+
+		itembag, ok := entity1.Parts[part.Itembag].(*game.Itembag)
+		if !ok {
+			return
+		}
+
+		itemslot, ok := entity2.Parts[part.Itemslot].(*game.Itemslot)
+		if !ok {
+			return
+		}
+
+		item, err := query.GetItem(itemslot.Item)
+		if err != nil {
+			logrus.WithFields(logrus.Fields{
+				"Entity":   entity1.Id,
+				"Universe": entity1.UniverseId,
+				"Error":    err.Error(),
+			}).Error("collision.item")
+			return
+		}
+
+		err = script.ItemChange(itembag, item, itemslot.Amount)
+		if err != nil {
+			logrus.WithFields(logrus.Fields{
+				"Entity":   entity1.Id,
+				"Universe": entity1.UniverseId,
+				"Error":    err.Error(),
+			}).Error("collision.item")
+			return
+		}
+
+		universe := game.Multiverse[entity2.UniverseId]
+		universe.Remove(entity2)
+	})
+}

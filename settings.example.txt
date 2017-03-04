@@ -1,5 +1,5 @@
 # OSPokemon Settings File
-log=info
+log=debug
 logpath=ospokemon.log
 port=8080
 webpath=www

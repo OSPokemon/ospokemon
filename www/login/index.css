@@ -6,11 +6,3 @@
 legend {
   text-align: center;
 }
-
-.has-warning .form-control {
-	transition: .5s;
-}
-
-.has-warning .input-group-addon {
-	transition: .5s;
-}

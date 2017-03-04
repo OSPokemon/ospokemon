@@ -1,45 +1,39 @@
 package event
 
-const AccountMake = "save.Account.Make"
-const AccountQuery = "save.Account.Query"
-const AccountInsert = "save.Account.Insert"
-const AccountDelete = "save.Account.Delete"
+const BindingDown = "BindingDown"
+const BindingUp = "BindingUp"
 
-const MovementUpdate = "save.Movement.Update"
-const MovementCollision = "save.Movement.Collision"
+const Movement = "Movement"
+const Collision = "Collision"
 
-const PlayerMake = "save.Player.Make"
-const PlayerQuery = "save.Player.Query"
-const PlayerInsert = "save.Player.Insert"
-const PlayerDelete = "save.Player.Delete"
+const ActionCast = "game.ActionCast"
 
-const PokemonMake = "save.Pokemon.Make"
-const PokemonQuery = "save.Pokemon.Query"
-const PokemonInsert = "save.Pokemon.Insert"
-const PokemonDelete = "save.Pokemon.Delete"
+const ActionBuild = "game.ActionBuild"
+const ItemslotBuild = "game.ItemslotBuild"
 
-const ActionMake = "save.Action.Make"
+const UniverseAdd = "game.Universe.Add"
+const UniverseRemove = "game.Universe.Remove"
 
-const ActionsPlayerQuery = "save.Actions.PlayerQuery"
-const ActionsPlayerInsert = "save.Actions.PlayerInsert"
-const ActionsPlayerDelete = "save.Actions.PlayerDelete"
+const AccountsSelect = "query.AccountsSelect"
+const AccountsInsert = "query.AccountsInsert"
+const AccountsDelete = "query.AccountsDelete"
 
-const ActionsPokemonQuery = "save.Actions.PokemonQuery"
+const ActionsPlayersSelect = "query.ActionsPlayersSelect"
+const ActionsPlayersInsert = "query.ActionsPlayersInsert"
+const ActionsPlayersDelete = "query.ActionsPlayersDelete"
 
-const ItemslotMake = "save.Itemslot.Make"
+const EntitiesUniversesSelect = "query.EntitiesUniversesSelect"
 
-const ItembagPlayerQuery = "save.Itembag.PlayerQuery"
-const ItembagPlayerInsert = "save.Itembag.PlayerInsert"
-const ItembagPlayerDelete = "save.Itembag.PlayerDelete"
+const ItembagsPlayersSelect = "query.ItembagsPlayersSelect"
+const ItembagsPlayersInsert = "query.ItembagsPlayersInsert"
+const ItembagsPlayersDelete = "query.ItembagsPlayersDelete"
 
-const ItemslotEntityQuery = "save.Itemslot.EntityQuery"
+const PlayersSelect = "query.PlayersSelect"
+const PlayersInsert = "query.PlayersInsert"
+const PlayersDelete = "query.PlayersDelete"
 
-const UniverseMake = "save.Universe.Make"
-const UniverseQuery = "save.Universe.Query"
+const PokemonSelect = "query.PokemonSelect"
+const PokemonInsert = "query.PokemonInsert"
+const PokemonDelete = "query.PokemonDelete"
 
-const EntityQuery = "save.Entity.Query"
-
-// const UniverseInsert = "save.Universe.Insert"
-
-const BindingDown = "save.Binding.Down"
-const BindingUp = "save.Binding.Up"
+const UniversesSelect = "query.UniversesSelect"

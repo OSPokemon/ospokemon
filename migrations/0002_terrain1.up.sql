@@ -1,0 +1,1 @@
+INSERT INTO terrain (id, collision, image) VALUES (1, 1, "/img/entity/tree.png")

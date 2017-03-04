@@ -2,8 +2,9 @@ package server
 
 import (
 	"github.com/Sirupsen/logrus"
+	"github.com/ospokemon/ospokemon/game"
 	"github.com/ospokemon/ospokemon/part"
-	"github.com/ospokemon/ospokemon/save"
+	"github.com/ospokemon/ospokemon/query"
 	"golang.org/x/net/websocket"
 )
 
@@ -11,7 +12,6 @@ var WebsocketHandler = websocket.Handler(func(conn *websocket.Conn) {
 	s := readsession(conn.Request())
 
 	if s == nil {
-		logrus.Warn("server.WebsocketHandler: Failure: Session missing")
 		return
 	}
 
@@ -20,7 +20,7 @@ var WebsocketHandler = websocket.Handler(func(conn *websocket.Conn) {
 
 	s.Websocket = conn
 
-	p, err := save.GetPlayer(s.Username)
+	p, err := query.GetPlayer(s.Username)
 
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
@@ -31,9 +31,9 @@ var WebsocketHandler = websocket.Handler(func(conn *websocket.Conn) {
 
 	p.AddPart(s)
 
-	e := p.Parts[part.ENTITY].(*save.Entity)
+	e := p.Parts[part.Entity].(*game.Entity)
 
-	if u, err := save.GetUniverse(e.UniverseId); err != nil {
+	if u, err := query.GetUniverse(e.UniverseId); err != nil {
 		logrus.WithFields(logrus.Fields{
 			"Universe": e.UniverseId,
 		}).Error(err.Error())

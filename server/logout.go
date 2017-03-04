@@ -1,18 +1,17 @@
 package server
 
 import (
-	"github.com/ospokemon/ospokemon/save"
+	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/query"
 	"net/http"
 )
 
 var LogoutHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	if s := readsession(r); s != nil {
-		a := save.Accounts[s.Username]
-		a.Delete()
-		a.Insert()
-		delete(save.Accounts, s.Username)
-		delete(Sessions, s.SessionId)
+		account := game.Accounts[s.Username]
+		query.AccountsDelete(account)
+		query.AccountsInsert(account)
 
-		http.Redirect(w, r, "/login/", http.StatusMovedPermanently)
+		http.Redirect(w, r, "/login/#"+s.Username, http.StatusMovedPermanently)
 	}
 })

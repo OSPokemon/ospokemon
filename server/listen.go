@@ -1,8 +1,9 @@
 package server
 
 import (
+	"github.com/Sirupsen/logrus"
+	"github.com/ospokemon/ospokemon/game"
 	"github.com/ospokemon/ospokemon/part"
-	"github.com/ospokemon/ospokemon/save"
 	"golang.org/x/net/websocket"
 )
 
@@ -12,14 +13,26 @@ func Listen(s *Session) {
 		err := websocket.JSON.Receive(s.Websocket, &message)
 
 		if err != nil {
-			p, _ := save.GetPlayer(s.Username)
-			e := p.Parts[part.ENTITY].(*save.Entity)
-			u, _ := save.GetUniverse(e.UniverseId)
+			if err.Error() != "EOF" {
+				logrus.Warn(err.Error())
+			}
 
-			e.RemovePart(s)
-			u.Remove(e)
+			// account := game.Accounts[s.Username]
+
+			// if account != nil {
+			// 	query.AccountsDelete(account)
+			// 	query.AccountsInsert(account)
+			// }
 
 			s.Websocket.Close()
+
+			if player := game.Players[s.Username]; player != nil {
+				entity := player.Parts[part.Entity].(*game.Entity)
+				universe := game.Multiverse[entity.UniverseId]
+
+				universe.Remove(entity)
+			}
+
 			return
 		}
 
