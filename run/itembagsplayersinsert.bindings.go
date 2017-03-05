@@ -16,15 +16,14 @@ func ItembagsPlayersInsertBindings(args ...interface{}) {
 	player := args[0].(*game.Player)
 	itembag := args[1].(*game.Itembag)
 
-	insert := make(map[string]uint)
-	for itemid, _ := range itembag.GetItems() {
-		itemslots := itembag.GetItemslots(itemid)
-		itemslot := itemslots[0]
+	insert := make(map[string]int)
+	for id, itemslot := range itembag.Slots {
+		if itemslot == nil {
+			continue
+		}
 
-		if bindings, ok := itemslot.Parts[part.Bindings].(game.Bindings); ok {
-			for key, _ := range bindings {
-				insert[key] = itemslot.Item
-			}
+		if binding := itemslot.Parts[part.Binding].(*game.Binding); binding != nil {
+			insert[binding.Key] = id
 		}
 	}
 

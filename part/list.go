@@ -3,6 +3,7 @@ package part
 const Account = "account"
 const Action = "action"
 const Actions = "actions"
+const Binding = "binding"
 const Bindings = "bindings"
 const Cast = "cast"
 const Entity = "entity"

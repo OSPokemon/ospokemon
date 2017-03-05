@@ -11,8 +11,6 @@ type Itemslot struct {
 	part.Parts
 }
 
-type Itemslots []*Itemslot
-
 func MakeItemslot() *Itemslot {
 	itemslot := &Itemslot{
 		Id:    -1,
@@ -22,12 +20,21 @@ func MakeItemslot() *Itemslot {
 	return itemslot
 }
 
-func (i *Itemslot) Part() string {
-	return part.Itemslot
+func BuildItemslot(id int, item *Item, amount int) *Itemslot {
+	itemslot := MakeItemslot()
+	itemslot.Id = id
+	itemslot.Item = item.Id
+	itemslot.Amount = amount
+
+	imaging := MakeImaging()
+	imaging.ReadAnimations(item.Animations)
+	itemslot.AddPart(imaging)
+
+	return itemslot
 }
 
-func (itemslots Itemslots) Part() string {
-	return part.Itemslots
+func (i *Itemslot) Part() string {
+	return part.Itemslot
 }
 
 // func (i *Itemslot) Update(u *Universe, e *Entity, d time.Duration) {

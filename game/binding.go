@@ -2,12 +2,11 @@ package game
 
 import (
 	"github.com/ospokemon/ospokemon/part"
-	"time"
+	// "time"
 )
 
 type Binding struct {
-	Key      string
-	SystemId string
+	Key string
 	part.Parts
 }
 
@@ -17,5 +16,9 @@ func MakeBinding() *Binding {
 	}
 }
 
-func (b *Binding) Update(u *Universe, e *Entity, d time.Duration) {
+func (binding *Binding) Part() string {
+	return part.Binding
 }
+
+// func (b *Binding) Update(u *Universe, e *Entity, d time.Duration) {
+// }

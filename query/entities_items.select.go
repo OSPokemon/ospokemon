@@ -12,16 +12,22 @@ func EntitiesItemsSelect(entity *game.Entity, universe *game.Universe) (*game.It
 		universe.Id,
 	)
 
-	itemslot := game.MakeItemslot()
-	err := row.Scan(&itemslot.Item, &itemslot.Amount)
+	var itembuff uint
+	var amountbuff int
+	err := row.Scan(&itembuff, &amountbuff)
 
-	if err == nil {
-		logrus.WithFields(logrus.Fields{
-			"Universe": universe.Id,
-			"Entity":   entity.Id,
-			"Item":     itemslot,
-		}).Debug("entities_items select")
+	item, err := GetItem(itembuff)
+	if err != nil {
+		return nil, err
 	}
 
-	return itemslot, err
+	itemslot := game.BuildItemslot(0, item, amountbuff)
+
+	logrus.WithFields(logrus.Fields{
+		"Universe": universe.Id,
+		"Entity":   entity.Id,
+		"Itemslot": itemslot,
+	}).Debug("entities_items select")
+
+	return itemslot, nil
 }

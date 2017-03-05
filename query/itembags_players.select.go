@@ -19,15 +19,19 @@ func ItembagsPlayersSelect(player *game.Player) (*game.Itembag, error) {
 	itembag := game.MakeItembag(player.BagSize)
 
 	for rows.Next() {
-		itemslot := game.MakeItemslot()
+		var idbuff, amountbuff int
+		var itembuff uint
 
-		if err = rows.Scan(&itemslot.Id, &itemslot.Item, &itemslot.Amount); err != nil {
+		if err = rows.Scan(&idbuff, &itembuff, &amountbuff); err != nil {
 			return itembag, err
 		}
 
-		event.Fire(event.ItemslotBuild, itemslot)
+		item, err := GetItem(itembuff)
+		if err != nil {
+			return itembag, err
+		}
 
-		itembag.Slots[itemslot.Id] = itemslot
+		itembag.Slots[idbuff] = game.BuildItemslot(idbuff, item, amountbuff)
 	}
 	rows.Close()
 

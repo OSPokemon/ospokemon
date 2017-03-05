@@ -5,13 +5,13 @@ import (
 	"github.com/ospokemon/ospokemon/game"
 )
 
-func BindingsItemsPlayersInsert(player *game.Player, items map[string]uint) error {
-	for key, item := range items {
+func BindingsItemsPlayersInsert(player *game.Player, itemslots map[string]int) error {
+	for key, itemslotid := range itemslots {
 		_, err := Connection.Exec(
-			"INSERT INTO bindings_items_players (username, key, item) VALUES (?, ?, ?)",
+			"INSERT INTO bindings_items_players (username, key, itemslot) VALUES (?, ?, ?)",
 			player.Username,
 			key,
-			item,
+			itemslotid,
 		)
 
 		if err != nil {
@@ -20,8 +20,8 @@ func BindingsItemsPlayersInsert(player *game.Player, items map[string]uint) erro
 	}
 
 	logrus.WithFields(logrus.Fields{
-		"Username": player.Username,
-		"Items":    items,
+		"Username":  player.Username,
+		"Itemslots": itemslots,
 	}).Debug("bindings_items_players insert")
 
 	return nil

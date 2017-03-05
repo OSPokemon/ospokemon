@@ -5,9 +5,9 @@ import (
 	"github.com/ospokemon/ospokemon/game"
 )
 
-func BindingsItemsPlayersSelect(player *game.Player) (map[string]uint, error) {
+func BindingsItemsPlayersSelect(player *game.Player) (map[string]int, error) {
 	rows, err := Connection.Query(
-		"SELECT item, key FROM bindings_items_players WHERE username=?",
+		"SELECT key, itemslot FROM bindings_items_players WHERE username=?",
 		player.Username,
 	)
 
@@ -15,24 +15,24 @@ func BindingsItemsPlayersSelect(player *game.Player) (map[string]uint, error) {
 		return nil, err
 	}
 
-	items := make(map[string]uint)
+	itemslots := make(map[string]int)
 
 	for rows.Next() {
-		var itembuff uint
 		var keybuff string
+		var itemslot int
 
-		if err = rows.Scan(&itembuff, &keybuff); err != nil {
-			return items, err
+		if err = rows.Scan(&keybuff, &itemslot); err != nil {
+			return itemslots, err
 		}
 
-		items[keybuff] = itembuff
+		itemslots[keybuff] = itemslot
 	}
 	rows.Close()
 
 	logrus.WithFields(logrus.Fields{
-		"Username": player.Username,
-		"Items":    items,
+		"Username":  player.Username,
+		"Itemslots": itemslots,
 	}).Debug("bindings_items_players select")
 
-	return items, nil
+	return itemslots, nil
 }

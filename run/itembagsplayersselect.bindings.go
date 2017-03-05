@@ -31,22 +31,12 @@ func ItembagsPlayersSelectBindings(args ...interface{}) {
 	}
 
 	if bquery != nil {
-		for key, itemid := range bquery {
+		for key, itemslotid := range bquery {
 			binding := game.MakeBinding()
 			binding.Key = key
-			itemslots := game.Itemslots(itembag.GetItemslots(itemid))
-
-			for index, itemslot := range itemslots {
-				if index == 0 {
-					bindings := make(game.Bindings)
-					binding.AddPart(itemslots)
-					binding.AddPart(itemslot.Parts[part.Imaging])
-					bindings[key] = binding
-					itemslot.AddPart(bindings)
-				} else {
-					itemslot.AddPart(itemslots[0].Parts[part.Bindings])
-				}
-			}
+			itemslot := itembag.Slots[itemslotid]
+			itemslot.AddPart(binding)
+			binding.Parts = itemslot.Parts
 
 			player.Parts[part.Bindings].(game.Bindings)[key] = binding
 		}

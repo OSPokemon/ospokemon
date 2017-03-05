@@ -29,7 +29,7 @@ CREATE TABLE animations_spells (
 CREATE TABLE bindings_items_players (
 	username TEXT,
 	key TEXT,
-	item INTEGER);
+	itemslot INTEGER);
 CREATE TABLE bindings_menus_players (
 	username TEXT,
 	key TEXT,

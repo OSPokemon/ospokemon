@@ -95,26 +95,21 @@ func bindingset(p *game.Player, m string) {
 
 		binding.AddPart(action.Parts[part.Imaging])
 
-	} else if data["item"] != nil {
-		itemid := uint(data["item"].(float64))
+	} else if data["itemslot"] != nil {
+		itemslotid := uint(data["itemslot"].(float64))
 		itembag := p.Parts[part.Itembag].(*game.Itembag)
-		itemslots := game.Itemslots(itembag.GetItemslots(itemid))
+		itemslot := itembag.Slots[itemslotid]
 
-		if len(itemslots) < 1 {
+		if itemslot == nil {
 			return
 		}
-
-		if itemslots[0].Parts[part.Bindings] == nil {
-			itembindings := make(game.Bindings)
-			itembindings[key] = binding
-
-			for _, itemslot := range itemslots {
-				itemslot.AddPart(itembindings)
-			}
+		if oldBinding, _ := itemslot.Parts[part.Binding].(*game.Binding); oldBinding != nil {
+			oldBinding.RemovePart(oldBinding)
+			delete(bindings, oldBinding.Key)
 		}
 
-		binding.AddPart(itemslots)
-		binding.AddPart(itemslots[0].Parts[part.Imaging])
+		itemslot.AddPart(binding)
+		binding.Parts = itemslot.Parts
 	} else if data["walk"] != nil {
 		direction := data["walk"].(string)
 

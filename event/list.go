@@ -9,7 +9,6 @@ const Collision = "Collision"
 const ActionCast = "game.ActionCast"
 
 const ActionBuild = "game.ActionBuild"
-const ItemslotBuild = "game.ItemslotBuild"
 
 const UniverseAdd = "game.Universe.Add"
 const UniverseRemove = "game.Universe.Remove"
