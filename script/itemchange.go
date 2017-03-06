@@ -8,21 +8,19 @@ import (
 	"strconv"
 )
 
-const ITEMCHANGE = "itemchange"
-
 func init() {
-	game.Scripts[ITEMCHANGE] = func(e *game.Entity, data map[string]string) error {
+	game.Scripts["itemchange"] = func(e *game.Entity, data map[string]string) error {
 		itembag, ok := e.Parts[part.Itembag].(*game.Itembag)
 		if !ok {
-			return errors.New("itembag mising")
+			return errors.New("itemchange: itembag mising")
 		}
 
-		itemid, err := strconv.ParseUint(data["item"], 10, 64)
+		itemid, err := strconv.ParseUint(data["item"], 10, 0)
 		if err != nil {
 			return err
 		}
 
-		amount, err := strconv.ParseInt(data["amount"], 10, 64)
+		amount, err := strconv.Atoi(data["amount"])
 		if err != nil {
 			return err
 		}
@@ -32,68 +30,19 @@ func init() {
 			return err
 		}
 
-		return ItemChange(itembag, item, int(amount))
+		return ItemChange(itembag, item, amount)
 	}
 }
 
 func ItemChange(itembag *game.Itembag, item *game.Item, amount int) error {
 	if amount > 0 {
-		return itemGive(itembag, item, amount)
+		if !itembag.Add(item, int(amount)) {
+			return errors.New("itemchange: itembag full")
+		}
 	} else if amount < 0 {
-		return itemTake(itembag, item, amount)
-	}
-	return errors.New("script.ItemChange amount is 0")
-}
-
-func itemGive(itembag *game.Itembag, item *game.Item, amount int) error {
-	for _, itemslot := range itembag.GetItemslots(item.Id) {
-		itemslot.Amount += amount
-
-		if itemslot.Amount < item.Stack {
-			return nil
-		}
-		amount = itemslot.Amount - item.Stack
-	}
-
-	for id, itemslot := range itembag.Slots {
-		if itemslot != nil {
-			continue
-		}
-
-		itemslot = game.MakeItemslot()
-		itemslot.Id = id
-		itemslot.Item = item.Id
-		itemslot.Amount = amount
-		amount = 0
-
-		imaging := game.MakeImaging()
-		imaging.ReadAnimations(item.Animations)
-		itemslot.AddPart(imaging)
-		itembag.Slots[id] = itemslot
-		return nil
-	}
-
-	return errors.New("script.ItemChange bag is full!")
-}
-
-func itemTake(itembag *game.Itembag, item *game.Item, amount int) error {
-	if itembag.GetItems()[item.Id] < -amount {
-		return errors.New("script.ItemChange items missing")
-	}
-
-	for _, itemslot := range itembag.GetItemslots(item.Id) {
-		itemslot.Amount += amount
-
-		if itemslot.Amount < 0 {
-			amount = itemslot.Amount
-			itemslot.Amount = 0
-		} else {
-			if itemslot.Amount == 0 {
-				itembag.Slots[itemslot.Id] = nil
-			}
-			return nil
+		if !itembag.Remove(item, -int(amount)) {
+			return errors.New("itemchange: missing items")
 		}
 	}
-
-	return errors.New("script.ItemChange items missing!")
+	return nil
 }

@@ -22,7 +22,7 @@ func ItembagsPlayersInsertBindings(args ...interface{}) {
 			continue
 		}
 
-		if binding := itemslot.Parts[part.Binding].(*game.Binding); binding != nil {
+		if binding, _ := itemslot.Parts[part.Binding].(*game.Binding); binding != nil {
 			insert[binding.Key] = id
 		}
 	}

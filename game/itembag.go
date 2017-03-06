@@ -46,3 +46,50 @@ func (itembag *Itembag) GetItemslots(itemid uint) []*Itemslot {
 
 	return itemslots
 }
+
+func (itembag *Itembag) Add(item *Item, amount int) bool {
+	for _, itemslot := range itembag.GetItemslots(item.Id) {
+		itemslot.Amount += amount
+
+		if itemslot.Amount < item.Stack {
+			return true
+		}
+		amount = itemslot.Amount - item.Stack
+	}
+
+	for id, itemslot := range itembag.Slots {
+		if itemslot == nil {
+			itemslot = BuildItemslot(id, item, amount)
+			itembag.Slots[id] = itemslot
+
+			if itemslot.Amount <= item.Stack {
+				return true
+			}
+			amount = itemslot.Amount - item.Stack
+		}
+	}
+
+	return false
+}
+
+func (itembag *Itembag) Remove(item *Item, amount int) bool {
+	if itembag.GetItems()[item.Id] < amount {
+		return false
+	}
+
+	for _, itemslot := range itembag.GetItemslots(item.Id) {
+		itemslot.Amount -= amount
+		amount = 0
+
+		if itemslot.Amount < 1 {
+			amount -= itemslot.Amount
+			itembag.Slots[itemslot.Id] = nil
+		}
+
+		if amount < 1 {
+			return true
+		}
+	}
+
+	return false
+}
