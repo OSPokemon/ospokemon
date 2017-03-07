@@ -6,6 +6,7 @@ import (
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
 	"github.com/ospokemon/ospokemon/part"
+	"github.com/ospokemon/ospokemon/script"
 	"github.com/ospokemon/ospokemon/space"
 	// "github.com/ospokemon/ospokemon/run"
 )
@@ -64,90 +65,13 @@ func keyup(p *game.Player, key string) {
 func bindingset(p *game.Player, m string) {
 	data := make(map[string]interface{})
 	json.Unmarshal([]byte(m), &data)
+	err := script.BindingSet(p.Parts[part.Entity].(*game.Entity), data)
 
-	key, ok := data["key"].(string)
-	if !ok {
+	if err != nil {
 		logrus.WithFields(logrus.Fields{
 			"Username": p.Username,
-			"Message":  m,
-		}).Warn("Websocket: bindingset \"key\" missing")
-		return
+		}).Error(err.Error())
 	}
-
-	bindings := p.Parts[part.Bindings].(game.Bindings)
-
-	binding := game.MakeBinding()
-	binding.Key = key
-
-	if data["spell"] != nil {
-		spellId := uint(data["spell"].(float64))
-		actions := p.Parts[part.Actions].(game.Actions)
-		action := actions[spellId]
-
-		if action == nil {
-			return
-		}
-
-		if action.Parts[part.Bindings] == nil {
-			action.AddPart(make(game.Bindings))
-		}
-		action.Parts[part.Bindings].(game.Bindings)[binding.Key] = binding
-
-		binding.AddPart(action.Parts[part.Imaging])
-
-	} else if data["itemslot"] != nil {
-		itemslotid := uint(data["itemslot"].(float64))
-		itembag := p.Parts[part.Itembag].(*game.Itembag)
-		itemslot := itembag.Slots[itemslotid]
-
-		if itemslot == nil {
-			return
-		}
-		if oldBinding, _ := itemslot.Parts[part.Binding].(*game.Binding); oldBinding != nil {
-			oldBinding.RemovePart(oldBinding)
-			delete(bindings, oldBinding.Key)
-		}
-
-		itemslot.AddPart(binding)
-		binding.Parts = itemslot.Parts
-	} else if data["walk"] != nil {
-		direction := data["walk"].(string)
-
-		for k, b := range bindings {
-			if b.Parts[part.Walk] != nil {
-				if direction == string(b.Parts[part.Walk].(game.Walk)) {
-					delete(bindings, k)
-				}
-			}
-		}
-
-		binding.AddPart(game.Walk(direction))
-		imaging := game.MakeImaging()
-		imaging.Image = "/img/ui/walk/" + direction + ".png"
-		binding.AddPart(imaging)
-	} else if data["menu"] != nil {
-		menu := data["menu"].(string)
-
-		for k, b := range bindings {
-			if b.Parts[part.Menu] != nil {
-				if menu == string(b.Parts[part.Menu].(game.Menu)) {
-					delete(bindings, k)
-				}
-			}
-		}
-
-		binding.AddPart(game.Menu(menu))
-		imaging := game.MakeImaging()
-		imaging.Image = "/img/ui/menu/" + menu + ".png"
-		binding.AddPart(imaging)
-	} else {
-		logrus.WithFields(logrus.Fields{
-			"Message":  m,
-			"Username": p.Username,
-		}).Warn("Websocket: unrecognized Binding.Set message")
-	}
-
-	bindings[binding.Key] = binding
 }
 
 func clickuniverse(player *game.Player, m string) {
