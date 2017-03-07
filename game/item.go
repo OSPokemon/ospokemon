@@ -18,7 +18,7 @@ func MakeItem(id uint) *Item {
 		Spell: Spell{
 			Id:         id,
 			Animations: make(map[string]string),
-			Data:       make(map[string]string),
+			Data:       make(map[string]interface{}),
 		},
 	}
 

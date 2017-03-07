@@ -14,13 +14,8 @@ func init() {
 		entity1 := args[0].(*game.Entity)
 		entity2 := args[1].(*game.Entity)
 
-		itembag, ok := entity1.Parts[part.Itembag].(*game.Itembag)
-		if !ok {
-			return
-		}
-
-		itemslot, ok := entity2.Parts[part.Itemslot].(*game.Itemslot)
-		if !ok {
+		itemslot, _ := entity2.Parts[part.Itemslot].(*game.Itemslot)
+		if itemslot == nil {
 			return
 		}
 
@@ -34,7 +29,11 @@ func init() {
 			return
 		}
 
-		err = script.ItemChange(itembag, item, itemslot.Amount)
+		err = script.ItemChange(entity1, map[string]interface{}{
+			"item":   item,
+			"amount": itemslot.Amount,
+		})
+
 		if err != nil {
 			logrus.WithFields(logrus.Fields{
 				"Entity":   entity1.Id,

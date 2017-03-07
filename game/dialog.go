@@ -11,13 +11,13 @@ type Dialog struct {
 	Text    string
 	Choices []*Dialog
 	Script  string
-	Data    map[string]string
+	Data    map[string]interface{}
 }
 
 func MakeDialog() *Dialog {
 	return &Dialog{
 		Choices: make([]*Dialog, 0),
-		Data:    make(map[string]string),
+		Data:    make(map[string]interface{}),
 	}
 }
 

@@ -10,7 +10,7 @@ type Spell struct {
 	CastTime   time.Duration
 	Cooldown   time.Duration
 	Animations map[string]string
-	Data       map[string]string
+	Data       map[string]interface{}
 }
 
 var Spells = make(map[uint]*Spell)
@@ -19,7 +19,7 @@ func MakeSpell(id uint) *Spell {
 	s := &Spell{
 		Id:         id,
 		Animations: make(map[string]string),
-		Data:       make(map[string]string),
+		Data:       make(map[string]interface{}),
 	}
 
 	return s
