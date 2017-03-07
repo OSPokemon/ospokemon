@@ -12,6 +12,7 @@ func ActionsPlayersSelect(player *game.Player) (game.Actions, error) {
 		"SELECT spell, timer FROM actions_players WHERE username=?",
 		player.Username,
 	)
+	defer rows.Close()
 
 	if err != nil {
 		return nil, err
@@ -20,25 +21,28 @@ func ActionsPlayersSelect(player *game.Player) (game.Actions, error) {
 	actions := make(game.Actions)
 
 	for rows.Next() {
-		action := game.MakeAction()
+		var spellbuff uint
 		var timebuff uint64
-		err = rows.Scan(&action.Spell, &timebuff)
+		err = rows.Scan(&spellbuff, &timebuff)
 
 		if err != nil {
-			return actions, err
+			return nil, err
 		}
 
-		if t := time.Duration(timebuff); timebuff > 0 {
-			action.Timer = &t
+		if spell, err := GetSpell(spellbuff); spell != nil {
+			action := game.BuildAction(spell)
+
+			if t := time.Duration(timebuff); timebuff > 0 {
+				action.Timer = &t
+			} else {
+				action.Timer = nil
+			}
+
+			actions[action.Spell] = action
 		} else {
-			action.Timer = nil
+			return nil, err
 		}
-
-		event.Fire(event.ActionBuild, action)
-
-		actions[action.Spell] = action
 	}
-	rows.Close()
 
 	logrus.WithFields(logrus.Fields{
 		"Username": player.Username,
@@ -46,5 +50,6 @@ func ActionsPlayersSelect(player *game.Player) (game.Actions, error) {
 	}).Debug("actions_players select")
 
 	event.Fire(event.ActionsPlayersSelect, player, actions)
+
 	return actions, nil
 }

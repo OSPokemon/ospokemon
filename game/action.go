@@ -20,6 +20,16 @@ func MakeAction() *Action {
 	return a
 }
 
+func BuildAction(spell *Spell) *Action {
+	action := MakeAction()
+
+	imaging := MakeImaging()
+	imaging.ReadAnimations(spell.Animations)
+	action.AddPart(imaging)
+
+	return action
+}
+
 func (a *Action) Part() string {
 	return part.Action
 }
