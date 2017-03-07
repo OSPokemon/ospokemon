@@ -3,12 +3,12 @@ INSERT INTO entities_universes(universe, id, x, y, dx, dy)
 INSERT INTO classes_entities(entity, universe, class)
 	VALUES (27, 0, 1);
 INSERT INTO dialogs(entity, universe, id, parent, lead, `text`, script)
-	VALUES (27, 0, 0, 0, "Ojisan", "Spare change, sir?",  "");
+	VALUES (27, 0, 0, 0, "Ojisan", "Ojisan: Spare change, sir?",  "");
 INSERT INTO dialogs(entity, universe, id, parent, lead, `text`, script)
-	VALUES (27, 0, 1, 0, "Here's 1 coin", "Thank you!", "itemchange");
+	VALUES (27, 0, 1, 0, "Here's 1 coin", "Ojisan: Thank you!", "itemchange");
 INSERT INTO dialogs_data(entity, universe, dialog, key, value)
 	VALUES (27, 0, 1, "item", "1");
 INSERT INTO dialogs_data(entity, universe, dialog, key, value)
 	VALUES (27, 0, 1, "amount", "-1");
 INSERT INTO dialogs(entity, universe, id, parent, lead, `text`, script)
-	VALUES (27, 0, 2, 0, "I'm sorry...", "Oh...", "");
+	VALUES (27, 0, 2, 0, "I'm sorry...", "Ojisan: Oh...", "");

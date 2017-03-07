@@ -3,6 +3,7 @@
 	data: {},
 	build: function() {
 		ospokemon.menu.dialog = this
+		$(this).draggable()
 		ospokemon.event.On('Update', this.update)
 		return this
 	},

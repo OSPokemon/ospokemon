@@ -54,7 +54,7 @@ func DialogsSelect(entity *game.Entity, universe *game.Universe) (*game.Dialog, 
 		logrus.WithFields(logrus.Fields{
 			"Universe": universe.Id,
 			"Entity":   entity.Id,
-			"Dialogs":  dialogs[0],
+			"Dialogs":  len(dialogs),
 		}).Debug("dialogs select")
 	}
 
