@@ -25,11 +25,7 @@ func BuildItemslot(id int, item *Item, amount int) *Itemslot {
 	itemslot.Id = id
 	itemslot.Item = item.Id
 	itemslot.Amount = amount
-
-	imaging := MakeImaging()
-	imaging.ReadAnimations(item.Animations)
-	itemslot.AddPart(imaging)
-
+	itemslot.AddPart(BuildImaging(item.Animations))
 	return itemslot
 }
 

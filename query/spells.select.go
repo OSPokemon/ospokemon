@@ -8,14 +8,14 @@ import (
 
 func SpellsSelect(id uint) (*game.Spell, error) {
 	row := Connection.QueryRow(
-		"SELECT script, casttime, cooldown FROM spells WHERE id=?",
+		"SELECT id, script, casttime, cooldown FROM spells WHERE id=?",
 		id,
 	)
 
-	spell := game.MakeSpell(id)
+	spell := game.MakeSpell()
 
 	var casttimebuff, cooldownbuff int64
-	if err := row.Scan(&spell.Script, &casttimebuff, &cooldownbuff); err != nil {
+	if err := row.Scan(&spell.Id, &spell.Script, &casttimebuff, &cooldownbuff); err != nil {
 		return spell, err
 	}
 

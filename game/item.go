@@ -13,16 +13,10 @@ type Item struct {
 
 var Items = make(map[uint]*Item)
 
-func MakeItem(id uint) *Item {
-	i := &Item{
-		Spell: Spell{
-			Id:         id,
-			Animations: make(map[string]string),
-			Data:       make(map[string]interface{}),
-		},
+func MakeItem() *Item {
+	return &Item{
+		Spell: *MakeSpell(),
 	}
-
-	return i
 }
 
 func (i *Item) Part() string {

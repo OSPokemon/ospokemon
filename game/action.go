@@ -13,20 +13,14 @@ type Action struct {
 }
 
 func MakeAction() *Action {
-	a := &Action{
+	return &Action{
 		Parts: make(part.Parts),
 	}
-
-	return a
 }
 
 func BuildAction(spell *Spell) *Action {
 	action := MakeAction()
-
-	imaging := MakeImaging()
-	imaging.ReadAnimations(spell.Animations)
-	action.AddPart(imaging)
-
+	action.AddPart(BuildImaging(spell.Animations))
 	return action
 }
 

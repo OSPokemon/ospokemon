@@ -15,6 +15,10 @@ func MakeImaging() *Imaging {
 	}
 }
 
+func BuildImaging(sample map[string]string) *Imaging {
+	return MakeImaging().ReadAnimations(sample)
+}
+
 func (i *Imaging) ReadAnimations(sample map[string]string) *Imaging {
 	i.Image = sample["portrait"]
 	for k, v := range sample {
