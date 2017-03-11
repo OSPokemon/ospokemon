@@ -2,6 +2,7 @@ package game
 
 import (
 	"github.com/ospokemon/ospokemon/part"
+	"github.com/ospokemon/ospokemon/space"
 	"time"
 )
 
@@ -19,14 +20,27 @@ type Player struct {
 
 var Players = make(map[string]*Player)
 
-func MakePlayer(username string) *Player {
-	p := &Player{
-		Username: username,
-		BagSize:  DEFAULT_BAG_SIZE,
-		Parts:    make(part.Parts),
+func MakePlayer() *Player {
+	return &Player{
+		Parts: make(part.Parts),
 	}
+}
 
-	return p
+func BuildPlayer(username string, bagSize uint, class *Class, entity *Entity) *Player {
+	player := MakePlayer()
+	player.Username = username
+	player.Class = class.Id
+	player.BagSize = bagSize
+	player.AddPart(MakeItembag(bagSize))
+	player.AddPart(BuildImaging(class.Animations))
+	player.AddPart(entity)
+
+	rect := entity.Shape.(*space.Rect)
+	rect.Dimension.DX = class.Dimension.DX
+	rect.Dimension.DY = class.Dimension.DY
+	entity.Parts = player.Parts
+
+	return player
 }
 
 func (p *Player) Part() string {

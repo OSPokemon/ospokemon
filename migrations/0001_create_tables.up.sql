@@ -65,11 +65,6 @@ CREATE TABLE entities_items (
 	universe INTEGER,
 	item INTEGER,
 	amount INTEGER);
-CREATE TABLE entities_players (
-	username TEXT,
-	universe INTEGER,
-	x NUMBER,
-	y NUMBER);
 CREATE TABLE entities_terrain (
 	entity INTEGER,
 	universe INTEGER,
@@ -108,7 +103,10 @@ CREATE TABLE players (
 	experience INTEGER,
 	money INTEGER,
 	class INTEGER,
-	bagsize INTEGER);
+	bagsize INTEGER,
+	universe INTEGER,
+	x NUMBER,
+	y NUMBER);
 CREATE TABLE players_stats (
 	username TEXT,
 	stat TEXT,

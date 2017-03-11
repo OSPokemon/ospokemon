@@ -16,7 +16,10 @@ func AccountsInsertPlayer(args ...interface{}) {
 	player := game.Players[account.Username]
 
 	if player == nil {
-		player = game.MakePlayer(account.Username)
+		class, _ := query.GetClass(0)
+		entity := game.MakeEntity()
+		player = game.BuildPlayer(account.Username, game.DEFAULT_BAG_SIZE, class, entity)
+		player.Username = account.Username
 		logrus.WithFields(logrus.Fields{
 			"Username": player.Username,
 		}).Debug("account insert player: grant empty player")
