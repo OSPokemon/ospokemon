@@ -6,9 +6,26 @@
 		return this
 	},
 	update: function(data) {
-		if (this.username != data.username) {
-			this.username = data.username
-			$('.username', this).text(this.username)
+		if (this.log) {
+			console.log(data)
+			this.log = false
+		}
+
+		if (this.username != data.player.username) {
+			this.username = data.player.username
+			$('.username', this).html(this.username)
+		}
+
+		if (this.message != data.chat) {
+			this.message = data.chat
+			if (this.message) {
+				$('.username', this).html(this.username + ':')
+				$('.message', this).html(this.message)
+			} else {
+				$('.username', this).html(this.username)
+				$('.message', this).html('')
+
+			}
 		}
 
 		var left = (this.entity.dx/2) - ($(this).width() / 2)

@@ -23,6 +23,10 @@
 			$(ospokemon.menu).append(player)
 		})
 
+		ospokemon.element.build('menu/chat/chat').then(function(chat) {
+			$(ospokemon.menu).append(chat)
+		})
+
 		ospokemon.element.build('menu/actions/actions').then(function(actions) {
 			$(ospokemon.menu).append(actions)
 		})
@@ -31,7 +35,7 @@
 			$(ospokemon.menu).append(settings)
 		})
 
-		ospokemon.element.build('menu/dialog').then(function(dialog) {
+		ospokemon.element.build('menu/dialog/dialog').then(function(dialog) {
 			$(ospokemon.menu).append(dialog)
 		})
 

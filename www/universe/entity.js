@@ -42,11 +42,11 @@
 		if (data.player) {
 			var entity = this
 			ospokemon.element.get('universe/nameplate').then(function(el) {
-				if (!entity.player) {
-					entity.player = el.build(entity)
+				if (!entity.nameplate) {
+					entity.nameplate = el.build(entity)
 				}
 
-				entity.player.update(data.player)
+				entity.nameplate.update(data)
 			})
 		}
 	},

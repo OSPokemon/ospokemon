@@ -17,6 +17,8 @@ func Entity(e *game.Entity) (string, map[string]interface{}) {
 		} else if imaging, ok := part.(*game.Imaging); ok {
 			key, partData := Imaging(imaging)
 			data[key] = partData
+		} else if chat, ok := part.(*game.ChatMessage); ok {
+			data["chat"] = chat.Message
 		}
 	}
 

@@ -8,6 +8,7 @@ import (
 	"github.com/ospokemon/ospokemon/part"
 	"github.com/ospokemon/ospokemon/script"
 	"github.com/ospokemon/ospokemon/space"
+	"time"
 	// "github.com/ospokemon/ospokemon/run"
 )
 
@@ -32,6 +33,8 @@ func ReceiveMessage(s *Session, m *WebsocketMessage) {
 		menutoggle(p, m.Message)
 	} else if m.Event == "Dialog.Choice" {
 		dialogchoice(p, m.Message)
+	} else if m.Event == "Chat" {
+		chat(p, m.Message)
 	} else {
 		logrus.WithFields(logrus.Fields{
 			"Message":  m,
@@ -140,4 +143,13 @@ func dialogchoice(player *game.Player, m string) {
 func menutoggle(p *game.Player, m string) {
 	menus := p.Parts[part.Menus].(game.Menus)
 	menus.Toggle(game.Menu(m))
+}
+
+func chat(p *game.Player, m string) {
+	timer := 3 * time.Second
+	chatmessage := &game.ChatMessage{
+		Message: m,
+		Timer:   &timer,
+	}
+	p.AddPart(chatmessage)
 }
