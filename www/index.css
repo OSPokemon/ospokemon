@@ -144,10 +144,11 @@ body {
 .chat-history {
 	height: 100%;
 	overflow: auto;
+	border: 2px solid rgba(0, 0, 0, 0);
 }
 .chat-history:hover, #chat.active .chat-history {
 	background-color: rgba(255, 255, 255, 0.8);
-	border: 2px solid rgba(0, 0, 0, 0.8);
+	border-color: rgba(0, 0, 0, 0.8);
 }
 #chat .username {
 	font-weight: bold

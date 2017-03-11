@@ -1,6 +1,7 @@
 package game
 
 import (
+	"github.com/ospokemon/ospokemon/json"
 	"github.com/ospokemon/ospokemon/part"
 )
 
@@ -29,4 +30,11 @@ func (i *Imaging) ReadAnimations(sample map[string]string) *Imaging {
 
 func (i *Imaging) Part() string {
 	return part.Imaging
+}
+
+func (imaging *Imaging) Json() json.Json {
+	return json.Json{
+		"image":      imaging.Image,
+		"animations": imaging.Animations,
+	}
 }

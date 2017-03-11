@@ -2,6 +2,7 @@ package game
 
 import (
 	"github.com/ospokemon/ospokemon/event"
+	"github.com/ospokemon/ospokemon/json"
 	"github.com/ospokemon/ospokemon/part"
 	"github.com/ospokemon/ospokemon/space"
 	"time"
@@ -58,4 +59,23 @@ func (e *Entity) Move(vector space.Vector, universe *Universe) {
 			event.Fire(event.Collision, e, entity, universe, vector)
 		}
 	}
+}
+
+func (entity *Entity) Json() json.Json {
+	json := json.Json{
+		"id":    entity.Id,
+		"shape": entity.Shape.Snapshot(),
+	}
+
+	if imaging, _ := entity.Parts[part.Imaging].(*Imaging); imaging != nil {
+		json["imaging"] = imaging.Json()
+	}
+	if player, _ := entity.Parts[part.Player].(*Player); player != nil {
+		json["player"] = player.Json()
+	}
+	if chatmessage, _ := entity.Parts[part.ChatMessage].(*ChatMessage); chatmessage != nil {
+		json["chat"] = chatmessage.Message
+	}
+
+	return json
 }

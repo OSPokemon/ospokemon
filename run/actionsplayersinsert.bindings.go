@@ -20,7 +20,7 @@ func ActionsPlayersInsertBindings(args ...interface{}) {
 	for _, action := range actions {
 		if bindings, ok := action.Parts[part.Bindings].(game.Bindings); ok {
 			for key, _ := range bindings {
-				insert[key] = action.Spell
+				insert[key] = action.Spell.Id
 			}
 		}
 	}

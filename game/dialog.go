@@ -1,6 +1,7 @@
 package game
 
 import (
+	"github.com/ospokemon/ospokemon/json"
 	"github.com/ospokemon/ospokemon/part"
 )
 
@@ -33,4 +34,18 @@ func (d *Dialog) Next(lead string) *Dialog {
 
 func (d *Dialog) Part() string {
 	return part.Dialog
+}
+
+func (dialog *Dialog) Json() json.Json {
+	json := json.Json{
+		"id":   dialog.Id,
+		"lead": dialog.Lead,
+		"text": dialog.Text,
+	}
+	choices := make([]string, 0)
+	for _, choice := range dialog.Choices {
+		choices = append(choices, choice.Lead)
+	}
+	json["choices"] = choices
+	return json
 }

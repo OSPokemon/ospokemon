@@ -1,6 +1,7 @@
 package game
 
 import (
+	"github.com/ospokemon/ospokemon/json"
 	"github.com/ospokemon/ospokemon/part"
 	"time"
 )
@@ -20,4 +21,12 @@ func (actions Actions) Update(universe *Universe, entity *Entity, d time.Duratio
 			*action.Timer = *action.Timer - d
 		}
 	}
+}
+
+func (actions Actions) Json() json.Json {
+	data := json.Json{}
+	for id, action := range actions {
+		data[json.StringUint(id)] = action.Json()
+	}
+	return data
 }

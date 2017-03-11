@@ -5,7 +5,6 @@ import (
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
 	"github.com/ospokemon/ospokemon/part"
-	"github.com/ospokemon/ospokemon/query"
 	"github.com/ospokemon/ospokemon/script"
 )
 
@@ -19,17 +18,9 @@ func init() {
 			return
 		}
 
-		item, err := query.GetItem(itemslot.Item)
-		if err != nil {
-			logrus.WithFields(logrus.Fields{
-				"Entity":   entity1.Id,
-				"Universe": entity1.UniverseId,
-				"Error":    err.Error(),
-			}).Error("collision.item")
-			return
-		}
+		item := itemslot.Item
 
-		err = script.ItemChange(entity1, map[string]interface{}{
+		err := script.ItemChange(entity1, map[string]interface{}{
 			"item":   item,
 			"amount": itemslot.Amount,
 		})

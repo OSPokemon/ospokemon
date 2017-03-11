@@ -38,7 +38,7 @@ func ActionsPlayersSelect(player *game.Player) (game.Actions, error) {
 				action.Timer = nil
 			}
 
-			actions[action.Spell] = action
+			actions[action.Spell.Id] = action
 		} else {
 			return nil, err
 		}

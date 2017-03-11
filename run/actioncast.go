@@ -4,7 +4,6 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
-	"github.com/ospokemon/ospokemon/query"
 )
 
 func init() {
@@ -12,32 +11,22 @@ func init() {
 }
 
 func ActionCast(args ...interface{}) {
-	u := args[0].(*game.Universe)
-	e := args[1].(*game.Entity)
-	a := args[2].(*game.Action)
+	universe := args[0].(*game.Universe)
+	entity := args[1].(*game.Entity)
+	action := args[2].(*game.Action)
 
-	spell, err := query.GetSpell(a.Spell)
-	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"Universe": u.Id,
-			"Entity":   e.Id,
-			"Action":   a,
-			"Error":    err.Error(),
-		}).Error("action cast")
-		return
-	}
-
+	spell := action.Spell
 	timer := spell.Cooldown
-	a.Timer = &timer
+	action.Timer = &timer
 
 	if script, ok := game.Scripts[spell.Script]; ok {
-		script(e, spell.Data)
-	} else {
-		logrus.WithFields(logrus.Fields{
-			"Universe": u.Id,
-			"Entity":   e.Id,
-			"Action":   a,
-			"Error":    err.Error(),
-		}).Error("action cast")
+		if err := script(entity, spell.Data); err != nil {
+			logrus.WithFields(logrus.Fields{
+				"Universe": universe.Id,
+				"Entity":   entity.Id,
+				"Action":   action,
+				"Error":    err.Error(),
+			}).Error("action cast")
+		}
 	}
 }

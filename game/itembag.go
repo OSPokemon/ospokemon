@@ -1,6 +1,7 @@
 package game
 
 import (
+	"github.com/ospokemon/ospokemon/json"
 	"github.com/ospokemon/ospokemon/part"
 	"time"
 )
@@ -28,7 +29,7 @@ func (itembag *Itembag) GetItems() map[uint]int {
 
 	for _, itemslot := range itembag.Slots {
 		if itemslot != nil {
-			items[itemslot.Item] = items[itemslot.Item] + itemslot.Amount
+			items[itemslot.Item.Id] = items[itemslot.Item.Id] + itemslot.Amount
 		}
 	}
 
@@ -39,7 +40,7 @@ func (itembag *Itembag) GetItemslots(itemid uint) []*Itemslot {
 	itemslots := make([]*Itemslot, 0)
 
 	for _, itemslot := range itembag.Slots {
-		if itemslot != nil && itemslot.Item == itemid {
+		if itemslot != nil && itemslot.Item.Id == itemid {
 			itemslots = append(itemslots, itemslot)
 		}
 	}
@@ -92,4 +93,18 @@ func (itembag *Itembag) Remove(item *Item, amount int) bool {
 	}
 
 	return false
+}
+
+func (itembag *Itembag) Json() json.Json {
+	data := json.Json{}
+	for id, itemslot := range itembag.Slots {
+		if itemslot == nil {
+			data[json.StringInt(id)] = nil
+		} else {
+			itemslotJson := itemslot.Json()
+			itemslotJson["timer"] = json.FmtDuration(itembag.Timers[itemslot.Item.Id])
+			data[json.StringInt(id)] = itemslotJson
+		}
+	}
+	return data
 }

@@ -1,6 +1,7 @@
 package game
 
 import (
+	"github.com/ospokemon/ospokemon/json"
 	"github.com/ospokemon/ospokemon/part"
 	"github.com/ospokemon/ospokemon/space"
 	"time"
@@ -48,4 +49,11 @@ func (p *Player) Part() string {
 }
 
 func (p *Player) Update(u *Universe, e *Entity, d time.Duration) {
+}
+
+func (player *Player) Json() json.Json {
+	return json.Json{
+		"username": player.Username,
+		"level":    player.Level,
+	}
 }

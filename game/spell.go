@@ -1,6 +1,7 @@
 package game
 
 import (
+	"github.com/ospokemon/ospokemon/json"
 	"time"
 )
 
@@ -21,7 +22,7 @@ func MakeSpell() *Spell {
 	}
 }
 
-func (s *Spell) Snapshot() map[string]interface{} {
+func (s *Spell) Json() json.Json {
 	return map[string]interface{}{
 		"id":         s.Id,
 		"casttime":   s.CastTime,

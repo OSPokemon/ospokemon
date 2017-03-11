@@ -1,6 +1,7 @@
 package game
 
 import (
+	"github.com/ospokemon/ospokemon/json"
 	"github.com/ospokemon/ospokemon/part"
 	// "time"
 )
@@ -53,6 +54,24 @@ func (binding *Binding) RemoveParts() {
 		binding.RemovePart(binding)
 		binding.Parts = nil
 	}
+}
+
+func (binding *Binding) Json() json.Json {
+	json := json.Json{
+		"key": binding.Key,
+	}
+
+	if imaging, _ := binding.Parts[part.Imaging].(*Imaging); imaging != nil {
+		json["imaging"] = imaging.Json()
+	}
+	if walk, _ := binding.Parts[part.Walk].(Walk); walk != "" {
+		json["walk"] = walk
+	}
+	if menu, _ := binding.Parts[part.Menu].(Menu); menu != "" {
+		json["menu"] = menu
+	}
+
+	return json
 }
 
 // func (b *Binding) Update(u *Universe, e *Entity, d time.Duration) {

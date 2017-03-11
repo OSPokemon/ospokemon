@@ -36,6 +36,9 @@ func (s *Session) Part() string {
 
 func (s *Session) Update(u *game.Universe, e *game.Entity, d time.Duration) {
 	p := game.Players[s.Username]
+	if p == nil {
+		return
+	}
 
 	data := make(map[string]interface{})
 	universeData := make(map[string]interface{})
@@ -43,43 +46,37 @@ func (s *Session) Update(u *game.Universe, e *game.Entity, d time.Duration) {
 	data["universe"] = universeData
 	data["username"] = s.Username
 
-	data["entityid"] = p.Parts[part.Entity].(*game.Entity).Id
+	data["entityid"] = e.Id
 
 	for entityId, entity := range u.Entities {
 		if entity == nil {
 			continue
 		}
 
-		key := strconv.Itoa(int(entityId))
-		_, entityData := json.Entity(entity)
-		universeData[key] = entityData
+		universeData[json.StringUint(entityId)] = entity.Json()
 	}
 
 	menus := p.Parts[part.Menus].(game.Menus)
 	if menus["player"] {
-		key, playerData := json.Player(p)
-		data[key] = playerData
+		data["player"] = p.Json()
 	}
 	if menus["itembag"] {
 		itembag := p.Parts[part.Itembag].(*game.Itembag)
-		key, itembagData := json.Itembag(itembag)
-		data[key] = itembagData
+		data["itembag"] = itembag.Json()
 	}
 	if menus["actions"] {
 		actions := p.Parts[part.Actions].(game.Actions)
-		key, actionsData := json.Actions(actions)
-		data[key] = actionsData
+		data["actions"] = actions.Json()
 	}
 	if menus["settings"] {
 		data["settings"] = true
 	}
 
 	bindings := p.Parts[part.Bindings].(game.Bindings)
-	_, bindingsData := json.Bindings(bindings)
-	data["bindings"] = bindingsData
+	data["bindings"] = bindings.Json()
 
 	if dialog, _ := p.Parts[part.Dialog].(*game.Dialog); dialog != nil {
-		data["dialog"] = json.Dialog(dialog)
+		data["dialog"] = dialog.Json()
 	}
 
 	snapshot, _ := encoder.Marshal(map[string]interface{}{

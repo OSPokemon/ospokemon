@@ -1,6 +1,7 @@
 package game
 
 import (
+	"github.com/ospokemon/ospokemon/json"
 	"github.com/ospokemon/ospokemon/part"
 	// "time"
 )
@@ -75,6 +76,14 @@ func (bindings Bindings) Remove(key string) error {
 
 	delete(bindings, key)
 	return nil
+}
+
+func (bindings Bindings) Json() json.Json {
+	json := json.Json{}
+	for key, binding := range bindings {
+		json[key] = binding.Json()
+	}
+	return json
 }
 
 // func (b Bindings) Update(u *Universe, e *Entity, d time.Duration) {

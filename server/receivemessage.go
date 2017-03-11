@@ -9,7 +9,6 @@ import (
 	"github.com/ospokemon/ospokemon/script"
 	"github.com/ospokemon/ospokemon/space"
 	"time"
-	// "github.com/ospokemon/ospokemon/run"
 )
 
 func ReceiveMessage(s *Session, m *WebsocketMessage) {
