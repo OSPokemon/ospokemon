@@ -1,10 +1,9 @@
 package server
 
 import (
-	encoder "encoding/json"
+	"encoding/json"
 	"github.com/cznic/mathutil"
 	"github.com/ospokemon/ospokemon/game"
-	"github.com/ospokemon/ospokemon/json"
 	"github.com/ospokemon/ospokemon/option"
 	"golang.org/x/net/websocket"
 	"net/http"
@@ -42,7 +41,7 @@ func (s *Session) Update(u *game.Universe, e *game.Entity, d time.Duration) {
 	}
 
 	data := make(map[string]interface{})
-	universeData := make(map[string]interface{})
+	universeData := make(map[uint]interface{})
 
 	data["universe"] = universeData
 	data["username"] = s.Username
@@ -54,7 +53,7 @@ func (s *Session) Update(u *game.Universe, e *game.Entity, d time.Duration) {
 			continue
 		}
 
-		universeData[json.StringUint(entityId)] = entity.Json()
+		universeData[entityId] = entity.Json()
 	}
 
 	menus := player.GetMenus()
@@ -80,7 +79,7 @@ func (s *Session) Update(u *game.Universe, e *game.Entity, d time.Duration) {
 		data["dialog"] = dialog.Json()
 	}
 
-	snapshot, _ := encoder.Marshal(map[string]interface{}{
+	snapshot, _ := json.Marshal(map[string]interface{}{
 		"event": "Update",
 		"data":  data,
 	})

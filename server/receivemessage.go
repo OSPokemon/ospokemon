@@ -42,34 +42,22 @@ func ReceiveMessage(s *Session, m *WebsocketMessage) {
 }
 
 func keydown(player *game.Player, key string) {
-	bindings := player.GetBindings()
-	binding := bindings[key]
-
-	if binding == nil {
-		return
+	if binding := player.GetBindings()[key]; binding != nil {
+		event.Fire(event.BindingDown, player, binding)
 	}
-
-	event.Fire(event.BindingDown, player, binding)
 }
 
 func keyup(player *game.Player, key string) {
-	bindings := player.GetBindings()
-	binding := bindings[key]
-
-	if binding == nil {
-		return
+	if binding := player.GetBindings()[key]; binding != nil {
+		event.Fire(event.BindingUp, player, binding)
 	}
-
-	event.Fire(event.BindingUp, player, binding)
 }
 
 func bindingset(player *game.Player, m string) {
 	data := make(map[string]interface{})
 	json.Unmarshal([]byte(m), &data)
-	entity := player.GetEntity()
-	err := script.BindingSet(entity, data)
 
-	if err != nil {
+	if err := script.BindingSet(player.GetEntity(), data); err != nil {
 		logrus.WithFields(logrus.Fields{
 			"Username": player.Username,
 		}).Error(err.Error())
