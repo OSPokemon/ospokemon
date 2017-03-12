@@ -1,15 +1,16 @@
 package game
 
 import (
-	"github.com/ospokemon/ospokemon/part"
 	"time"
 )
+
+const PARTaccount = "account"
 
 type Account struct {
 	Username string
 	Password string
 	Register time.Time
-	part.Parts
+	Parts
 }
 
 var Accounts = make(map[string]*Account)
@@ -17,12 +18,17 @@ var Accounts = make(map[string]*Account)
 func MakeAccount(username string) *Account {
 	a := &Account{
 		Username: username,
-		Parts:    make(part.Parts),
+		Parts:    make(Parts),
 	}
 
 	return a
 }
 
 func (a *Account) Part() string {
-	return part.Account
+	return PARTaccount
+}
+
+func (parts Parts) GetAccount() *Account {
+	account, _ := parts[PARTaccount].(*Account)
+	return account
 }

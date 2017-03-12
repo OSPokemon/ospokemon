@@ -3,7 +3,6 @@ package server
 import (
 	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/game"
-	"github.com/ospokemon/ospokemon/part"
 	"github.com/ospokemon/ospokemon/query"
 	"net/http"
 )
@@ -24,7 +23,7 @@ var LoginHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request)
 
 	if account := game.Accounts[username]; account != nil {
 		if account.Password == password {
-			session := account.Parts[part.Session].(*Session)
+			session := account.Parts[PARTsession].(*Session)
 			session.WriteSessionId(w)
 			http.Redirect(w, r, "/", http.StatusMovedPermanently)
 			return
@@ -58,8 +57,7 @@ var LoginHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request)
 		session.WriteSessionId(w)
 		Sessions[session.SessionId] = session
 
-		player := account.Parts[part.Player].(*game.Player)
-		entity := player.Parts[part.Entity].(*game.Entity)
+		entity := account.GetEntity()
 
 		entity.AddPart(session)
 

@@ -4,7 +4,6 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
-	"github.com/ospokemon/ospokemon/part"
 	"github.com/ospokemon/ospokemon/query"
 )
 
@@ -19,7 +18,7 @@ func EntitiesUniversesSelectItemslot(args ...interface{}) {
 
 	if err == nil {
 		entity.AddPart(itemslot)
-		entity.AddPart(itemslot.Parts[part.Imaging])
+		entity.AddPart(itemslot.GetImaging())
 		itemslot.Parts = entity.Parts
 	} else if err.Error() != "sql: no rows in result set" {
 		logrus.WithFields(logrus.Fields{

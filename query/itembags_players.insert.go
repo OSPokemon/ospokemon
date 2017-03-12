@@ -16,7 +16,7 @@ func ItembagsPlayersInsert(player *game.Player, itembag *game.Itembag) error {
 			"INSERT INTO itemslots_players (username, pos, item, amount) VALUES (?, ?, ?, ?)",
 			player.Username,
 			pos,
-			itemslot.Item,
+			itemslot.Item.Id,
 			itemslot.Amount,
 		)
 

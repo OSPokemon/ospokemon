@@ -5,7 +5,6 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
-	"github.com/ospokemon/ospokemon/part"
 	"github.com/ospokemon/ospokemon/script"
 	"github.com/ospokemon/ospokemon/space"
 	"time"
@@ -42,36 +41,37 @@ func ReceiveMessage(s *Session, m *WebsocketMessage) {
 	}
 }
 
-func keydown(p *game.Player, key string) {
-	bindings := p.Parts[part.Bindings].(game.Bindings)
+func keydown(player *game.Player, key string) {
+	bindings := player.GetBindings()
 	binding := bindings[key]
 
 	if binding == nil {
 		return
 	}
 
-	event.Fire(event.BindingDown, p, binding)
+	event.Fire(event.BindingDown, player, binding)
 }
 
-func keyup(p *game.Player, key string) {
-	bindings := p.Parts[part.Bindings].(game.Bindings)
+func keyup(player *game.Player, key string) {
+	bindings := player.GetBindings()
 	binding := bindings[key]
 
 	if binding == nil {
 		return
 	}
 
-	event.Fire(event.BindingUp, p, binding)
+	event.Fire(event.BindingUp, player, binding)
 }
 
-func bindingset(p *game.Player, m string) {
+func bindingset(player *game.Player, m string) {
 	data := make(map[string]interface{})
 	json.Unmarshal([]byte(m), &data)
-	err := script.BindingSet(p.Parts[part.Entity].(*game.Entity), data)
+	entity := player.GetEntity()
+	err := script.BindingSet(entity, data)
 
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
-			"Username": p.Username,
+			"Username": player.Username,
 		}).Error(err.Error())
 	}
 }
@@ -92,7 +92,7 @@ func clickuniverse(player *game.Player, m string) {
 		return
 	}
 
-	movement := player.Parts[part.Movement].(*game.Movement)
+	movement := player.GetMovement()
 	movement.Up = false
 	movement.Down = false
 	movement.Left = false
@@ -105,20 +105,20 @@ func clickentity(player *game.Player, m string) {
 	json.Unmarshal([]byte(m), &data)
 
 	if entityId, ok := data["entity"].(float64); ok {
-		playerEntity := player.Parts[part.Entity].(*game.Entity)
+		playerEntity := player.GetEntity()
 		universe := game.Multiverse[playerEntity.UniverseId]
 		entity := universe.Entities[uint(entityId)]
 
-		if dialog, _ := entity.Parts[part.Dialog].(*game.Dialog); dialog != nil {
+		if dialog := entity.GetDialog(); dialog != nil {
 			player.AddPart(dialog)
 		}
 	}
 }
 
 func dialogchoice(player *game.Player, m string) {
-	entity := player.Parts[part.Entity].(*game.Entity)
+	entity := player.GetEntity()
 
-	if dialog, ok := player.Parts[part.Dialog].(*game.Dialog); ok {
+	if dialog := player.GetDialog(); dialog != nil {
 		if nextDialog := dialog.Next(m); nextDialog != nil {
 
 			if script := game.Scripts[nextDialog.Script]; script != nil {
@@ -139,16 +139,16 @@ func dialogchoice(player *game.Player, m string) {
 	}
 }
 
-func menutoggle(p *game.Player, m string) {
-	menus := p.Parts[part.Menus].(game.Menus)
+func menutoggle(player *game.Player, m string) {
+	menus := player.GetMenus()
 	menus.Toggle(game.Menu(m))
 }
 
-func chat(p *game.Player, m string) {
+func chat(player *game.Player, m string) {
 	timer := 3 * time.Second
 	chatmessage := &game.ChatMessage{
 		Message: m,
 		Timer:   &timer,
 	}
-	p.AddPart(chatmessage)
+	player.AddPart(chatmessage)
 }

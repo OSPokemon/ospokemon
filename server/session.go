@@ -6,13 +6,14 @@ import (
 	"github.com/ospokemon/ospokemon/game"
 	"github.com/ospokemon/ospokemon/json"
 	"github.com/ospokemon/ospokemon/option"
-	"github.com/ospokemon/ospokemon/part"
 	"golang.org/x/net/websocket"
 	"net/http"
 	"strconv"
 	"sync"
 	"time"
 )
+
+const PARTsession = "session"
 
 type Session struct {
 	Username  string
@@ -31,12 +32,12 @@ func NewSession(username string) *Session {
 }
 
 func (s *Session) Part() string {
-	return part.Session
+	return PARTsession
 }
 
 func (s *Session) Update(u *game.Universe, e *game.Entity, d time.Duration) {
-	p := game.Players[s.Username]
-	if p == nil {
+	player := game.Players[s.Username]
+	if player == nil {
 		return
 	}
 
@@ -56,26 +57,26 @@ func (s *Session) Update(u *game.Universe, e *game.Entity, d time.Duration) {
 		universeData[json.StringUint(entityId)] = entity.Json()
 	}
 
-	menus := p.Parts[part.Menus].(game.Menus)
+	menus := player.GetMenus()
 	if menus["player"] {
-		data["player"] = p.Json()
+		data["player"] = player.Json()
 	}
 	if menus["itembag"] {
-		itembag := p.Parts[part.Itembag].(*game.Itembag)
+		itembag := player.GetItembag()
 		data["itembag"] = itembag.Json()
 	}
 	if menus["actions"] {
-		actions := p.Parts[part.Actions].(game.Actions)
+		actions := player.GetActions()
 		data["actions"] = actions.Json()
 	}
 	if menus["settings"] {
 		data["settings"] = true
 	}
 
-	bindings := p.Parts[part.Bindings].(game.Bindings)
+	bindings := player.GetBindings()
 	data["bindings"] = bindings.Json()
 
-	if dialog, _ := p.Parts[part.Dialog].(*game.Dialog); dialog != nil {
+	if dialog := player.GetDialog(); dialog != nil {
 		data["dialog"] = dialog.Json()
 	}
 

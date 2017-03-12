@@ -1,11 +1,14 @@
 package game
 
-import (
-	"github.com/ospokemon/ospokemon/part"
-)
+const PARTstats = "stats"
 
 type Stats map[string]*Stat
 
 func (s Stats) Part() string {
-	return part.Stats
+	return PARTstats
+}
+
+func (parts Parts) GetStats() Stats {
+	stats, _ := parts[PARTstats].(Stats)
+	return stats
 }

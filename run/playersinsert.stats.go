@@ -4,7 +4,6 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
-	"github.com/ospokemon/ospokemon/part"
 	"github.com/ospokemon/ospokemon/query"
 )
 
@@ -14,9 +13,9 @@ func init() {
 
 func PlayersInsertStats(args ...interface{}) {
 	player := args[0].(*game.Player)
-	stats, ok := player.Parts[part.Stats].(game.Stats)
+	stats := player.GetStats()
 
-	if !ok {
+	if len(stats) < 1 {
 		stats = map[string]*game.Stat{
 			"speed": &game.Stat{5, 5, 5},
 		}

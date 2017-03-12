@@ -3,7 +3,6 @@ package run
 import (
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
-	"github.com/ospokemon/ospokemon/part"
 	"github.com/ospokemon/ospokemon/space"
 )
 
@@ -14,8 +13,8 @@ func init() {
 		universe := args[2].(*game.Universe)
 		vector := args[3].(space.Vector)
 
-		terrain, ok := entity2.Parts[part.Terrain].(*game.Terrain)
-		if !ok {
+		terrain := entity2.GetTerrain()
+		if terrain == nil {
 			return
 		}
 

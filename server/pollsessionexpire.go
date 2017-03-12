@@ -11,10 +11,11 @@ func PollSessionExpire() {
 		for _, s := range Sessions {
 			if s.Expire.Before(now) {
 				account := game.Accounts[s.Username]
-				query.AccountsDelete(account)
-				query.AccountsInsert(account)
-				delete(game.Accounts, s.Username)
-				delete(Sessions, s.SessionId)
+
+				if account != nil {
+					query.AccountsDelete(account)
+					query.AccountsInsert(account)
+				}
 
 				if s.Websocket != nil {
 					s.Websocket.Close()

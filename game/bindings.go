@@ -2,14 +2,20 @@ package game
 
 import (
 	"github.com/ospokemon/ospokemon/json"
-	"github.com/ospokemon/ospokemon/part"
 	// "time"
 )
+
+const PARTbindings = "bindings"
 
 type Bindings map[string]*Binding
 
 func (b Bindings) Part() string {
-	return part.Bindings
+	return PARTbindings
+}
+
+func (parts Parts) GetBindings() Bindings {
+	bindings, _ := parts[PARTbindings].(Bindings)
+	return bindings
 }
 
 func (bindings Bindings) SetAction(key string, action *Action) {

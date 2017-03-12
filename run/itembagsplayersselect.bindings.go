@@ -4,7 +4,6 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
-	"github.com/ospokemon/ospokemon/part"
 	"github.com/ospokemon/ospokemon/query"
 )
 
@@ -26,9 +25,7 @@ func ItembagsPlayersSelectBindings(args ...interface{}) {
 		return
 	}
 
-	if player.Parts[part.Bindings] == nil {
-		player.AddPart(make(game.Bindings))
-	}
+	bindings := player.GetBindings()
 
 	if bquery != nil {
 		for key, itemslotid := range bquery {
@@ -38,7 +35,7 @@ func ItembagsPlayersSelectBindings(args ...interface{}) {
 			itemslot.AddPart(binding)
 			binding.Parts = itemslot.Parts
 
-			player.Parts[part.Bindings].(game.Bindings)[key] = binding
+			bindings[key] = binding
 		}
 	} else {
 		logrus.WithFields(logrus.Fields{

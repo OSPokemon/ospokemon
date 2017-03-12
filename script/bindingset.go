@@ -3,7 +3,6 @@ package script
 import (
 	"errors"
 	"github.com/ospokemon/ospokemon/game"
-	"github.com/ospokemon/ospokemon/part"
 	"strconv"
 )
 
@@ -12,8 +11,8 @@ func init() {
 }
 
 func BindingSet(e *game.Entity, data map[string]interface{}) error {
-	bindings, ok := e.Parts[part.Bindings].(game.Bindings)
-	if !ok {
+	bindings := e.GetBindings()
+	if bindings == nil {
 		return errors.New("bindingset: bindings missing")
 	}
 
@@ -43,7 +42,7 @@ func BindingSet(e *game.Entity, data map[string]interface{}) error {
 	}
 
 	if spellid > 0 {
-		if actions, _ := e.Parts[part.Actions].(game.Actions); actions != nil {
+		if actions := e.GetActions(); actions != nil {
 			if action := actions[spellid]; action != nil {
 				bindings.SetAction(key, action)
 				return nil
@@ -74,7 +73,7 @@ func BindingSet(e *game.Entity, data map[string]interface{}) error {
 	}
 
 	if !(itemslotid < 0) {
-		if itembag, _ := e.Parts[part.Itembag].(*game.Itembag); itembag != nil {
+		if itembag := e.GetItembag(); itembag != nil {
 			if itemslot := itembag.Slots[itemslotid]; itemslot != nil {
 				bindings.SetItemslot(key, itemslot)
 				return nil
@@ -85,7 +84,7 @@ func BindingSet(e *game.Entity, data map[string]interface{}) error {
 	}
 
 	if walk, _ := data["walk"].(string); walk != "" {
-		if movement, _ := e.Parts[part.Movement].(*game.Movement); movement != nil {
+		if movement := e.GetMovement(); movement != nil {
 			bindings.SetWalk(key, walk)
 			return nil
 		}
@@ -93,7 +92,7 @@ func BindingSet(e *game.Entity, data map[string]interface{}) error {
 	}
 
 	if menu, _ := data["menu"].(string); menu != "" {
-		if menus, _ := e.Parts[part.Menus].(*game.Menus); menus != nil {
+		if menus := e.GetMenus(); menus != nil {
 			bindings.SetMenu(key, menu)
 			return nil
 		}

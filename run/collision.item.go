@@ -4,7 +4,6 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
-	"github.com/ospokemon/ospokemon/part"
 	"github.com/ospokemon/ospokemon/script"
 )
 
@@ -13,7 +12,7 @@ func init() {
 		entity1 := args[0].(*game.Entity)
 		entity2 := args[1].(*game.Entity)
 
-		itemslot, _ := entity2.Parts[part.Itemslot].(*game.Itemslot)
+		itemslot := entity2.GetItemslot()
 		if itemslot == nil {
 			return
 		}

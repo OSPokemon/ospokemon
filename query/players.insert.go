@@ -4,12 +4,11 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
-	"github.com/ospokemon/ospokemon/part"
 	"github.com/ospokemon/ospokemon/space"
 )
 
 func PlayersInsert(player *game.Player) error {
-	entity := player.Parts[part.Entity].(*game.Entity)
+	entity := player.GetEntity()
 	r := entity.Shape.(*space.Rect)
 	_, err := Connection.Exec(
 		"INSERT INTO players (username, level, experience, money, class, bagsize, universe, x, y) values (?, ?, ?, ?, ?, ?, ?, ?, ?)",

@@ -4,7 +4,6 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
-	"github.com/ospokemon/ospokemon/part"
 )
 
 func init() {
@@ -15,12 +14,12 @@ func BindingDownItemslot(args ...interface{}) {
 	player := args[0].(*game.Player)
 	binding := args[1].(*game.Binding)
 
-	itemslot, _ := binding.Parts[part.Itemslot].(*game.Itemslot)
+	itemslot := binding.GetItemslot()
 	if itemslot == nil {
 		return
 	}
 
-	itembag := player.Parts[part.Itembag].(*game.Itembag)
+	itembag := player.GetItembag()
 
 	if itembag.Timers[itemslot.Item.Id] != nil {
 		return

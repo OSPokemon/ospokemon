@@ -3,7 +3,7 @@ package server
 import (
 	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/game"
-	"github.com/ospokemon/ospokemon/part"
+	"github.com/ospokemon/ospokemon/query"
 	"golang.org/x/net/websocket"
 )
 
@@ -17,17 +17,17 @@ func Listen(s *Session) {
 				logrus.Warn(err.Error())
 			}
 
-			// account := game.Accounts[s.Username]
+			account := game.Accounts[s.Username]
 
-			// if account != nil {
-			// 	query.AccountsDelete(account)
-			// 	query.AccountsInsert(account)
-			// }
+			if account != nil {
+				query.AccountsDelete(account)
+				query.AccountsInsert(account)
+			}
 
 			s.Websocket.Close()
 
 			if player := game.Players[s.Username]; player != nil {
-				entity := player.Parts[part.Entity].(*game.Entity)
+				entity := player.GetEntity()
 				universe := game.Multiverse[entity.UniverseId]
 
 				universe.Remove(entity)

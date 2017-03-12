@@ -10,7 +10,7 @@ import (
 func init() {
 	event.On(event.AccountsDelete, func(args ...interface{}) {
 		account := args[0].(*game.Account)
-		player := game.Players[account.Username]
+		player := account.GetPlayer()
 		err := query.PlayersDelete(player)
 
 		if err != nil {

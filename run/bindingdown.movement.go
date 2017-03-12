@@ -3,7 +3,6 @@ package run
 import (
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
-	"github.com/ospokemon/ospokemon/part"
 )
 
 func init() {
@@ -14,9 +13,9 @@ func BindingDownMovement(args ...interface{}) {
 	player := args[0].(*game.Player)
 	bindings := args[1].(*game.Binding)
 
-	movement := player.Parts[part.Movement].(*game.Movement)
+	movement := player.GetMovement()
 
-	if walk, ok := bindings.Parts[part.Walk].(game.Walk); ok {
+	if walk := bindings.GetWalk(); walk != "" {
 		movement.Target = nil
 		movement.Walk(string(walk))
 	}

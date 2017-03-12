@@ -2,9 +2,10 @@ package game
 
 import (
 	"github.com/ospokemon/ospokemon/json"
-	"github.com/ospokemon/ospokemon/part"
 	"time"
 )
+
+const PARTitembag = "itembag"
 
 type Itembag struct {
 	Timers map[uint]*time.Duration
@@ -21,7 +22,12 @@ func MakeItembag(size uint) *Itembag {
 }
 
 func (itembag *Itembag) Part() string {
-	return part.Itembag
+	return PARTitembag
+}
+
+func (parts Parts) GetItembag() *Itembag {
+	itembag, _ := parts[PARTitembag].(*Itembag)
+	return itembag
 }
 
 func (itembag *Itembag) GetItems() map[uint]int {

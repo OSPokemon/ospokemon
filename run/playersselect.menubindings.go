@@ -4,7 +4,6 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
-	"github.com/ospokemon/ospokemon/part"
 	"github.com/ospokemon/ospokemon/query"
 )
 
@@ -25,11 +24,7 @@ func PlayersSelectMenuBindings(args ...interface{}) {
 		return
 	}
 
-	bindings, ok := player.Parts[part.Bindings].(game.Bindings)
-	if !ok {
-		bindings = make(game.Bindings)
-		player.AddPart(bindings)
-	}
+	bindings := player.GetBindings()
 
 	if mquery != nil {
 		for key, menu := range mquery {

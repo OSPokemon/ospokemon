@@ -3,7 +3,6 @@ package run
 import (
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
-	"github.com/ospokemon/ospokemon/part"
 	"github.com/ospokemon/ospokemon/query"
 )
 
@@ -14,10 +13,10 @@ func init() {
 func BindingDownAction(args ...interface{}) {
 	player := args[0].(*game.Player)
 	binding := args[1].(*game.Binding)
-	entity := player.Parts[part.Entity].(*game.Entity)
+	entity := player.GetEntity()
 	universe, _ := query.GetUniverse(entity.UniverseId)
 
-	if action, ok := binding.Parts[part.Action].(*game.Action); ok {
+	if action := binding.GetAction(); action != nil {
 		event.Fire(event.ActionCast, universe, entity, action)
 	}
 }

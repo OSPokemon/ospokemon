@@ -2,14 +2,20 @@ package game
 
 import (
 	"github.com/ospokemon/ospokemon/json"
-	"github.com/ospokemon/ospokemon/part"
 	"time"
 )
+
+const PARTactions = "actions"
 
 type Actions map[uint]*Action
 
 func (a Actions) Part() string {
-	return part.Actions
+	return PARTactions
+}
+
+func (parts Parts) GetActions() Actions {
+	actions, _ := parts[PARTactions].(Actions)
+	return actions
 }
 
 func (actions Actions) Update(universe *Universe, entity *Entity, d time.Duration) {

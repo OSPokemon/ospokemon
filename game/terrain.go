@@ -1,8 +1,6 @@
 package game
 
-import (
-	"github.com/ospokemon/ospokemon/part"
-)
+const PARTterrain = "terrain"
 
 type Terrain struct {
 	Id        uint
@@ -23,5 +21,10 @@ func MakeTerrain(id uint) *Terrain {
 }
 
 func (t *Terrain) Part() string {
-	return part.Terrain
+	return PARTterrain
+}
+
+func (parts Parts) GetTerrain() *Terrain {
+	terrain, _ := parts[PARTterrain].(*Terrain)
+	return terrain
 }

@@ -4,7 +4,6 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
-	"github.com/ospokemon/ospokemon/part"
 	"github.com/ospokemon/ospokemon/query"
 )
 
@@ -18,10 +17,8 @@ func ActionsPlayersInsertBindings(args ...interface{}) {
 
 	insert := make(map[string]uint)
 	for _, action := range actions {
-		if bindings, ok := action.Parts[part.Bindings].(game.Bindings); ok {
-			for key, _ := range bindings {
-				insert[key] = action.Spell.Id
-			}
+		if binding := action.GetBinding(); binding != nil {
+			insert[binding.Key] = action.Spell.Id
 		}
 	}
 

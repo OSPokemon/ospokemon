@@ -1,8 +1,6 @@
 package game
 
-import (
-	"github.com/ospokemon/ospokemon/part"
-)
+const PARTitem = "item"
 
 type Item struct {
 	Spell
@@ -20,5 +18,10 @@ func MakeItem() *Item {
 }
 
 func (i *Item) Part() string {
-	return part.Item
+	return PARTitem
+}
+
+func (parts Parts) GetItem() *Item {
+	item, _ := parts[PARTitem].(*Item)
+	return item
 }

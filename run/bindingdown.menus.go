@@ -3,7 +3,6 @@ package run
 import (
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
-	"github.com/ospokemon/ospokemon/part"
 )
 
 func init() {
@@ -13,9 +12,9 @@ func init() {
 func BindingDownMenus(args ...interface{}) {
 	player := args[0].(*game.Player)
 	binding := args[1].(*game.Binding)
-	menus := player.Parts[part.Menus].(game.Menus)
+	menus := player.GetMenus()
 
-	if menu, ok := binding.Parts[part.Menu].(game.Menu); ok {
+	if menu := binding.GetMenu(); menu != "" {
 		menus.Toggle(menu)
 	}
 }

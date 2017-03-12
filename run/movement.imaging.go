@@ -3,7 +3,6 @@ package run
 import (
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
-	"github.com/ospokemon/ospokemon/part"
 	"github.com/ospokemon/ospokemon/space"
 	"math"
 )
@@ -16,7 +15,7 @@ func MovementImaging(args ...interface{}) {
 	e := args[0].(*game.Entity)
 	v, _ := args[1].(space.Vector)
 
-	i := e.Parts[part.Imaging].(*game.Imaging)
+	i := e.GetImaging()
 
 	if v.DX == 0 && v.DY == 0 {
 		i.Image = i.Animations["portrait"]

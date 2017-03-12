@@ -2,20 +2,21 @@ package game
 
 import (
 	"github.com/ospokemon/ospokemon/json"
-	"github.com/ospokemon/ospokemon/part"
 )
+
+const PARTitemslot = "itemslot"
 
 type Itemslot struct {
 	Id     int
 	Item   *Item
 	Amount int
-	part.Parts
+	Parts
 }
 
 func MakeItemslot() *Itemslot {
 	itemslot := &Itemslot{
 		Id:    -1,
-		Parts: make(part.Parts),
+		Parts: make(Parts),
 	}
 
 	return itemslot
@@ -31,7 +32,12 @@ func BuildItemslot(id int, item *Item, amount int) *Itemslot {
 }
 
 func (i *Itemslot) Part() string {
-	return part.Itemslot
+	return PARTitemslot
+}
+
+func (parts Parts) GetItemslot() *Itemslot {
+	itemslot, _ := parts[PARTitemslot].(*Itemslot)
+	return itemslot
 }
 
 func (itemslot *Itemslot) Json() json.Json {
@@ -40,13 +46,13 @@ func (itemslot *Itemslot) Json() json.Json {
 		"amount": itemslot.Amount,
 	}
 
-	if imaging, _ := itemslot.Parts[part.Imaging].(*Imaging); imaging != nil {
+	if imaging := itemslot.GetImaging(); imaging != nil {
 		json["imaging"] = imaging.Json()
 	}
-	if entity, _ := itemslot.Parts[part.Entity].(*Entity); entity != nil {
+	if entity := itemslot.GetEntity(); entity != nil {
 		json["entity"] = entity.Id
 	}
-	if binding, _ := itemslot.Parts[part.Binding].(*Binding); binding != nil {
+	if binding := itemslot.GetBinding(); binding != nil {
 		json["binding"] = binding.Key
 	}
 

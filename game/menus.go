@@ -2,11 +2,12 @@ package game
 
 import (
 	"github.com/Sirupsen/logrus"
-	"github.com/ospokemon/ospokemon/part"
 )
 
-type Menu string
+const PARTmenu = "menu"
+const PARTmenus = "menus"
 
+type Menu string
 type Menus map[Menu]bool
 
 func MakeMenus() Menus {
@@ -30,9 +31,19 @@ func (m Menus) Toggle(menu Menu) {
 }
 
 func (m Menu) Part() string {
-	return part.Menu
+	return PARTmenu
+}
+
+func (parts Parts) GetMenu() Menu {
+	menu, _ := parts[PARTmenu].(Menu)
+	return menu
 }
 
 func (m Menus) Part() string {
-	return part.Menus
+	return PARTmenus
+}
+
+func (parts Parts) GetMenus() Menus {
+	menus, _ := parts[PARTmenus].(Menus)
+	return menus
 }

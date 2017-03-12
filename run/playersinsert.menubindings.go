@@ -4,7 +4,6 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
-	"github.com/ospokemon/ospokemon/part"
 	"github.com/ospokemon/ospokemon/query"
 )
 
@@ -14,9 +13,9 @@ func init() {
 
 func PlayersInsertMenuBindings(args ...interface{}) {
 	player := args[0].(*game.Player)
-	bindings, ok := player.Parts[part.Bindings].(game.Bindings)
+	bindings := player.GetBindings()
 
-	if !ok {
+	if len(bindings) < 1 {
 		bindings = make(game.Bindings)
 
 		menubindings := map[string]game.Menu{
@@ -41,7 +40,7 @@ func PlayersInsertMenuBindings(args ...interface{}) {
 
 	insert := make(map[string]string)
 	for key, binding := range bindings {
-		if menu, ok := binding.Parts[part.Menu].(game.Menu); ok {
+		if menu := binding.GetMenu(); menu != "" {
 			insert[key] = string(menu)
 		}
 	}

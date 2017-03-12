@@ -26,7 +26,7 @@ func EntitiesItemsSelect(entity *game.Entity, universe *game.Universe) (*game.It
 	logrus.WithFields(logrus.Fields{
 		"Universe": universe.Id,
 		"Entity":   entity.Id,
-		"Itemslot": itemslot,
+		"Item":     item.Id,
 	}).Debug("entities_items select")
 
 	return itemslot, nil

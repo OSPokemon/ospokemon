@@ -3,16 +3,17 @@ package game
 import (
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/json"
-	"github.com/ospokemon/ospokemon/part"
 	"github.com/ospokemon/ospokemon/space"
 	"time"
 )
+
+const PARTentity = "entity"
 
 type Entity struct {
 	Id         uint
 	UniverseId uint
 	space.Shape
-	part.Parts
+	Parts
 }
 
 type Entities map[uint]*Entity
@@ -20,14 +21,19 @@ type Entities map[uint]*Entity
 func MakeEntity() *Entity {
 	entity := &Entity{
 		Shape: &space.Rect{},
-		Parts: make(part.Parts),
+		Parts: make(Parts),
 	}
 
 	return entity
 }
 
 func (e *Entity) Part() string {
-	return part.Entity
+	return PARTentity
+}
+
+func (parts Parts) GetEntity() *Entity {
+	entity, _ := parts[PARTentity].(*Entity)
+	return entity
 }
 
 func (e *Entity) Update(u *Universe, d time.Duration) {
@@ -67,13 +73,13 @@ func (entity *Entity) Json() json.Json {
 		"shape": entity.Shape.Snapshot(),
 	}
 
-	if imaging, _ := entity.Parts[part.Imaging].(*Imaging); imaging != nil {
+	if imaging := entity.GetImaging(); imaging != nil {
 		json["imaging"] = imaging.Json()
 	}
-	if player, _ := entity.Parts[part.Player].(*Player); player != nil {
+	if player := entity.GetPlayer(); player != nil {
 		json["player"] = player.Json()
 	}
-	if chatmessage, _ := entity.Parts[part.ChatMessage].(*ChatMessage); chatmessage != nil {
+	if chatmessage := entity.GetChatMessage(); chatmessage != nil {
 		json["chat"] = chatmessage.Message
 	}
 

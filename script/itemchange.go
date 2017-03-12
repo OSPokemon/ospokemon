@@ -3,7 +3,6 @@ package script
 import (
 	"errors"
 	"github.com/ospokemon/ospokemon/game"
-	"github.com/ospokemon/ospokemon/part"
 	"github.com/ospokemon/ospokemon/query"
 	"strconv"
 )
@@ -13,8 +12,8 @@ func init() {
 }
 
 func ItemChange(e *game.Entity, data map[string]interface{}) error {
-	itembag, ok := e.Parts[part.Itembag].(*game.Itembag)
-	if !ok {
+	itembag := e.GetItembag()
+	if itembag == nil {
 		return errors.New("itemchange: itembag mising")
 	}
 

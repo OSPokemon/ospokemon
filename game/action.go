@@ -3,19 +3,20 @@ package game
 import (
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/json"
-	"github.com/ospokemon/ospokemon/part"
 	"time"
 )
+
+const PARTaction = "action"
 
 type Action struct {
 	Spell *Spell
 	Timer *time.Duration
-	part.Parts
+	Parts
 }
 
 func MakeAction() *Action {
 	return &Action{
-		Parts: make(part.Parts),
+		Parts: make(Parts),
 	}
 }
 
@@ -27,7 +28,12 @@ func BuildAction(spell *Spell) *Action {
 }
 
 func (a *Action) Part() string {
-	return part.Action
+	return PARTaction
+}
+
+func (parts Parts) GetAction() *Action {
+	action, _ := parts[PARTaction].(*Action)
+	return action
 }
 
 func (a *Action) Update(universe *Universe, entity *Entity, d time.Duration) {

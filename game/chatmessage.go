@@ -1,9 +1,10 @@
 package game
 
 import (
-	"github.com/ospokemon/ospokemon/part"
 	"time"
 )
+
+const PARTchatmessage = "chat"
 
 type ChatMessage struct {
 	Message string
@@ -11,7 +12,12 @@ type ChatMessage struct {
 }
 
 func (m *ChatMessage) Part() string {
-	return part.ChatMessage
+	return PARTchatmessage
+}
+
+func (parts Parts) GetChatMessage() *ChatMessage {
+	chat, _ := parts[PARTchatmessage].(*ChatMessage)
+	return chat
 }
 
 func (m *ChatMessage) Update(u *Universe, e *Entity, t time.Duration) {

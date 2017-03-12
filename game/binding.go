@@ -2,23 +2,29 @@ package game
 
 import (
 	"github.com/ospokemon/ospokemon/json"
-	"github.com/ospokemon/ospokemon/part"
 	// "time"
 )
 
+const PARTbinding = "binding"
+
 type Binding struct {
 	Key string
-	part.Parts
+	Parts
 }
 
 func MakeBinding() *Binding {
 	return &Binding{
-		Parts: make(part.Parts),
+		Parts: make(Parts),
 	}
 }
 
 func (binding *Binding) Part() string {
-	return part.Binding
+	return PARTbinding
+}
+
+func (parts Parts) GetBinding() *Binding {
+	binding, _ := parts[PARTbinding].(*Binding)
+	return binding
 }
 
 func (binding *Binding) SetAction(action *Action) {
@@ -32,7 +38,7 @@ func (binding *Binding) SetItemslot(itemslot *Itemslot) {
 }
 
 func (binding *Binding) SetWalk(walk string) {
-	binding.Parts = make(part.Parts)
+	binding.Parts = make(Parts)
 	binding.AddPart(Walk(walk))
 
 	imaging := MakeImaging()
@@ -41,7 +47,7 @@ func (binding *Binding) SetWalk(walk string) {
 }
 
 func (binding *Binding) SetMenu(menu string) {
-	binding.Parts = make(part.Parts)
+	binding.Parts = make(Parts)
 	binding.AddPart(Menu(menu))
 
 	imaging := MakeImaging()
@@ -61,13 +67,13 @@ func (binding *Binding) Json() json.Json {
 		"key": binding.Key,
 	}
 
-	if imaging, _ := binding.Parts[part.Imaging].(*Imaging); imaging != nil {
+	if imaging := binding.GetImaging(); imaging != nil {
 		json["imaging"] = imaging.Json()
 	}
-	if walk, _ := binding.Parts[part.Walk].(Walk); walk != "" {
+	if walk := binding.GetWalk(); walk != "" {
 		json["walk"] = walk
 	}
-	if menu, _ := binding.Parts[part.Menu].(Menu); menu != "" {
+	if menu := binding.GetMenu(); menu != "" {
 		json["menu"] = menu
 	}
 

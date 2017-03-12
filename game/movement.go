@@ -1,11 +1,12 @@
 package game
 
 import (
-	// "github.com/ospokemon/ospokemon/event"
-	"github.com/ospokemon/ospokemon/part"
 	"github.com/ospokemon/ospokemon/space"
 	"time"
 )
+
+const PARTmovement = "movement"
+const PARTwalk = "walk"
 
 var VECTup = &space.Vector{0, -1}
 var VECTright = &space.Vector{1, 0}
@@ -24,11 +25,21 @@ type Movement struct {
 type Walk string
 
 func (m *Movement) Part() string {
-	return part.Movement
+	return PARTmovement
+}
+
+func (parts Parts) GetMovement() *Movement {
+	movement, _ := parts[PARTmovement].(*Movement)
+	return movement
 }
 
 func (w Walk) Part() string {
-	return part.Walk
+	return PARTwalk
+}
+
+func (parts Parts) GetWalk() Walk {
+	walk, _ := parts[PARTwalk].(Walk)
+	return walk
 }
 
 func (m *Movement) Update(u *Universe, e *Entity, d time.Duration) {
@@ -46,7 +57,7 @@ func (m *Movement) Update(u *Universe, e *Entity, d time.Duration) {
 		vector = m.makeWalkVector()
 	}
 
-	stats := e.Parts[part.Stats].(Stats)
+	stats := e.GetStats()
 	speedStat := stats["speed"]
 
 	vector = vector.MakeUnit().Multiply(speedStat.Value)

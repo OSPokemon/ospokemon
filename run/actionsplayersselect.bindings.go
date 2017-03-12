@@ -4,7 +4,6 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
-	"github.com/ospokemon/ospokemon/part"
 	"github.com/ospokemon/ospokemon/query"
 )
 
@@ -26,11 +25,7 @@ func ActionsPlayersSelectBindings(args ...interface{}) {
 		return
 	}
 
-	bindings, ok := player.Parts[part.Bindings].(game.Bindings)
-	if !ok {
-		bindings = make(game.Bindings)
-		player.AddPart(bindings)
-	}
+	bindings := player.GetBindings()
 
 	if aquery != nil {
 		for key, actionid := range aquery {
@@ -39,7 +34,7 @@ func ActionsPlayersSelectBindings(args ...interface{}) {
 			action := actions[actionid]
 
 			binding.AddPart(action)
-			binding.AddPart(action.Parts[part.Imaging])
+			binding.AddPart(action.GetImaging())
 
 			bindings[key] = binding
 		}

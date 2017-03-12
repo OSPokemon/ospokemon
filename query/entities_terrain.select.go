@@ -23,7 +23,7 @@ func EntitiesTerrainSelect(entity *game.Entity, universe *game.Universe) (*game.
 			logrus.WithFields(logrus.Fields{
 				"Universe": universe.Id,
 				"Entity":   entity.Id,
-				"Terrain":  terrain,
+				"Terrain":  terrain.Id,
 			}).Debug("entities_terrain select")
 		}
 	}

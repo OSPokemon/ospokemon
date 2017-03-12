@@ -1,9 +1,6 @@
 package game
 
-import (
-	"github.com/Sirupsen/logrus"
-	"github.com/ospokemon/ospokemon/part"
-)
+const PARTpokemon = "pokemon"
 
 type Pokemon struct {
 	Id      uint
@@ -13,7 +10,7 @@ type Pokemon struct {
 	Level   uint
 	Gender  string
 	Shiny   bool
-	part.Parts
+	Parts
 }
 
 var Pokemons = make(map[uint]*Pokemon)
@@ -21,10 +18,8 @@ var Pokemons = make(map[uint]*Pokemon)
 func MakePokemon(id uint) *Pokemon {
 	p := &Pokemon{
 		Id:    id,
-		Parts: make(part.Parts),
+		Parts: make(Parts),
 	}
-
-	logrus.Debug("Pokemon created")
 
 	return p
 }

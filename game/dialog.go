@@ -2,8 +2,9 @@ package game
 
 import (
 	"github.com/ospokemon/ospokemon/json"
-	"github.com/ospokemon/ospokemon/part"
 )
+
+const PARTdialog = "dialog"
 
 type Dialog struct {
 	Id      uint
@@ -33,7 +34,12 @@ func (d *Dialog) Next(lead string) *Dialog {
 }
 
 func (d *Dialog) Part() string {
-	return part.Dialog
+	return PARTdialog
+}
+
+func (parts Parts) GetDialog() *Dialog {
+	dialog, _ := parts[PARTdialog].(*Dialog)
+	return dialog
 }
 
 func (dialog *Dialog) Json() json.Json {

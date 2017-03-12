@@ -2,8 +2,9 @@ package game
 
 import (
 	"github.com/ospokemon/ospokemon/json"
-	"github.com/ospokemon/ospokemon/part"
 )
+
+const PARTimaging = "imaging"
 
 type Imaging struct {
 	Image      string
@@ -29,7 +30,12 @@ func (i *Imaging) ReadAnimations(sample map[string]string) *Imaging {
 }
 
 func (i *Imaging) Part() string {
-	return part.Imaging
+	return PARTimaging
+}
+
+func (parts Parts) GetImaging() *Imaging {
+	imaging, _ := parts[PARTimaging].(*Imaging)
+	return imaging
 }
 
 func (imaging *Imaging) Json() json.Json {

@@ -4,7 +4,6 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
-	"github.com/ospokemon/ospokemon/part"
 	"github.com/ospokemon/ospokemon/query"
 )
 
@@ -25,9 +24,7 @@ func PlayersSelectMovementBindings(args ...interface{}) {
 		return
 	}
 
-	if player.Parts[part.Bindings] == nil {
-		player.AddPart(make(game.Bindings))
-	}
+	bindings := player.GetBindings()
 
 	if mquery != nil {
 		for key, direction := range mquery {
@@ -40,7 +37,7 @@ func PlayersSelectMovementBindings(args ...interface{}) {
 			imaging.Image = "/img/ui/walk/" + direction + ".png"
 			binding.AddPart(imaging)
 
-			player.Parts[part.Bindings].(game.Bindings)[key] = binding
+			bindings[key] = binding
 		}
 	}
 }

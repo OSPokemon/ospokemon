@@ -4,7 +4,6 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
-	"github.com/ospokemon/ospokemon/part"
 	"github.com/ospokemon/ospokemon/query"
 )
 
@@ -14,11 +13,7 @@ func init() {
 
 func PlayersInsertActions(args ...interface{}) {
 	player := args[0].(*game.Player)
-	actions, ok := player.Parts[part.Actions].(game.Actions)
-
-	if !ok {
-		return
-	}
+	actions := player.GetActions()
 
 	err := query.ActionsPlayersInsert(player, actions)
 
