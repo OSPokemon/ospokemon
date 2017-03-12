@@ -32,10 +32,12 @@ func BuildPlayer(username string, bagSize uint, class *Class, entity *Entity) *P
 	player.Username = username
 	player.Class = class.Id
 	player.BagSize = bagSize
+	player.AddPart(entity)
 	player.AddPart(MakeItembag(bagSize))
 	player.AddPart(make(Bindings))
+	player.AddPart(MakeMenus())
+	player.AddPart(&Movement{})
 	player.AddPart(BuildImaging(class.Animations))
-	player.AddPart(entity)
 
 	rect := entity.Shape.(*space.Rect)
 	rect.Dimension.DX = class.Dimension.DX
