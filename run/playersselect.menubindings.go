@@ -17,7 +17,7 @@ func PlayersSelectMenuBindings(args ...interface{}) {
 	mquery, err := query.BindingsMenusPlayersSelect(player)
 
 	if err != nil {
-		log.Add("Username", "2").Add("Error", err.Error()).Error("players select menubindings")
+		log.Add("Username", player.Username).Add("Error", err.Error()).Error("players select menubindings")
 		return
 	}
 

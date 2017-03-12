@@ -29,6 +29,6 @@ func ItembagsPlayersInsertBindings(args ...interface{}) {
 	err := query.BindingsItemsPlayersInsert(player, insert)
 
 	if err != nil {
-		log.Add("Username", "2").Add("Error", err.Error()).Error("itembags players insert bindings")
+		log.Add("Username", player.Username).Add("Error", err.Error()).Error("itembags players insert bindings")
 	}
 }

@@ -16,7 +16,7 @@ func UniversesSelectEntities(args ...interface{}) {
 	entities, err := query.EntitiesUniversesSelect(universe)
 
 	if err != nil {
-		log.Add("Universe", "2").Add("Error", err.Error()).Error("universes select entities")
+		log.Add("Universe", universe.Id).Add("Error", err.Error()).Error("universes select entities")
 		return
 	}
 

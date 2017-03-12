@@ -39,7 +39,7 @@ func TypesSelect(id uint) (*game.Type, error) {
 
 	game.Types[id] = t
 
-	log.Add("Type", "2").Info("types select")
+	log.Add("Type", id).Info("types select")
 
 	return t, nil
 }

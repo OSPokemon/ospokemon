@@ -20,7 +20,7 @@ func PlayersStatsInsert(player *game.Player, stats game.Stats) error {
 		}
 	}
 
-	log.Add("Username", "2").Add("stats", stats).Debug("players_stats insert")
+	log.Add("Username", player.Username).Add("stats", stats).Debug("players_stats insert")
 
 	return nil
 }

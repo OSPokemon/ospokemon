@@ -19,7 +19,7 @@ func PokemonInsert(pokemon *game.Pokemon) error {
 	)
 
 	if err == nil {
-		log.Add("Pokemon", "2").Info("pokemon insert")
+		log.Add("Pokemon", pokemon.Id).Info("pokemon insert")
 
 		event.Fire(event.PokemonInsert, pokemon)
 	}

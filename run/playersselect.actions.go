@@ -17,7 +17,7 @@ func PlayersSelectActions(args ...interface{}) {
 	actions, err := query.ActionsPlayersSelect(player)
 
 	if err != nil {
-		log.Add("Username", "2").Add("Error", err.Error()).Error("actions select player")
+		log.Add("Username", player.Username).Add("Error", err.Error()).Error("actions select player")
 		return
 	}
 

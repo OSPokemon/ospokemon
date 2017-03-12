@@ -12,7 +12,7 @@ func PlayersStatsDelete(player *game.Player) error {
 	)
 
 	if err == nil {
-		log.Add("Username", "2").Debug("players_stats delete")
+		log.Add("Username", player.Username).Debug("players_stats delete")
 	}
 
 	return err

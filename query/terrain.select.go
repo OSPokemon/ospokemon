@@ -17,7 +17,7 @@ func TerrainSelect(id uint) (*game.Terrain, error) {
 	if err == nil {
 		game.Terrains[id] = t
 
-		log.Add("Terrain", "2").Info("terrain select")
+		log.Add("Terrain", id).Info("terrain select")
 	}
 
 	return t, err

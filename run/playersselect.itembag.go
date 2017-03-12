@@ -16,7 +16,7 @@ func PlayersSelectItembag(args ...interface{}) {
 	itembag, err := query.ItembagsPlayersSelect(player)
 
 	if err != nil {
-		log.Add("Username", "2").Add("Error", err.Error()).Error("player build itembag")
+		log.Add("Username", player.Username).Add("Error", err.Error()).Error("player build itembag")
 		return
 	}
 

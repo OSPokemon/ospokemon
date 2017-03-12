@@ -20,12 +20,12 @@ func AccountsInsertPlayer(args ...interface{}) {
 		entity := game.MakeEntity()
 		player = game.BuildPlayer(account.Username, game.DEFAULT_BAG_SIZE, class, entity)
 		player.Username = account.Username
-		log.Add("Username", "2").Debug("account insert player: grant empty player")
+		log.Add("Username", player.Username).Debug("account insert player: grant empty player")
 	}
 
 	err := query.PlayersInsert(player)
 
 	if err != nil {
-		log.Add("Username", "2").Add("Error", err.Error()).Error("Account insert player")
+		log.Add("Username", player.Username).Add("Error", err.Error()).Error("Account insert player")
 	}
 }

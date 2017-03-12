@@ -20,7 +20,7 @@ func PlayersInsertStats(args ...interface{}) {
 			"speed": &game.Stat{5, 5, 5},
 		}
 
-		log.Add("Username", "2").Debug("players insert stats: grant default stats")
+		log.Add("Username", player.Username).Debug("players insert stats: grant default stats")
 	}
 
 	err := query.PlayersStatsInsert(player, stats)

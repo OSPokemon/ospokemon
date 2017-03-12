@@ -33,7 +33,7 @@ func PlayersInsertMenuBindings(args ...interface{}) {
 			bindings[binding.Key] = binding
 		}
 
-		log.Add("Username", "2").Debug("players insert menubindings: grant default menu bindings")
+		log.Add("Username", player.Username).Debug("players insert menubindings: grant default menu bindings")
 	}
 
 	insert := make(map[string]string)

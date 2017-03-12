@@ -17,7 +17,7 @@ func PlayersSelectStats(args ...interface{}) {
 	stats, err := query.PlayersStatsSelect(player)
 
 	if err != nil {
-		log.Add("Username", "2").Add("Error", err.Error()).Error("players select stats")
+		log.Add("Username", player.Username).Add("Error", err.Error()).Error("players select stats")
 		return
 	}
 

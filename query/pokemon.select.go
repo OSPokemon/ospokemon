@@ -30,7 +30,7 @@ func PokemonSelect(id uint) (*game.Pokemon, error) {
 
 	game.Pokemons[id] = pokemon
 
-	log.Add("Pokemon", "2").Info("pokemon select")
+	log.Add("Pokemon", id).Info("pokemon select")
 
 	event.Fire(event.PokemonSelect, pokemon)
 	return pokemon, nil

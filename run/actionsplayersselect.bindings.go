@@ -18,7 +18,7 @@ func ActionsPlayersSelectBindings(args ...interface{}) {
 	aquery, err := query.ActionsBindingsPlayersSelect(player)
 
 	if err != nil {
-		log.Add("Username", "2").Add("Error", err.Error()).Error("actions players select bindings")
+		log.Add("Username", player.Username).Add("Error", err.Error()).Error("actions players select bindings")
 		return
 	}
 
@@ -36,6 +36,6 @@ func ActionsPlayersSelectBindings(args ...interface{}) {
 			bindings[key] = binding
 		}
 	} else {
-		log.Add("Username", "2").Add("Bindings", bindings).Warn("actions players select bindings")
+		log.Add("Username", player.Username).Add("Bindings", bindings).Warn("actions players select bindings")
 	}
 }

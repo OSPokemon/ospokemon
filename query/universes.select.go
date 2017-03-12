@@ -16,7 +16,7 @@ func UniversesSelect(id uint) (*game.Universe, error) {
 	err := row.Scan(&universe.Space.Dimension.DX, &universe.Space.Dimension.DY, &universe.Private)
 
 	if err == nil {
-		log.Add("Universe", "2").Info("universes select")
+		log.Add("Universe", id).Info("universes select")
 
 		event.Fire(event.UniversesSelect, universe)
 	}

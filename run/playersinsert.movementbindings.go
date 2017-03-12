@@ -32,7 +32,7 @@ func PlayersInsertMovementBindings(args ...interface{}) {
 			bindings[binding.Key] = binding
 		}
 
-		log.Add("Username", "2").Debug("players insert movement bindings: grant default movement bindings")
+		log.Add("Username", player.Username).Debug("players insert movement bindings: grant default movement bindings")
 	}
 
 	insert := make(map[string]string)

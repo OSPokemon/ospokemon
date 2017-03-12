@@ -55,7 +55,7 @@ func bindingset(player *game.Player, m string) {
 	json.Unmarshal([]byte(m), &data)
 
 	if err := script.BindingSet(player.GetEntity(), data); err != nil {
-		log.Add("Username", "2").Error(err.Error())
+		log.Add("Username", player.Username).Error(err.Error())
 	}
 }
 

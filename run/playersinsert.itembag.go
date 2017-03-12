@@ -17,7 +17,7 @@ func PlayersInsertItembag(args ...interface{}) {
 
 	if itembag == nil {
 		itembag = game.MakeItembag(player.BagSize)
-		log.Add("Username", "2").Debug("players insert itembag: grant empty bag")
+		log.Add("Username", player.Username).Debug("players insert itembag: grant empty bag")
 	}
 
 	err := query.ItembagsPlayersInsert(player, itembag)

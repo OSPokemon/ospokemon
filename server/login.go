@@ -36,12 +36,12 @@ var LoginHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request)
 	account, err := query.GetAccount(username)
 
 	if account == nil {
-		log.Add("Username", "2").Debug("server.Login: account not found")
+		log.Add("Username", username).Debug("server.Login: account not found")
 
 		http.Redirect(w, r, "/login/?account", http.StatusMovedPermanently)
 		return
 	} else if err != nil {
-		log.Add("Username", "2").Add("Error", err.Error()).Error("server.Login")
+		log.Add("Username", username).Add("Error", err.Error()).Error("server.Login")
 
 		http.Redirect(w, r, "/login/?account", http.StatusMovedPermanently)
 		return

@@ -28,7 +28,7 @@ func PlayersStatsSelect(player *game.Player) (game.Stats, error) {
 	}
 	rows.Close()
 
-	log.Add("Username", "2").Add("Stats", stats).Debug("players_stats select")
+	log.Add("Username", player.Username).Add("Stats", stats).Debug("players_stats select")
 
 	return stats, nil
 }

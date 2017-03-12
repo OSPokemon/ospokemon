@@ -17,7 +17,7 @@ func PlayersSelectMovementBindings(args ...interface{}) {
 	mquery, err := query.BindingsMovementsPlayersSelect(player)
 
 	if err != nil {
-		log.Add("Username", "2").Add("Error", err.Error()).Error("players select movement bindings")
+		log.Add("Username", player.Username).Add("Error", err.Error()).Error("players select movement bindings")
 		return
 	}
 

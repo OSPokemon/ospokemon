@@ -72,8 +72,7 @@ func (s *Session) Update(u *game.Universe, e *game.Entity, d time.Duration) {
 		data["settings"] = true
 	}
 
-	bindings := player.GetBindings()
-	data["bindings"] = bindings.Json()
+	data["bindings"] = player.GetBindings().Json()
 
 	if dialog := player.GetDialog(); dialog != nil {
 		data["dialog"] = dialog.Json()

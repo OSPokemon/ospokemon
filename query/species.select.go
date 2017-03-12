@@ -135,7 +135,7 @@ func SpeciesSelect(id uint) (*game.Species, error) {
 	}
 	rows.Close()
 
-	log.Add("Species", "2").Info("species select")
+	log.Add("Species", id).Info("species select")
 
 	return species, nil
 }

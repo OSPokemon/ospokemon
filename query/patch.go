@@ -12,7 +12,7 @@ func Patch() {
 
 	if !ok {
 		for _, err := range errors {
-			log.Add("Path", "2").Error(err.Error())
+			log.Add("Path", option.String("dbpath")).Error(err.Error())
 		}
 	}
 }

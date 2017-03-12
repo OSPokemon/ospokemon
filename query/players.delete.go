@@ -10,7 +10,7 @@ func PlayersDelete(player *game.Player) error {
 	_, err := Connection.Exec("DELETE FROM players WHERE username=?", player.Username)
 
 	if err == nil {
-		log.Add("Username", "2").Info("players delete")
+		log.Add("Username", player.Username).Info("players delete")
 
 		event.Fire(event.PlayersDelete, player)
 	}

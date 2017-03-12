@@ -29,5 +29,5 @@ func BindingDownItemslot(args ...interface{}) {
 	timer := item.CastTime + item.Cooldown
 	itembag.Timers[itemslot.Item.Id] = &timer
 
-	log.Add("Username", "2").Add("Binding", binding).Info("binding down itemslot")
+	log.Add("Username", player.Username).Add("Binding", binding).Info("binding down itemslot")
 }

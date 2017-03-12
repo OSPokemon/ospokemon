@@ -24,7 +24,7 @@ func PlayersInsert(player *game.Player) error {
 	)
 
 	if err == nil {
-		log.Add("Username", "2").Info("players insert")
+		log.Add("Username", player.Username).Info("players insert")
 
 		delete(game.Players, player.Username)
 		event.Fire(event.PlayersInsert, player)

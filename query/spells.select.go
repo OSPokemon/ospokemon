@@ -64,7 +64,7 @@ func SpellsSelect(id uint) (*game.Spell, error) {
 
 	game.Spells[id] = spell
 
-	log.Add("Spell", "2").Info("spells select")
+	log.Add("Spell", id).Info("spells select")
 
 	return spell, nil
 }

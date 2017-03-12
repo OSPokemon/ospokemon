@@ -18,6 +18,6 @@ func PlayersInsertActions(args ...interface{}) {
 	err := query.ActionsPlayersInsert(player, actions)
 
 	if err != nil {
-		log.Add("Username", "2").Add("Error", err.Error()).Error("actions insert player")
+		log.Add("Username", player.Username).Add("Error", err.Error()).Error("actions insert player")
 	}
 }

@@ -16,6 +16,6 @@ func ActionsPlayersDeleteBindings(args ...interface{}) {
 	err := query.ActionsBindingsPlayersDelete(player)
 
 	if err != nil {
-		log.Add("Username", "2").Add("Error", err.Error()).Error("actions players delete bindings")
+		log.Add("Username", player.Username).Add("Error", err.Error()).Error("actions players delete bindings")
 	}
 }

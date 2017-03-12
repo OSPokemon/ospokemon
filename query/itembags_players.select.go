@@ -60,7 +60,7 @@ func ItembagsPlayersSelect(player *game.Player) (*game.Itembag, error) {
 	}
 	rows.Close()
 
-	log.Add("Username", "2").Add("Itembag", itembag.Slots).Debug("itembags_players select")
+	log.Add("Username", player.Username).Add("Itembag", itembag.Slots).Debug("itembags_players select")
 
 	event.Fire(event.ItembagsPlayersSelect, player, itembag)
 

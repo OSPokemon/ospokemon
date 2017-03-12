@@ -68,7 +68,7 @@ func ItemsSelect(id uint) (*game.Item, error) {
 
 	game.Items[id] = item
 
-	log.Add("Item", "2").Info("items select")
+	log.Add("Item", id).Info("items select")
 
 	return item, nil
 }

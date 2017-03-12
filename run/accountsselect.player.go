@@ -20,6 +20,6 @@ func AccountsSelectPlayer(args ...interface{}) {
 		player.AddPart(player)
 		account.Parts = player.Parts
 	} else if err != nil {
-		log.Add("Username", "2").Add("Error", err.Error()).Error("accounts select player")
+		log.Add("Username", player.Username).Add("Error", err.Error()).Error("accounts select player")
 	}
 }

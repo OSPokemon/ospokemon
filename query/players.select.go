@@ -35,7 +35,7 @@ func PlayersSelect(username string) (*game.Player, error) {
 
 	game.Players[username] = player
 
-	log.Add("Username", "2").Info("players select")
+	log.Add("Username", player.Username).Info("players select")
 
 	event.Fire(event.PlayersSelect, player)
 

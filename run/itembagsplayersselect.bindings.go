@@ -18,7 +18,7 @@ func ItembagsPlayersSelectBindings(args ...interface{}) {
 	bquery, err := query.BindingsItemsPlayersSelect(player)
 
 	if err != nil {
-		log.Add("Username", "2").Add("Error", err.Error()).Error("itembags players select bindings")
+		log.Add("Username", player.Username).Add("Error", err.Error()).Error("itembags players select bindings")
 		return
 	}
 
@@ -35,6 +35,6 @@ func ItembagsPlayersSelectBindings(args ...interface{}) {
 			bindings[key] = binding
 		}
 	} else {
-		log.Add("Username", "2").Add("Bindings", bquery).Warn("itembags players select bindings")
+		log.Add("Username", player.Username).Add("Bindings", bquery).Warn("itembags players select bindings")
 	}
 }
