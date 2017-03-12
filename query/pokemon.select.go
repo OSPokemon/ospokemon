@@ -8,13 +8,14 @@ import (
 
 func PokemonSelect(id uint) (*game.Pokemon, error) {
 	row := Connection.QueryRow(
-		"SELECT species, name, xp, level, gender, shiny FROM pokemon WHERE id=?",
+		"SELECT id, species, name, xp, level, gender, shiny FROM pokemon WHERE id=?",
 		id,
 	)
 
-	pokemon := game.MakePokemon(id)
+	pokemon := game.MakePokemon()
 
 	err := row.Scan(
+		&pokemon.Id,
 		&pokemon.Species,
 		&pokemon.Name,
 		&pokemon.Xp,

@@ -15,9 +15,8 @@ type Pokemon struct {
 
 var Pokemons = make(map[uint]*Pokemon)
 
-func MakePokemon(id uint) *Pokemon {
+func MakePokemon() *Pokemon {
 	p := &Pokemon{
-		Id:    id,
 		Parts: make(Parts),
 	}
 
