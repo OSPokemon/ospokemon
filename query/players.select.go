@@ -1,9 +1,9 @@
 package query
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 	"github.com/ospokemon/ospokemon/space"
 )
 
@@ -35,9 +35,7 @@ func PlayersSelect(username string) (*game.Player, error) {
 
 	game.Players[username] = player
 
-	logrus.WithFields(logrus.Fields{
-		"Username": player.Username,
-	}).Info("players select")
+	log.Add("Username", "2").Info("players select")
 
 	event.Fire(event.PlayersSelect, player)
 

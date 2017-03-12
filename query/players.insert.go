@@ -1,9 +1,9 @@
 package query
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 	"github.com/ospokemon/ospokemon/space"
 )
 
@@ -24,9 +24,7 @@ func PlayersInsert(player *game.Player) error {
 	)
 
 	if err == nil {
-		logrus.WithFields(logrus.Fields{
-			"Username": player.Username,
-		}).Info("players insert")
+		log.Add("Username", "2").Info("players insert")
 
 		delete(game.Players, player.Username)
 		event.Fire(event.PlayersInsert, player)

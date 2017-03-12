@@ -1,9 +1,9 @@
 package run
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 )
 
 func init() {
@@ -21,12 +21,7 @@ func ActionCast(args ...interface{}) {
 
 	if script, ok := game.Scripts[spell.Script]; ok {
 		if err := script(entity, spell.Data); err != nil {
-			logrus.WithFields(logrus.Fields{
-				"Universe": universe.Id,
-				"Entity":   entity.Id,
-				"Action":   action,
-				"Error":    err.Error(),
-			}).Error("action cast")
+			log.Add("Universe", universe.Id).Add("Entity", entity.Id).Add("Spell", spell.Id).Add("Error", err.Error()).Error("action cast")
 		}
 	}
 }

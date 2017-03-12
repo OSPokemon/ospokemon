@@ -1,9 +1,9 @@
 package run
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 	"github.com/ospokemon/ospokemon/query"
 )
 
@@ -25,6 +25,6 @@ func ActionsPlayersInsertBindings(args ...interface{}) {
 	err := query.ActionsBindingsPlayersInsert(player, insert)
 
 	if err != nil {
-		logrus.Error(err.Error())
+		log.Add("player", player.Username).Add("Error", err.Error()).Error("actions players insert bindings")
 	}
 }

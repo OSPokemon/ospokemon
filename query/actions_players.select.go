@@ -1,9 +1,9 @@
 package query
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 	"time"
 )
 
@@ -44,10 +44,7 @@ func ActionsPlayersSelect(player *game.Player) (game.Actions, error) {
 		}
 	}
 
-	logrus.WithFields(logrus.Fields{
-		"Username": player.Username,
-		"Actions":  actions,
-	}).Debug("actions_players select")
+	log.Add("Username", player.Username).Add("Actions", actions).Debug("actions_players select")
 
 	event.Fire(event.ActionsPlayersSelect, player, actions)
 

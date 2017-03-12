@@ -1,9 +1,9 @@
 package run
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 	"github.com/ospokemon/ospokemon/query"
 )
 
@@ -17,18 +17,12 @@ func PlayersInsertItembag(args ...interface{}) {
 
 	if itembag == nil {
 		itembag = game.MakeItembag(player.BagSize)
-		logrus.WithFields(logrus.Fields{
-			"Username": player.Username,
-		}).Debug("players insert itembag: grant empty bag")
+		log.Add("Username", "2").Debug("players insert itembag: grant empty bag")
 	}
 
 	err := query.ItembagsPlayersInsert(player, itembag)
 
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"Player":  player.Username,
-			"Itembag": itembag.GetItems(),
-			"Error":   err.Error(),
-		}).Error("playersinsert.itembag")
+		log.Add("Player", player.Username).Add("Itembag", itembag.GetItems()).Add("Error", err.Error()).Error("players insert itembag")
 	}
 }

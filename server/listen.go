@@ -1,8 +1,8 @@
 package server
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 	"github.com/ospokemon/ospokemon/query"
 	"golang.org/x/net/websocket"
 )
@@ -14,7 +14,7 @@ func Listen(s *Session) {
 
 		if err != nil {
 			if err.Error() != "EOF" {
-				logrus.Warn(err.Error())
+				log.Warn(err.Error())
 			}
 
 			account := game.Accounts[s.Username]

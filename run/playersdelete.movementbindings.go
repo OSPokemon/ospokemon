@@ -1,9 +1,9 @@
 package run
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 	"github.com/ospokemon/ospokemon/query"
 )
 
@@ -16,6 +16,6 @@ func PlayersDeleteMovementBindings(args ...interface{}) {
 	err := query.BindingsMovementsPlayersDelete(player)
 
 	if err != nil {
-		logrus.Error(err.Error())
+		log.Add("Player", player.Username).Add("Error", err.Error()).Error("players delete movementbindings")
 	}
 }

@@ -2,9 +2,9 @@ package server
 
 import (
 	"encoding/json"
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 	"github.com/ospokemon/ospokemon/script"
 	"github.com/ospokemon/ospokemon/space"
 	"time"
@@ -34,10 +34,7 @@ func ReceiveMessage(s *Session, m *WebsocketMessage) {
 	} else if m.Event == "Chat" {
 		chat(p, m.Message)
 	} else {
-		logrus.WithFields(logrus.Fields{
-			"Message":  m,
-			"Username": p.Username,
-		}).Warn("Websocket: unrecognized message type")
+		log.Add("Message", m).Add("Username", p.Username).Warn("ReceiveMessage: unrecognized message type")
 	}
 }
 
@@ -58,9 +55,7 @@ func bindingset(player *game.Player, m string) {
 	json.Unmarshal([]byte(m), &data)
 
 	if err := script.BindingSet(player.GetEntity(), data); err != nil {
-		logrus.WithFields(logrus.Fields{
-			"Username": player.Username,
-		}).Error(err.Error())
+		log.Add("Username", "2").Error(err.Error())
 	}
 }
 
@@ -111,11 +106,7 @@ func dialogchoice(player *game.Player, m string) {
 
 			if script := game.Scripts[nextDialog.Script]; script != nil {
 				if err := script(entity, nextDialog.Data); err != nil {
-					logrus.WithFields(logrus.Fields{
-						"Player": player.Username,
-						"Choice": m,
-						"Error":  err.Error(),
-					}).Error("dialog choice")
+					log.Add("Player", player.Username).Add("Choice", m).Add("Error", err.Error()).Error("dialog choice")
 					return
 				}
 			}

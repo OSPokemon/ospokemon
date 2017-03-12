@@ -1,9 +1,9 @@
 package run
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 	"github.com/ospokemon/ospokemon/query"
 )
 
@@ -20,17 +20,12 @@ func AccountsInsertPlayer(args ...interface{}) {
 		entity := game.MakeEntity()
 		player = game.BuildPlayer(account.Username, game.DEFAULT_BAG_SIZE, class, entity)
 		player.Username = account.Username
-		logrus.WithFields(logrus.Fields{
-			"Username": player.Username,
-		}).Debug("account insert player: grant empty player")
+		log.Add("Username", "2").Debug("account insert player: grant empty player")
 	}
 
 	err := query.PlayersInsert(player)
 
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"Username": player.Username,
-			"Error":    err.Error(),
-		}).Error("Account insert player")
+		log.Add("Username", "2").Add("Error", err.Error()).Error("Account insert player")
 	}
 }

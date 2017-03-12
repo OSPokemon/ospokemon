@@ -1,9 +1,9 @@
 package query
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 )
 
 func UniversesSelect(id uint) (*game.Universe, error) {
@@ -16,9 +16,7 @@ func UniversesSelect(id uint) (*game.Universe, error) {
 	err := row.Scan(&universe.Space.Dimension.DX, &universe.Space.Dimension.DY, &universe.Private)
 
 	if err == nil {
-		logrus.WithFields(logrus.Fields{
-			"Universe": universe.Id,
-		}).Info("universes select")
+		log.Add("Universe", "2").Info("universes select")
 
 		event.Fire(event.UniversesSelect, universe)
 	}

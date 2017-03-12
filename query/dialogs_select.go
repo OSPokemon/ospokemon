@@ -1,8 +1,8 @@
 package query
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 )
 
 func DialogsSelect(entity *game.Entity, universe *game.Universe) (*game.Dialog, error) {
@@ -51,11 +51,7 @@ func DialogsSelect(entity *game.Entity, universe *game.Universe) (*game.Dialog, 
 	}
 
 	if len(dialogs) > 0 && err == nil {
-		logrus.WithFields(logrus.Fields{
-			"Universe": universe.Id,
-			"Entity":   entity.Id,
-			"Dialogs":  len(dialogs),
-		}).Debug("dialogs select")
+		log.Add("Universe", universe.Id).Add("Entity", entity.Id).Add("Dialogs", len(dialogs)).Debug("dialogs select")
 	}
 
 	return dialogs[0], nil

@@ -1,8 +1,8 @@
 package game
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/cznic/mathutil"
+	"github.com/ospokemon/ospokemon/log"
 	"github.com/ospokemon/ospokemon/space"
 	"time"
 )
@@ -57,19 +57,13 @@ func (u *Universe) Add(e *Entity) {
 	e.Id = u.GenerateId()
 	u.Entities[e.Id] = e
 
-	logrus.WithFields(logrus.Fields{
-		"Universe": u.Id,
-		"Entity":   e.Id,
-	}).Debug("game.Universe.Add")
+	log.Add("Universe", u.Id).Add("Entity", e.Id).Debug("game.Universe.Add")
 
 	// event.Fire(event.UniverseAdd, u, e)
 }
 
 func (u *Universe) Remove(e *Entity) {
-	logrus.WithFields(logrus.Fields{
-		"Universe": u.Id,
-		"Entity":   e.Id,
-	}).Debug("game.Universe.Remove")
+	log.Add("Universe", u.Id).Add("Entity", e.Id).Debug("game.Universe.Remove")
 
 	delete(u.Entities, e.Id)
 	e.Id = 0

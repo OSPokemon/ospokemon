@@ -1,9 +1,9 @@
 package query
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 	"time"
 )
 
@@ -60,10 +60,7 @@ func ItembagsPlayersSelect(player *game.Player) (*game.Itembag, error) {
 	}
 	rows.Close()
 
-	logrus.WithFields(logrus.Fields{
-		"Username": player.Username,
-		"Itembag":  itembag.Slots,
-	}).Debug("itembags_players select")
+	log.Add("Username", "2").Add("Itembag", itembag.Slots).Debug("itembags_players select")
 
 	event.Fire(event.ItembagsPlayersSelect, player, itembag)
 

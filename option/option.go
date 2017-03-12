@@ -2,7 +2,7 @@ package option
 
 import (
 	"flag"
-	"github.com/Sirupsen/logrus"
+	"github.com/ospokemon/ospokemon/log"
 	"io/ioutil"
 	"strconv"
 	"strings"
@@ -75,9 +75,7 @@ func readfile(path string) error {
 
 		setting := strings.Split(line, "=")
 		if options[setting[0]] == nil {
-			logrus.WithFields(logrus.Fields{
-				"Setting": setting,
-			}).Warn("Setting name not recognized")
+			log.Add("Setting", setting).Warn("Setting name not recognized")
 			continue
 		}
 		if len(setting) == 2 {
@@ -99,28 +97,5 @@ func bindflags(read map[string]*string) {
 }
 
 func loginit() {
-	switch String("log") {
-	case "debug":
-		logrus.SetLevel(logrus.DebugLevel)
-		break
-	case "info":
-		logrus.SetLevel(logrus.InfoLevel)
-		break
-	case "warn":
-		logrus.SetLevel(logrus.WarnLevel)
-		break
-	case "error":
-		logrus.SetLevel(logrus.ErrorLevel)
-		break
-	case "fatal":
-		logrus.SetLevel(logrus.FatalLevel)
-		break
-	case "panic":
-		logrus.SetLevel(logrus.PanicLevel)
-		break
-	default:
-		logrus.SetLevel(logrus.InfoLevel)
-		logrus.Warn("Log level invalid: ", String("log"))
-		break
-	}
+	log.SetLevel(String("log"))
 }

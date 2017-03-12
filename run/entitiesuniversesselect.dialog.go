@@ -1,9 +1,9 @@
 package run
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 	"github.com/ospokemon/ospokemon/query"
 )
 
@@ -19,10 +19,6 @@ func EntitiesUniversesSelectDialog(args ...interface{}) {
 	if err == nil {
 		entity.AddPart(dialog)
 	} else if err.Error() != "sql: no rows in result set" {
-		logrus.WithFields(logrus.Fields{
-			"Universe": universe.Id,
-			"Entity":   entity.Id,
-			"Error":    err.Error(),
-		}).Error("EntityUniverseSelect-Dialog")
+		log.Add("Universe", universe.Id).Add("Entity", entity.Id).Add("Error", err.Error()).Error("EntityUniverseSelect-Dialog")
 	}
 }

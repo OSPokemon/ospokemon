@@ -1,8 +1,8 @@
 package query
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 )
 
 func BindingsMenusPlayersSelect(player *game.Player) (map[string]string, error) {
@@ -28,10 +28,7 @@ func BindingsMenusPlayersSelect(player *game.Player) (map[string]string, error) 
 	}
 	rows.Close()
 
-	logrus.WithFields(logrus.Fields{
-		"Username": player.Username,
-		"Bindings": menus,
-	}).Debug("bindings_menus_players select")
+	log.Add("Username", player.Username).Add("Bindings", menus).Debug("bindings_menus_players select")
 
 	return menus, nil
 }

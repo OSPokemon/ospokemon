@@ -1,8 +1,8 @@
 package query
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 	"time"
 )
 
@@ -64,9 +64,7 @@ func SpellsSelect(id uint) (*game.Spell, error) {
 
 	game.Spells[id] = spell
 
-	logrus.WithFields(logrus.Fields{
-		"Spell": spell.Id,
-	}).Info("spells select")
+	log.Add("Spell", "2").Info("spells select")
 
 	return spell, nil
 }

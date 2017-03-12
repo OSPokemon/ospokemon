@@ -1,8 +1,8 @@
 package query
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 )
 
 func ClassesSelect(id uint) (*game.Class, error) {
@@ -36,9 +36,7 @@ func ClassesSelect(id uint) (*game.Class, error) {
 
 	game.Classes[id] = class
 
-	logrus.WithFields(logrus.Fields{
-		"Class": class.Id,
-	}).Info("classes select")
+	log.Add("Class", class.Id).Info("classes select")
 
 	return class, nil
 }

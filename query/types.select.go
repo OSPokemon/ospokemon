@@ -1,8 +1,8 @@
 package query
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 )
 
 func TypesSelect(id uint) (*game.Type, error) {
@@ -39,9 +39,7 @@ func TypesSelect(id uint) (*game.Type, error) {
 
 	game.Types[id] = t
 
-	logrus.WithFields(logrus.Fields{
-		"Type": t,
-	}).Info("types select")
+	log.Add("Type", "2").Info("types select")
 
 	return t, nil
 }

@@ -1,8 +1,8 @@
 package query
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 )
 
 func PlayersStatsSelect(player *game.Player) (game.Stats, error) {
@@ -28,10 +28,7 @@ func PlayersStatsSelect(player *game.Player) (game.Stats, error) {
 	}
 	rows.Close()
 
-	logrus.WithFields(logrus.Fields{
-		"Username": player.Username,
-		"Stats":    stats,
-	}).Debug("players_stats select")
+	log.Add("Username", "2").Add("Stats", stats).Debug("players_stats select")
 
 	return stats, nil
 }

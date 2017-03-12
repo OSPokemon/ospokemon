@@ -1,8 +1,8 @@
 package query
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 	"time"
 )
 
@@ -68,9 +68,7 @@ func ItemsSelect(id uint) (*game.Item, error) {
 
 	game.Items[id] = item
 
-	logrus.WithFields(logrus.Fields{
-		"Item": item.Id,
-	}).Info("items select")
+	log.Add("Item", "2").Info("items select")
 
 	return item, nil
 }

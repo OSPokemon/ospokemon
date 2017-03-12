@@ -1,7 +1,7 @@
 package game
 
 import (
-	"github.com/Sirupsen/logrus"
+	"github.com/ospokemon/ospokemon/log"
 )
 
 const PARTmenu = "menu"
@@ -22,9 +22,7 @@ func MakeMenus() Menus {
 
 func (m Menus) Toggle(menu Menu) {
 	if _, ok := m[menu]; !ok {
-		logrus.WithFields(logrus.Fields{
-			"name": menu,
-		}).Warn("Menus: unrecognized menu name")
+		log.Add("name", menu).Warn("Menus: unrecognized menu name")
 	}
 
 	m[menu] = !m[menu]

@@ -1,9 +1,9 @@
 package run
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 )
 
 func init() {
@@ -29,8 +29,5 @@ func BindingDownItemslot(args ...interface{}) {
 	timer := item.CastTime + item.Cooldown
 	itembag.Timers[itemslot.Item.Id] = &timer
 
-	logrus.WithFields(logrus.Fields{
-		"Username": player.Username,
-		"Binding":  binding,
-	}).Info("binding down itemslot")
+	log.Add("Username", "2").Add("Binding", binding).Info("binding down itemslot")
 }

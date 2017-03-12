@@ -1,9 +1,9 @@
 package run
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 	"github.com/ospokemon/ospokemon/script"
 )
 
@@ -25,11 +25,7 @@ func init() {
 		})
 
 		if err != nil {
-			logrus.WithFields(logrus.Fields{
-				"Entity":   entity1.Id,
-				"Universe": entity1.UniverseId,
-				"Error":    err.Error(),
-			}).Error("collision.item")
+			log.Add("Entity", entity1.Id).Add("Universe", entity1.UniverseId).Add("Error", err.Error()).Error("collision.item")
 			return
 		}
 

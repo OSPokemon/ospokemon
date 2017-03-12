@@ -1,8 +1,8 @@
 package query
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 )
 
 func BindingsMovementsPlayersDelete(player *game.Player) error {
@@ -12,9 +12,7 @@ func BindingsMovementsPlayersDelete(player *game.Player) error {
 	)
 
 	if err == nil {
-		logrus.WithFields(logrus.Fields{
-			"Username": player.Username,
-		}).Debug("bindings_movements_players delete")
+		log.Add("Username", player.Username).Debug("bindings_movements_players delete")
 	}
 
 	return err

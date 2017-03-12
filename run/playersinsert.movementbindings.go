@@ -1,9 +1,9 @@
 package run
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 	"github.com/ospokemon/ospokemon/query"
 )
 
@@ -32,9 +32,7 @@ func PlayersInsertMovementBindings(args ...interface{}) {
 			bindings[binding.Key] = binding
 		}
 
-		logrus.WithFields(logrus.Fields{
-			"Username": player.Username,
-		}).Debug("players insert movement bindings: grant default movement bindings")
+		log.Add("Username", "2").Debug("players insert movement bindings: grant default movement bindings")
 	}
 
 	insert := make(map[string]string)
@@ -47,10 +45,6 @@ func PlayersInsertMovementBindings(args ...interface{}) {
 	err := query.BindingsMovementsPlayersInsert(player, insert)
 
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"Username": player.Username,
-			"Bindings": bindings,
-			"Error":    err.Error(),
-		}).Error("players insert movement bindings")
+		log.Add("Username", player.Username).Add("Bindings", bindings).Add("Error", err.Error()).Error("players insert movement bindings")
 	}
 }

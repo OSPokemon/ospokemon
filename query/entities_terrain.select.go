@@ -1,8 +1,8 @@
 package query
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 )
 
 func EntitiesTerrainSelect(entity *game.Entity, universe *game.Universe) (*game.Terrain, error) {
@@ -20,11 +20,7 @@ func EntitiesTerrainSelect(entity *game.Entity, universe *game.Universe) (*game.
 		terrain, err = GetTerrain(terrainbuff)
 
 		if err == nil {
-			logrus.WithFields(logrus.Fields{
-				"Universe": universe.Id,
-				"Entity":   entity.Id,
-				"Terrain":  terrain.Id,
-			}).Debug("entities_terrain select")
+			log.Add("Universe", universe.Id).Add("Entity", entity.Id).Add("Terrain", terrain.Id).Debug("entities_terrain select")
 		}
 	}
 

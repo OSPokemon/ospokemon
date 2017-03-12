@@ -1,9 +1,9 @@
 package run
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 	"github.com/ospokemon/ospokemon/query"
 )
 
@@ -18,10 +18,7 @@ func ItembagsPlayersSelectBindings(args ...interface{}) {
 	bquery, err := query.BindingsItemsPlayersSelect(player)
 
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"Username": player.Username,
-			"Error":    err.Error(),
-		}).Error("itembags players select bindings")
+		log.Add("Username", "2").Add("Error", err.Error()).Error("itembags players select bindings")
 		return
 	}
 
@@ -38,9 +35,6 @@ func ItembagsPlayersSelectBindings(args ...interface{}) {
 			bindings[key] = binding
 		}
 	} else {
-		logrus.WithFields(logrus.Fields{
-			"Username": player.Username,
-			"Bindings": bquery,
-		}).Warn("itembags players select bindings")
+		log.Add("Username", "2").Add("Bindings", bquery).Warn("itembags players select bindings")
 	}
 }

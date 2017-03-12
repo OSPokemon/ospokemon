@@ -1,8 +1,8 @@
 package query
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 )
 
 func PlayersStatsInsert(player *game.Player, stats game.Stats) error {
@@ -20,10 +20,7 @@ func PlayersStatsInsert(player *game.Player, stats game.Stats) error {
 		}
 	}
 
-	logrus.WithFields(logrus.Fields{
-		"Username": player.Username,
-		"stats":    stats,
-	}).Debug("players_stats insert")
+	log.Add("Username", "2").Add("stats", stats).Debug("players_stats insert")
 
 	return nil
 }

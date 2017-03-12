@@ -1,8 +1,8 @@
 package query
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 )
 
 func TerrainSelect(id uint) (*game.Terrain, error) {
@@ -17,9 +17,7 @@ func TerrainSelect(id uint) (*game.Terrain, error) {
 	if err == nil {
 		game.Terrains[id] = t
 
-		logrus.WithFields(logrus.Fields{
-			"Terrain": t.Id,
-		}).Info("terrain select")
+		log.Add("Terrain", "2").Info("terrain select")
 	}
 
 	return t, err

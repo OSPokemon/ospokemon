@@ -1,8 +1,8 @@
 package server
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 	"github.com/ospokemon/ospokemon/query"
 	"net/http"
 )
@@ -36,17 +36,12 @@ var LoginHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request)
 	account, err := query.GetAccount(username)
 
 	if account == nil {
-		logrus.WithFields(logrus.Fields{
-			"Username": username,
-		}).Debug("server.Login: account not found")
+		log.Add("Username", "2").Debug("server.Login: account not found")
 
 		http.Redirect(w, r, "/login/?account", http.StatusMovedPermanently)
 		return
 	} else if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"Username": username,
-			"Error":    err.Error(),
-		}).Error("server.Login")
+		log.Add("Username", "2").Add("Error", err.Error()).Error("server.Login")
 
 		http.Redirect(w, r, "/login/?account", http.StatusMovedPermanently)
 		return

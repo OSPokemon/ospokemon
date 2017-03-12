@@ -1,8 +1,8 @@
 package query
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 )
 
 func ClassesEntitiesSelect(entity *game.Entity, universe *game.Universe) (*game.Class, error) {
@@ -20,11 +20,7 @@ func ClassesEntitiesSelect(entity *game.Entity, universe *game.Universe) (*game.
 		class, err = GetClass(classbuff)
 
 		if err == nil {
-			logrus.WithFields(logrus.Fields{
-				"Universe": universe.Id,
-				"Entity":   entity.Id,
-				"Class":    classbuff,
-			}).Debug("classes_entities select")
+			log.Add("Universe", universe.Id).Add("Entity", entity.Id).Add("Class", classbuff).Debug("classes_entities select")
 		}
 	}
 

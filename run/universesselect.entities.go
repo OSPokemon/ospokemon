@@ -1,9 +1,9 @@
 package run
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 	"github.com/ospokemon/ospokemon/query"
 )
 
@@ -16,10 +16,7 @@ func UniversesSelectEntities(args ...interface{}) {
 	entities, err := query.EntitiesUniversesSelect(universe)
 
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"Universe": universe.Id,
-			"Error":    err.Error(),
-		}).Error("universes select entities")
+		log.Add("Universe", "2").Add("Error", err.Error()).Error("universes select entities")
 		return
 	}
 

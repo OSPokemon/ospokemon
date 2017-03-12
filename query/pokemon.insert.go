@@ -1,9 +1,9 @@
 package query
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 )
 
 func PokemonInsert(pokemon *game.Pokemon) error {
@@ -19,9 +19,7 @@ func PokemonInsert(pokemon *game.Pokemon) error {
 	)
 
 	if err == nil {
-		logrus.WithFields(logrus.Fields{
-			"Pokemon": pokemon.Id,
-		}).Info("pokemon insert")
+		log.Add("Pokemon", "2").Info("pokemon insert")
 
 		event.Fire(event.PokemonInsert, pokemon)
 	}

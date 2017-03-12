@@ -1,7 +1,7 @@
 package server
 
 import (
-	"github.com/Sirupsen/logrus"
+	"github.com/ospokemon/ospokemon/log"
 	"github.com/ospokemon/ospokemon/query"
 	"golang.org/x/net/websocket"
 )
@@ -21,9 +21,7 @@ var WebsocketHandler = websocket.Handler(func(conn *websocket.Conn) {
 	p, err := query.GetPlayer(s.Username)
 
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"Username": s.Username,
-		}).Error("server.Websocket: " + err.Error())
+		log.Add("Username", s.Username).Add("Error", err.Error()).Error("WebsocketHandler")
 		return
 	}
 
@@ -32,9 +30,7 @@ var WebsocketHandler = websocket.Handler(func(conn *websocket.Conn) {
 	e := p.GetEntity()
 
 	if u, err := query.GetUniverse(e.UniverseId); err != nil {
-		logrus.WithFields(logrus.Fields{
-			"Universe": e.UniverseId,
-		}).Error(err.Error())
+		log.Add("Universe", e.UniverseId).Add("Error", err.Error()).Error("WebsocketHandler")
 	} else {
 		u.Add(e)
 		Listen(s)

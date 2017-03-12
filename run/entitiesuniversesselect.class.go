@@ -1,9 +1,9 @@
 package run
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 	"github.com/ospokemon/ospokemon/query"
 	"github.com/ospokemon/ospokemon/space"
 )
@@ -28,10 +28,6 @@ func EntitiesUniversesSelectClass(args ...interface{}) {
 		rect.Dimension.DX = class.Dimension.DX
 		rect.Dimension.DY = class.Dimension.DY
 	} else if err.Error() != "sql: no rows in result set" {
-		logrus.WithFields(logrus.Fields{
-			"Universe": universe.Id,
-			"Entity":   entity.Id,
-			"Error":    err.Error(),
-		}).Error("entity build class")
+		log.Add("Universe", universe.Id).Add("Entity", entity.Id).Add("Error", err.Error()).Error("entity build class")
 	}
 }

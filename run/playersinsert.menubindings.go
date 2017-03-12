@@ -1,9 +1,9 @@
 package run
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 	"github.com/ospokemon/ospokemon/query"
 )
 
@@ -33,9 +33,7 @@ func PlayersInsertMenuBindings(args ...interface{}) {
 			bindings[binding.Key] = binding
 		}
 
-		logrus.WithFields(logrus.Fields{
-			"Username": player.Username,
-		}).Debug("players insert menubindings: grant default menu bindings")
+		log.Add("Username", "2").Debug("players insert menubindings: grant default menu bindings")
 	}
 
 	insert := make(map[string]string)
@@ -48,10 +46,6 @@ func PlayersInsertMenuBindings(args ...interface{}) {
 	err := query.BindingsMenusPlayersInsert(player, insert)
 
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"Username": player.Username,
-			"Bindings": bindings,
-			"Error":    err.Error(),
-		}).Error("players insert menubindings")
+		log.Add("Username", player.Username).Add("Bindings", bindings).Add("Error", err.Error()).Error("players insert menubindings")
 	}
 }

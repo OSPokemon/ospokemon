@@ -1,9 +1,9 @@
 package run
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 	"github.com/ospokemon/ospokemon/query"
 )
 
@@ -18,10 +18,7 @@ func ActionsPlayersSelectBindings(args ...interface{}) {
 	aquery, err := query.ActionsBindingsPlayersSelect(player)
 
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"Username": player.Username,
-			"Error":    err.Error(),
-		}).Error("actions players select bindings")
+		log.Add("Username", "2").Add("Error", err.Error()).Error("actions players select bindings")
 		return
 	}
 
@@ -39,9 +36,6 @@ func ActionsPlayersSelectBindings(args ...interface{}) {
 			bindings[key] = binding
 		}
 	} else {
-		logrus.WithFields(logrus.Fields{
-			"Username": player.Username,
-			"Bindings": bindings,
-		}).Warn("actions players select bindings")
+		log.Add("Username", "2").Add("Bindings", bindings).Warn("actions players select bindings")
 	}
 }

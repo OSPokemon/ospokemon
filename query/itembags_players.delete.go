@@ -1,9 +1,9 @@
 package query
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 )
 
 func ItembagsPlayersDelete(player *game.Player) error {
@@ -22,9 +22,7 @@ func ItembagsPlayersDelete(player *game.Player) error {
 	)
 
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"Username": player.Username,
-		}).Debug("itembags_players delete")
+		log.Add("Username", player.Username).Debug("itembags_players delete")
 
 		event.Fire(event.ItembagsPlayersDelete, player)
 	}

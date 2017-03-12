@@ -1,9 +1,9 @@
 package query
 
 import (
-	"github.com/Sirupsen/logrus"
 	_ "github.com/mattes/migrate/driver/sqlite3"
 	"github.com/mattes/migrate/migrate"
+	"github.com/ospokemon/ospokemon/log"
 	"github.com/ospokemon/ospokemon/option"
 )
 
@@ -12,9 +12,7 @@ func Patch() {
 
 	if !ok {
 		for _, err := range errors {
-			logrus.WithFields(logrus.Fields{
-				"Path": option.String("dbpath"),
-			}).Error(err.Error())
+			log.Add("Path", "2").Error(err.Error())
 		}
 	}
 }

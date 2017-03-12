@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/Sirupsen/logrus"
+	"github.com/ospokemon/ospokemon/log"
 	_ "github.com/ospokemon/ospokemon/option"
 	"github.com/ospokemon/ospokemon/query"
 	"github.com/ospokemon/ospokemon/run"
@@ -11,17 +11,12 @@ import (
 const PATCH uint64 = 8
 
 func main() {
-	logrus.WithFields(logrus.Fields{
-		"Patch": PATCH,
-	}).Info("OSPokemon")
+	log.Add("Patch", PATCH).Info("OSPokemon")
 
 	query.Patch()
 
 	if patch := query.CheckPatch(); patch != PATCH {
-		logrus.WithFields(logrus.Fields{
-			"Found":    patch,
-			"Expected": PATCH,
-		}).Fatal("Database patch mismatch")
+		log.Add("Found", patch).Add("Expected", PATCH).Error("Database patch mismatch")
 		return
 	}
 

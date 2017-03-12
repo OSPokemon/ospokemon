@@ -1,8 +1,8 @@
 package query
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 )
 
 func EntitiesItemsSelect(entity *game.Entity, universe *game.Universe) (*game.Itemslot, error) {
@@ -23,11 +23,7 @@ func EntitiesItemsSelect(entity *game.Entity, universe *game.Universe) (*game.It
 
 	itemslot := game.BuildItemslot(0, item, amountbuff)
 
-	logrus.WithFields(logrus.Fields{
-		"Universe": universe.Id,
-		"Entity":   entity.Id,
-		"Item":     item.Id,
-	}).Debug("entities_items select")
+	log.Add("Universe", universe.Id).Add("Entity", entity.Id).Add("Item", item.Id).Debug("entities_items select")
 
 	return itemslot, nil
 }

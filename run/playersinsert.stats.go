@@ -1,9 +1,9 @@
 package run
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 	"github.com/ospokemon/ospokemon/query"
 )
 
@@ -20,18 +20,12 @@ func PlayersInsertStats(args ...interface{}) {
 			"speed": &game.Stat{5, 5, 5},
 		}
 
-		logrus.WithFields(logrus.Fields{
-			"Username": player.Username,
-		}).Debug("players insert stats: grant default stats")
+		log.Add("Username", "2").Debug("players insert stats: grant default stats")
 	}
 
 	err := query.PlayersStatsInsert(player, stats)
 
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"Username": player.Username,
-			"Stats":    stats,
-			"Error":    err.Error(),
-		}).Error("players insert stats")
+		log.Add("Username", player.Username).Add("Stats", stats).Add("Error", err.Error()).Error("players insert stats")
 	}
 }

@@ -1,9 +1,9 @@
 package query
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 )
 
 func PokemonSelect(id uint) (*game.Pokemon, error) {
@@ -30,9 +30,7 @@ func PokemonSelect(id uint) (*game.Pokemon, error) {
 
 	game.Pokemons[id] = pokemon
 
-	logrus.WithFields(logrus.Fields{
-		"Pokemon": id,
-	}).Info("pokemon select")
+	log.Add("Pokemon", "2").Info("pokemon select")
 
 	event.Fire(event.PokemonSelect, pokemon)
 	return pokemon, nil

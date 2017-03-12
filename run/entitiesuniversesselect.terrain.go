@@ -1,9 +1,9 @@
 package run
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/event"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 	"github.com/ospokemon/ospokemon/query"
 )
 
@@ -23,10 +23,6 @@ func EntitiesUniversesSelectTerrain(args ...interface{}) {
 		imaging.Image = terrain.Image
 		entity.AddPart(imaging)
 	} else if err.Error() != "sql: no rows in result set" {
-		logrus.WithFields(logrus.Fields{
-			"Universe": universe.Id,
-			"Entity":   entity.Id,
-			"Error":    err.Error(),
-		}).Error("entity build terrain")
+		log.Add("Universe", universe.Id).Add("Entity", entity.Id).Add("Error", err.Error()).Error("entity build terrain")
 	}
 }

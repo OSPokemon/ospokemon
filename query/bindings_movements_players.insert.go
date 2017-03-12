@@ -1,8 +1,8 @@
 package query
 
 import (
-	"github.com/Sirupsen/logrus"
 	"github.com/ospokemon/ospokemon/game"
+	"github.com/ospokemon/ospokemon/log"
 )
 
 func BindingsMovementsPlayersInsert(player *game.Player, movements map[string]string) error {
@@ -19,10 +19,7 @@ func BindingsMovementsPlayersInsert(player *game.Player, movements map[string]st
 		}
 	}
 
-	logrus.WithFields(logrus.Fields{
-		"Username": player.Username,
-		"Menus":    movements,
-	}).Debug("bindings_movements_players insert")
+	log.Add("Username", player.Username).Add("Menus", movements).Debug("bindings_movements_players insert")
 
 	return nil
 }
