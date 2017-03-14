@@ -5,9 +5,13 @@ import (
 )
 
 func GetAccount(username string) (*game.Account, error) {
-	if a, ok := game.Accounts[username]; ok {
-		return a, nil
+	if game.Accounts[username] == nil {
+		if a, err := AccountsSelect(username); a != nil {
+			game.Accounts[username] = a
+		} else {
+			return nil, err
+		}
 	}
 
-	return AccountsSelect(username)
+	return game.Accounts[username], nil
 }

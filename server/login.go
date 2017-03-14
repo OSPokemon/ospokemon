@@ -1,7 +1,6 @@
 package server
 
 import (
-	"github.com/ospokemon/ospokemon/game"
 	"github.com/ospokemon/ospokemon/log"
 	"github.com/ospokemon/ospokemon/query"
 	"net/http"
@@ -21,45 +20,27 @@ var LoginHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request)
 	username := r.FormValue("username")
 	password := hashpassword(r.FormValue("password"))
 
-	if account := game.Accounts[username]; account != nil {
-		if account.Password == password {
-			session := account.Parts[PARTsession].(*Session)
-			session.WriteSessionId(w)
-			http.Redirect(w, r, "/", http.StatusMovedPermanently)
-			return
-		}
+	account, _ := query.GetAccount(username)
+	if account == nil {
+		log.Add("Username", username).Warn("login: account not found")
+		http.Redirect(w, r, "/login/?account", http.StatusMovedPermanently)
+		return
+	}
 
+	if account.Password != password {
+		log.Add("Username", username).Warn("login: incorrect password")
 		http.Redirect(w, r, "/login/?password#"+username, http.StatusMovedPermanently)
 		return
 	}
 
-	account, err := query.GetAccount(username)
-
-	if account == nil {
-		log.Add("Username", username).Debug("server.Login: account not found")
-
-		http.Redirect(w, r, "/login/?account", http.StatusMovedPermanently)
-		return
-	} else if err != nil {
-		log.Add("Username", username).Add("Error", err.Error()).Error("server.Login")
-
-		http.Redirect(w, r, "/login/?account", http.StatusMovedPermanently)
-		return
-	}
-
-	if account.Password == password {
-		session := NewSession(username)
+	session, _ := account.Parts[PARTsession].(*Session)
+	if session == nil {
+		session = NewSession(username)
 		session.WriteSessionId(w)
 		Sessions[session.SessionId] = session
-
-		entity := account.GetEntity()
-
-		entity.AddPart(session)
-
-		http.Redirect(w, r, "/", http.StatusMovedPermanently)
-		return
+		account.AddPart(session)
+		log.Add("Username", username).Add("SessionId", session.SessionId).Info("login: create session")
 	}
 
-	http.Redirect(w, r, "/login/?password#"+username, http.StatusMovedPermanently)
-	return
+	http.Redirect(w, r, "/", http.StatusMovedPermanently)
 })

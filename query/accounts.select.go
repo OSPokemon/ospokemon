@@ -23,7 +23,6 @@ func AccountsSelect(username string) (*game.Account, error) {
 	}
 
 	account.Register = time.Unix(timebuff, 0)
-	game.Accounts[username] = account
 
 	log.Add("Username", username).Info("accounts select")
 
