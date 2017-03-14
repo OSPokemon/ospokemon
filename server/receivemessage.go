@@ -16,6 +16,11 @@ func ReceiveMessage(s *Session, m *WebsocketMessage) {
 	s.Refresh()
 
 	if m.Event == "Ping" {
+		p.GetToaster().Add(&game.Toast{
+			Color:   "blue",
+			Message: "Pong",
+			Image:   "/img/ospokemon.png",
+		})
 		s.Send("Pong")
 	} else if m.Event == "Key.Down" {
 		keydown(p, m.Message)

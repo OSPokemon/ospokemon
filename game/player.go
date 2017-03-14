@@ -38,6 +38,7 @@ func BuildPlayer(username string, bagSize uint, class *Class, entity *Entity) *P
 	player.AddPart(MakeMenus())
 	player.AddPart(&Movement{})
 	player.AddPart(BuildImaging(class.Animations))
+	player.AddPart(MakeToaster())
 
 	rect := entity.Shape.(*space.Rect)
 	rect.Dimension.DX = class.Dimension.DX

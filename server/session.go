@@ -78,6 +78,11 @@ func (s *Session) Update(u *game.Universe, e *game.Entity, d time.Duration) {
 		data["dialog"] = dialog.Json()
 	}
 
+	if toaster := player.GetToaster(); len(*toaster) > 0 {
+		data["toaster"] = toaster.Json()
+		toaster.Clear()
+	}
+
 	snapshot, _ := json.Marshal(map[string]interface{}{
 		"event": "Update",
 		"data":  data,

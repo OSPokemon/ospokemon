@@ -70,6 +70,7 @@
 	},
 	update: function(data) {
 		var chat = ospokemon.menu.chat
+		var chatHistory = $('.chat-history', chat)
 
 		$.each(data.bindings, function(key, binding) {
 			if (binding.menu == 'chat' && chat.key != key) {
@@ -86,7 +87,6 @@
 						return
 					}
 
-					var chatHistory = $('.chat-history', chat)
 					chatHistory.append(el.build({
 						username: entity.player.username,
 						message: entity.chat

@@ -51,6 +51,10 @@ body {
 	padding: 8px;
 }
 
+#menu {
+	font-size: 20px;
+}
+
 .menu-button {
 	width: 48px;
 	height: 48px;
@@ -155,6 +159,22 @@ body {
 }
 #chat input {
 	width: 100%;
+}
+
+#toaster {
+	position: absolute;
+	right: 100px;
+	top: 100px;
+}
+.toast {
+	display: none;
+	padding: 8px 12px;
+	margin: 8px;
+	background-color: rgba(255, 255, 255, 0.6);
+}
+.toast img {
+	width: 24px;
+	height: 24px;
 }
 
 /* Resizable arrows */

@@ -39,6 +39,10 @@
 			$(ospokemon.menu).append(dialog)
 		})
 
+		ospokemon.element.build('menu/toaster/toaster').then(function(toaster) {
+			$(ospokemon.menu.append(toaster))
+		})
+
 		return this
 	},
 	keydown: function(e) {
