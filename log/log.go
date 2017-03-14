@@ -4,10 +4,7 @@ import (
 	"github.com/Sirupsen/logrus"
 )
 
-type Log struct {
-	message string
-	fields  map[string]interface{}
-}
+type Log map[string]interface{}
 
 func SetLevel(level string) {
 	switch level {
@@ -36,18 +33,16 @@ func SetLevel(level string) {
 	}
 }
 
-func New() *Log {
-	return &Log{
-		fields: make(map[string]interface{}),
-	}
+func New() Log {
+	return Log{}
 }
 
-func Add(name string, value interface{}) *Log {
+func Add(name string, value interface{}) Log {
 	return New().Add(name, value)
 }
 
-func (log *Log) Add(name string, value interface{}) *Log {
-	log.fields[name] = value
+func (log Log) Add(name string, value interface{}) Log {
+	log[name] = value
 	return log
 }
 
@@ -55,30 +50,30 @@ func Debug(message string) {
 	New().Debug(message)
 }
 
-func (log *Log) Debug(message string) {
-	logrus.WithFields(log.fields).Debug(message)
+func (log Log) Debug(message string) {
+	logrus.WithFields(logrus.Fields(log)).Debug(message)
 }
 
 func Info(message string) {
 	New().Info(message)
 }
 
-func (log *Log) Info(message string) {
-	logrus.WithFields(log.fields).Info(message)
+func (log Log) Info(message string) {
+	logrus.WithFields(logrus.Fields(log)).Info(message)
 }
 
 func Warn(message string) {
 	New().Warn(message)
 }
 
-func (log *Log) Warn(message string) {
-	logrus.WithFields(log.fields).Warn(message)
+func (log Log) Warn(message string) {
+	logrus.WithFields(logrus.Fields(log)).Warn(message)
 }
 
 func Error(message string) {
 	New().Error(message)
 }
 
-func (log *Log) Error(message string) {
-	logrus.WithFields(log.fields).Error(message)
+func (log Log) Error(message string) {
+	logrus.WithFields(logrus.Fields(log)).Error(message)
 }
