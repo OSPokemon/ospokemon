@@ -39,6 +39,8 @@
 			return false
 		})
 
+		$('#menus-settings-logout .btn-danger', this).click(this.logout)
+
 		ospokemon.event.On('Update', this.update)
 
 		return this
@@ -97,6 +99,7 @@
 
 	},
 	logout: function() {
+		window.onbeforeunload = null
 		window.location.href = 'api/logout'
 	}
 })
