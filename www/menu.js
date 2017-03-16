@@ -15,21 +15,20 @@
 	build: function() {
 		ospokemon.menu = this
 
-		window.onbeforeunload = this.onbeforeunload;
+		window.onbeforeunload = function (e) {
+			return 'block'
+		}
 
 		$('body').keydown(this.keydown)
 		$('body').keyup(this.keyup)
 
 		$.each(this.menus, function(i, name) {
-			ospokemon.menu.attach(name)
+			ospokemon.element.build(name).then(function(menu) {
+				$(ospokemon.menu).append(menu)
+			})
 		})
 
 		return this
-	},
-	attach: function(name) {
-		ospokemon.element.build(name).then(function(menu) {
-			$(ospokemon.menu).append(menu)
-		})
 	},
 	keydown: function(e) {
 		if (!ospokemon.menu.repeat[e.key]) {
@@ -40,8 +39,5 @@
 	keyup: function(e) {
 		ospokemon.menu.repeat[e.key] = false
 		ospokemon.websocket.Send('Key.Up', e.key)
-	},
-	onbeforeunload: function (e) {
-		return 'block'
 	}
 })

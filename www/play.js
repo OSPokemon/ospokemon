@@ -139,6 +139,7 @@ ospokemon.websocket.onmessage = function (e) {
 }
 
 ospokemon.websocket.onclose = function(e) {
+	window.onbeforeunload = null
 	if (ospokemon.username) {
 		window.location.href = '/login/#' + ospokemon.username
 	} else {
