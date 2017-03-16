@@ -1,11 +1,9 @@
 # OSPokemon Settings File
 log=debug
-logpath=ospokemon.log
 port=8080
-webpath=www
 dbpath=ospokemon.db
-patchpath=migrations
-interact=false
+webpath=www
 refresh=250
-sessionlife=180
+sessionlife=120
+allow-refresh=false
 passwordsalt=salt

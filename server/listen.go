@@ -3,6 +3,7 @@ package server
 import (
 	"github.com/ospokemon/ospokemon/game"
 	"github.com/ospokemon/ospokemon/log"
+	"github.com/ospokemon/ospokemon/option"
 	"github.com/ospokemon/ospokemon/query"
 	"golang.org/x/net/websocket"
 )
@@ -17,9 +18,7 @@ func Listen(s *Session) {
 				log.Warn(err.Error())
 			}
 
-			account := game.Accounts[s.Username]
-
-			if account != nil {
+			if account := game.Accounts[s.Username]; !option.Bool("allow-refresh") && account != nil {
 				query.AccountsDelete(account)
 				query.AccountsInsert(account)
 			}

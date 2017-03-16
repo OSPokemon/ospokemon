@@ -15,15 +15,14 @@ type option struct {
 }
 
 var options = map[string]*option{
-	"log":          &option{"info", "One of [debug,info,warn,error,fatal,panic]"},
-	"logpath":      &option{"ospokemon.log", "Log file path"},
-	"port":         &option{"80", "Server port to open"},
-	"dbpath":       &option{"ospokemon.db", "Server port to open"},
-	"webpath":      &option{"www", "Server homepage path"},
-	"interact":     &option{"false", "Launch interactive mode"},
-	"refresh":      &option{"250", "Refresh rate in milliseconds"},
-	"sessionlife":  &option{"180", "Session lifetime in seconds"},
-	"passwordsalt": &option{"ospokemonsalt", "Salt string for password hashing"},
+	"log":           &option{"info", "One of [debug,info,warn,error,fatal,panic]"},
+	"port":          &option{"80", "Server port to open"},
+	"dbpath":        &option{"ospokemon.db", "Databse path to open"},
+	"webpath":       &option{"www", "Server homepage path"},
+	"refresh":       &option{"250", "Refresh rate in milliseconds"},
+	"sessionlife":   &option{"180", "Session lifetime in seconds"},
+	"allow-refresh": &option{"false", "Prevent closing session when losing websocket"},
+	"passwordsalt":  &option{"ospokemonsalt", "Salt string for password hashing"},
 }
 
 func init() {
