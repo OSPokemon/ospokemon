@@ -66,7 +66,7 @@ func ItemChange(e *game.Entity, data map[string]interface{}) error {
 			toaster.Add(&game.Toast{
 				Color:   "green",
 				Image:   item.Animations["portrait"],
-				Message: "found " + strconv.Itoa(amount) + "!",
+				Message: "+" + strconv.Itoa(amount),
 			})
 		} else {
 			return errors.New("itemchange: itembag full")
@@ -76,7 +76,7 @@ func ItemChange(e *game.Entity, data map[string]interface{}) error {
 			toaster.Add(&game.Toast{
 				Color:   "orange",
 				Image:   item.Animations["portrait"],
-				Message: "spent " + strconv.Itoa(-amount) + "!",
+				Message: strconv.Itoa(amount),
 			})
 		} else {
 			return errors.New("itemchange: missing items")
