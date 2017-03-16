@@ -118,11 +118,6 @@ ospokemon.event = {
 ospokemon.websocket = new WebSocket('ws://' + window.location.host + '/api/websocket')
 
 ospokemon.websocket.onmessage = function (e) {
-	if (e.data == "Pong") {
-		console.log("server Pong")
-		return
-	}
-
 	var data = JSON.parse(e.data)
 
 	if (data.event == 'Update') {
