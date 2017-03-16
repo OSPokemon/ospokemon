@@ -5,25 +5,36 @@ import (
 	"github.com/ospokemon/ospokemon/log"
 )
 
-func EntitiesItemsSelect(entity *game.Entity, universe *game.Universe) (*game.Itemslot, error) {
-	row := Connection.QueryRow(
-		"SELECT item, amount FROM entities_items WHERE entity=? AND universe=?",
-		entity.Id,
+func EntitiesItemsSelect(universe *game.Universe) (map[uint]*game.Itemslot, error) {
+	rows, err := Connection.Query(
+		"SELECT entity, item, amount FROM entities_items WHERE universe=?",
 		universe.Id,
 	)
 
-	var itembuff uint
-	var amountbuff int
-	err := row.Scan(&itembuff, &amountbuff)
-
-	item, err := GetItem(itembuff)
 	if err != nil {
 		return nil, err
 	}
 
-	itemslot := game.BuildItemslot(0, item, amountbuff)
+	itemslots := make(map[uint]*game.Itemslot)
 
-	log.Add("Universe", universe.Id).Add("Entity", entity.Id).Add("Item", item.Id).Debug("entities_items select")
+	for rows.Next() {
+		var entityId, itembuff uint
+		var amountbuff int
+		err = rows.Scan(&entityId, &itembuff, &amountbuff)
+		if err != nil {
+			return nil, err
+		}
 
-	return itemslot, nil
+		item, err := GetItem(itembuff)
+		if err != nil {
+			return nil, err
+		}
+
+		itemslot := game.BuildItemslot(item, amountbuff)
+		itemslots[entityId] = itemslot
+	}
+
+	log.Add("Universe", universe.Id).Add("Itemslots", itemslots).Debug("entities_items select")
+
+	return itemslots, nil
 }

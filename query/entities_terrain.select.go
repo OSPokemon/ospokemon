@@ -5,24 +5,34 @@ import (
 	"github.com/ospokemon/ospokemon/log"
 )
 
-func EntitiesTerrainSelect(entity *game.Entity, universe *game.Universe) (*game.Terrain, error) {
-	row := Connection.QueryRow(
-		"SELECT terrain FROM entities_terrain WHERE entity=? AND universe=?",
-		entity.Id,
+func EntitiesTerrainsSelect(universe *game.Universe) (map[uint]*game.Terrain, error) {
+	rows, err := Connection.Query(
+		"SELECT entity, terrain FROM entities_terrains WHERE universe=?",
 		universe.Id,
 	)
-
-	var terrainbuff uint
-	var terrain *game.Terrain
-	err := row.Scan(&terrainbuff)
-
-	if err == nil {
-		terrain, err = GetTerrain(terrainbuff)
-
-		if err == nil {
-			log.Add("Universe", universe.Id).Add("Entity", entity.Id).Add("Terrain", terrain.Id).Debug("entities_terrain select")
-		}
+	if err != nil {
+		return nil, err
 	}
 
-	return terrain, err
+	terrains := make(map[uint]*game.Terrain)
+
+	for rows.Next() {
+		var entityId, terrainbuff uint
+		err = rows.Scan(&entityId, &terrainbuff)
+
+		if err != nil {
+			return nil, err
+		}
+
+		terrain, err := GetTerrain(terrainbuff)
+		if err != nil {
+			return nil, err
+		}
+
+		terrains[entityId] = terrain
+	}
+
+	log.Add("Universe", universe.Id).Add("Terrains", terrains).Debug("entities_terrains select")
+
+	return terrains, err
 }

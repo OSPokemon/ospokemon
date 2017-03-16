@@ -65,7 +65,7 @@ CREATE TABLE entities_items (
 	universe INTEGER,
 	item INTEGER,
 	amount INTEGER);
-CREATE TABLE entities_terrain (
+CREATE TABLE entities_terrains (
 	entity INTEGER,
 	universe INTEGER,
 	terrain INTEGER);

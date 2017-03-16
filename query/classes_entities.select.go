@@ -5,24 +5,33 @@ import (
 	"github.com/ospokemon/ospokemon/log"
 )
 
-func ClassesEntitiesSelect(entity *game.Entity, universe *game.Universe) (*game.Class, error) {
-	row := Connection.QueryRow(
-		"SELECT class FROM classes_entities WHERE entity=? AND universe=?",
-		entity.Id,
+func ClassesEntitiesSelect(universe *game.Universe) (map[uint]*game.Class, error) {
+	rows, err := Connection.Query(
+		"SELECT entity, class FROM classes_entities WHERE universe=?",
 		universe.Id,
 	)
-
-	var classbuff uint
-	var class *game.Class
-	err := row.Scan(&classbuff)
-
-	if err == nil {
-		class, err = GetClass(classbuff)
-
-		if err == nil {
-			log.Add("Universe", universe.Id).Add("Entity", entity.Id).Add("Class", classbuff).Debug("classes_entities select")
-		}
+	if err != nil {
+		return nil, err
 	}
 
-	return class, err
+	classes := make(map[uint]*game.Class)
+
+	for rows.Next() {
+		var entityId, classbuff uint
+		err := rows.Scan(&entityId, &classbuff)
+		if err != nil {
+			return nil, err
+		}
+
+		class, err := GetClass(classbuff)
+		if err != nil {
+			return nil, err
+		}
+
+		classes[entityId] = class
+	}
+
+	log.Add("Classes", classes).Debug("classes_entities select")
+
+	return classes, nil
 }

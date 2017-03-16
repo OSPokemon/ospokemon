@@ -12,17 +12,20 @@ func init() {
 }
 
 func EntitiesUniversesSelectTerrain(args ...interface{}) {
-	entity := args[0].(*game.Entity)
+	entities := args[0].(map[uint]*game.Entity)
 	universe := args[1].(*game.Universe)
-	terrain, err := query.EntitiesTerrainSelect(entity, universe)
+	terrains, err := query.EntitiesTerrainsSelect(universe)
 
-	if err == nil {
+	if err != nil {
+		log.Add("Universe", universe.Id).Add("Error", err.Error()).Error("entities universes select terrain")
+	}
+
+	for entityId, terrain := range terrains {
+		entity := entities[entityId]
 		entity.AddPart(terrain)
 
 		imaging := game.MakeImaging()
 		imaging.Image = terrain.Image
 		entity.AddPart(imaging)
-	} else if err.Error() != "sql: no rows in result set" {
-		log.Add("Universe", universe.Id).Add("Entity", entity.Id).Add("Error", err.Error()).Error("entity build terrain")
 	}
 }

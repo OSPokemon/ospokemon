@@ -6,7 +6,7 @@ import (
 	"github.com/ospokemon/ospokemon/space"
 )
 
-func EntitiesUniversesSelect(universe *game.Universe) ([]*game.Entity, error) {
+func EntitiesUniversesSelect(universe *game.Universe) (map[uint]*game.Entity, error) {
 	rows, err := Connection.Query(
 		"SELECT id, universe, x, y, dx, dy FROM entities_universes WHERE universe=?",
 		universe.Id,
@@ -16,7 +16,7 @@ func EntitiesUniversesSelect(universe *game.Universe) ([]*game.Entity, error) {
 		return nil, err
 	}
 
-	entities := make([]*game.Entity, 0)
+	entities := make(map[uint]*game.Entity)
 
 	for rows.Next() {
 		entity := game.MakeEntity()
@@ -26,12 +26,14 @@ func EntitiesUniversesSelect(universe *game.Universe) ([]*game.Entity, error) {
 		if err != nil {
 			return entities, err
 		}
-
-		event.Fire(event.EntitiesUniversesSelect, entity, universe)
-		entity.Id = 0 // delete temp id
-		entities = append(entities, entity)
+		entities[entity.Id] = entity
 	}
 	rows.Close()
+
+	event.Fire(event.EntitiesUniversesSelect, entities, universe)
+	for _, entity := range entities {
+		entity.Id = 0 // delete temp id
+	}
 
 	return entities, nil
 }
