@@ -17,10 +17,8 @@ func init() {
 			return
 		}
 
-		item := itemslot.Item
-
 		err := script.ItemChange(entity1, map[string]interface{}{
-			"item":   item,
+			"item":   itemslot.Item,
 			"amount": itemslot.Amount,
 		})
 

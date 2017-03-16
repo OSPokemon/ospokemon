@@ -66,7 +66,8 @@ func (itembag *Itembag) Add(item *Item, amount int) bool {
 
 	for id, itemslot := range itembag.Slots {
 		if itemslot == nil {
-			itemslot = BuildItemslot(id, item, amount)
+			itemslot = BuildItemslot(item, amount)
+			itemslot.Id = id
 			itembag.Slots[id] = itemslot
 
 			if itemslot.Amount <= item.Stack {

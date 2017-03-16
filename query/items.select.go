@@ -8,14 +8,14 @@ import (
 
 func ItemsSelect(id uint) (*game.Item, error) {
 	row := Connection.QueryRow(
-		"SELECT id, script, casttime, cooldown, tradable, stack, value FROM items WHERE id=?",
+		"SELECT id, script, casttime, cooldown, tradable, stack, value, dx, dy FROM items WHERE id=?",
 		id,
 	)
 
 	item := game.MakeItem()
 
 	var casttimebuff, cooldownbuff, tradeablebuff int64
-	if err := row.Scan(&item.Spell.Id, &item.Script, &casttimebuff, &cooldownbuff, &tradeablebuff, &item.Stack, &item.Value); err != nil {
+	if err := row.Scan(&item.Spell.Id, &item.Script, &casttimebuff, &cooldownbuff, &tradeablebuff, &item.Stack, &item.Value, &item.Dimension.DX, &item.Dimension.DY); err != nil {
 		return item, err
 	}
 

@@ -31,7 +31,9 @@ func ItembagsPlayersSelect(player *game.Player) (*game.Itembag, error) {
 			return itembag, err
 		}
 
-		itembag.Slots[idbuff] = game.BuildItemslot(idbuff, item, amountbuff)
+		itemslot := game.BuildItemslot(item, amountbuff)
+		itemslot.Id = idbuff
+		itembag.Slots[idbuff] = itemslot
 	}
 	rows.Close()
 

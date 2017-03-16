@@ -87,7 +87,9 @@ CREATE TABLE items (
 	cooldown INTEGER,
 	tradable INTEGER,
 	stack INTEGER,
-	value INTEGER);
+	value INTEGER,
+	dx NUMBER,
+	dy NUMBER);
 CREATE TABLE itemslots_players (
 	username TEXT,
 	pos INTEGER,

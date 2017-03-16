@@ -68,14 +68,14 @@ INSERT INTO entities_universes(universe, id, x, y, dx, dy) VALUES(0, 22, -48, 66
 INSERT INTO entities_terrains(entity, universe, terrain) VALUES (22, 0, 1);
 
 -- some coins
-INSERT INTO entities_universes(universe, id, x, y, dx, dy) VALUES(0, 23, 100, 100, 20, 20);
+INSERT INTO entities_universes(universe, id, x, y, dx, dy) VALUES(0, 23, 100, 100, 0, 0);
 INSERT INTO entities_items(entity, universe, item, amount) VALUES (23, 0, 1, 1);
 
-INSERT INTO entities_universes(universe, id, x, y, dx, dy) VALUES(0, 24, 120, 105, 20, 20);
+INSERT INTO entities_universes(universe, id, x, y, dx, dy) VALUES(0, 24, 120, 105, 0, 0);
 INSERT INTO entities_items(entity, universe, item, amount) VALUES (24, 0, 1, 1);
 
-INSERT INTO entities_universes(universe, id, x, y, dx, dy) VALUES(0, 25, 140, 100, 20, 20);
+INSERT INTO entities_universes(universe, id, x, y, dx, dy) VALUES(0, 25, 140, 100, 0, 0);
 INSERT INTO entities_items(entity, universe, item, amount) VALUES (25, 0, 1, 1);
 
-INSERT INTO entities_universes(universe, id, x, y, dx, dy) VALUES(0, 26, 160, 105, 20, 20);
+INSERT INTO entities_universes(universe, id, x, y, dx, dy) VALUES(0, 26, 160, 105, 0, 0);
 INSERT INTO entities_items(entity, universe, item, amount) VALUES (26, 0, 1, 1);
