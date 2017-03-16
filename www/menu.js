@@ -15,10 +15,6 @@
 	build: function() {
 		ospokemon.menu = this
 
-		window.onbeforeunload = function (e) {
-			return 'block'
-		}
-
 		$('body').keydown(this.keydown)
 		$('body').keyup(this.keyup)
 

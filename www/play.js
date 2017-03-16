@@ -134,6 +134,12 @@ ospokemon.websocket.onmessage = function (e) {
 	ospokemon.event.Fire(data.event, data.data)
 }
 
+ospokemon.websocket.onopen = function(e) {
+	window.onbeforeunload = function (e) {
+		return 'block'
+	}
+}
+
 ospokemon.websocket.onclose = function(e) {
 	window.onbeforeunload = null
 	if (ospokemon.username) {
