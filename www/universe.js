@@ -9,8 +9,6 @@
 		ospokemon.event.On('Update', this.update)
 
 		$('body').mousedown(this.mousedown)
-
-		return this
 	},
 	update: function(data) {
 		ospokemon.universe.data = data.universe

@@ -42,8 +42,6 @@
 		$('#menus-settings-logout .btn-danger', this).click(this.logout)
 
 		ospokemon.event.On('Update', this.update)
-
-		return this
 	},
 	toggle: function() {
 		ospokemon.websocket.Send('Menu.Toggle', 'settings')

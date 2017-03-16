@@ -7,8 +7,6 @@
 		})
 
 		this.update(data)
-
-		return this
 	},
 	update: function(data) {
 		if ($(this).attr('onclick') != data.onclick) {

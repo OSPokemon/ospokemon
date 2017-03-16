@@ -7,8 +7,6 @@
 		$(this).draggable().resizable()
 
 		ospokemon.event.On('Update', this.update)
-
-		return this
 	},
 	toggle: function() {
 		ospokemon.websocket.Send('Menu.Toggle', 'itembag')
@@ -39,7 +37,5 @@
 				}
 			})
 		})
-
-		return this
 	}
 })

@@ -2,8 +2,6 @@
 	class: 'universe.entity',
 	build: function() {
 		$(this).mousedown(this.mousedown)
-
-		return this
 	},
 	update: function(data) {
 		var image = $('.entity-image', this)

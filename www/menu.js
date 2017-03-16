@@ -27,8 +27,6 @@
 				$(ospokemon.menu).append(menu)
 			})
 		})
-
-		return this
 	},
 	keydown: function(e) {
 		if (!ospokemon.menu.repeat[e.key]) {

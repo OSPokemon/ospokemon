@@ -8,7 +8,5 @@
 		$('img', this).attr('src', data.image)
 
 		$('span.message', this).html(data.message)
-
-		return this
 	}
 })

@@ -63,7 +63,7 @@ ospokemon.element = {
 			class: name,
 			html: null,
 			script: null,
-			build: function(data) {
+			build: function() {
 				var el = ospokemon.element.elements[name]
 				var html = $(el.html)[0]
 
@@ -80,7 +80,8 @@ ospokemon.element = {
 					return
 				}
 
-				return html.build(data)
+				html.build.apply(html, arguments)
+				return html
 			}
 		}
 	}

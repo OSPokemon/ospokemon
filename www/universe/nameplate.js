@@ -3,7 +3,6 @@
 	build: function(entity) {
 		this.entity = entity
 		$(entity).append(this)
-		return this
 	},
 	update: function(data) {
 		if (this.log) {

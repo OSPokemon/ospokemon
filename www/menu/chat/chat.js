@@ -14,8 +14,6 @@
 		$(ospokemon.menu.chat).mousedown(this.mousedown)
 
 		$('body').keydown(this.keydownglobal)
-
-		return this
 	},
 	focusin: function(event) {
 		$(ospokemon.menu.chat).addClass('active')

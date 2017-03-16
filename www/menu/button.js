@@ -14,8 +14,6 @@
 		if (data) {
 			this.update(data)
 		}
-
-		return this
 	},
 	update: function(data) {
 		if (!data) {

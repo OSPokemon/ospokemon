@@ -3,7 +3,6 @@
 	build: function() {
 		ospokemon.menu.toaster = this
 		ospokemon.event.On('Update', this.update)
-		return this
 	},
 	update: function(data) {
 		var toaster = $(ospokemon.menu.toaster)

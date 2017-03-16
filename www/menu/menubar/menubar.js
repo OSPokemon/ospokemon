@@ -19,8 +19,6 @@
 		})
 
 		ospokemon.event.On('Update', this.update)
-
-		return this
 	},
 	update: function(data) {
 		if (ospokemon.menu.menubar.log) {
