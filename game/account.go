@@ -27,8 +27,3 @@ func MakeAccount(username string) *Account {
 func (a *Account) Part() string {
 	return PARTaccount
 }
-
-func (parts Parts) GetAccount() *Account {
-	account, _ := parts[PARTaccount].(*Account)
-	return account
-}
