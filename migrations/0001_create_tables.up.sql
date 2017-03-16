@@ -65,6 +65,10 @@ CREATE TABLE entities_items (
 	universe INTEGER,
 	item INTEGER,
 	amount INTEGER);
+CREATE TABLE entities_spawners (
+	entity INTEGER,
+	universe INTEGER,
+	speed INTEGER);
 CREATE TABLE entities_terrains (
 	entity INTEGER,
 	universe INTEGER,

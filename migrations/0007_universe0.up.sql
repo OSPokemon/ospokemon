@@ -70,12 +70,16 @@ INSERT INTO entities_terrains(entity, universe, terrain) VALUES (22, 0, 1);
 -- some coins
 INSERT INTO entities_universes(universe, id, x, y, dx, dy) VALUES(0, 23, 100, 100, 0, 0);
 INSERT INTO entities_items(entity, universe, item, amount) VALUES (23, 0, 1, 1);
+INSERT INTO entities_spawners(entity, universe, speed) VALUES (23, 0, 10000);
 
 INSERT INTO entities_universes(universe, id, x, y, dx, dy) VALUES(0, 24, 120, 105, 0, 0);
 INSERT INTO entities_items(entity, universe, item, amount) VALUES (24, 0, 1, 1);
+INSERT INTO entities_spawners(entity, universe, speed) VALUES (24, 0, 10000);
 
 INSERT INTO entities_universes(universe, id, x, y, dx, dy) VALUES(0, 25, 140, 100, 0, 0);
 INSERT INTO entities_items(entity, universe, item, amount) VALUES (25, 0, 1, 1);
+INSERT INTO entities_spawners(entity, universe, speed) VALUES (25, 0, 10000);
 
 INSERT INTO entities_universes(universe, id, x, y, dx, dy) VALUES(0, 26, 160, 105, 0, 0);
 INSERT INTO entities_items(entity, universe, item, amount) VALUES (26, 0, 1, 1);
+INSERT INTO entities_spawners(entity, universe, speed) VALUES (26, 0, 10000);

@@ -11,6 +11,7 @@ type Universe struct {
 	Id uint
 	*Space
 	Entities map[uint]*Entity
+	Spawners []*Spawner
 	Private  bool
 	// internals
 	bodyIdGen *mathutil.FC32
@@ -51,6 +52,10 @@ func (u *Universe) Update(d time.Duration) {
 
 		e.Update(u, d)
 	}
+
+	for _, spawner := range u.Spawners {
+		spawner.Update(u, d)
+	}
 }
 
 func (u *Universe) Add(e *Entity) {
@@ -60,6 +65,10 @@ func (u *Universe) Add(e *Entity) {
 	log.Add("Universe", u.Id).Add("Entity", e.Id).Debug("game.Universe.Add")
 
 	// event.Fire(event.UniverseAdd, u, e)
+}
+
+func (u *Universe) AddSpawner(spawner *Spawner) {
+	u.Spawners = append(u.Spawners, spawner)
 }
 
 func (u *Universe) Remove(e *Entity) {
