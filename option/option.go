@@ -15,7 +15,8 @@ type option struct {
 }
 
 var options = map[string]*option{
-	"log":           &option{"info", "One of [debug,info,warn,error,fatal,panic]"},
+	"loglevel":      &option{"info", "One of [debug,info,warn,error,fatal,panic]"},
+	"logpath":       &option{"", "Log file path"},
 	"port":          &option{"80", "Server port to open"},
 	"dbpath":        &option{"ospokemon.db", "Databse path to open"},
 	"webpath":       &option{"www", "Server homepage path"},
@@ -96,5 +97,8 @@ func bindflags(read map[string]*string) {
 }
 
 func loginit() {
-	log.SetLevel(String("log"))
+	log.SetLevel(String("loglevel"))
+	if String("logpath") != "" {
+		log.SetFile(String("logpath"))
+	}
 }

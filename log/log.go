@@ -2,78 +2,91 @@ package log
 
 import (
 	"github.com/Sirupsen/logrus"
+	"os"
 )
 
-type Log map[string]interface{}
+type Entries map[string]interface{}
+
+var log = logrus.New()
 
 func SetLevel(level string) {
 	switch level {
 	case "debug":
-		logrus.SetLevel(logrus.DebugLevel)
+		log.Level = logrus.DebugLevel
 		break
 	case "info":
-		logrus.SetLevel(logrus.InfoLevel)
+		log.Level = logrus.InfoLevel
 		break
 	case "warn":
-		logrus.SetLevel(logrus.WarnLevel)
+		log.Level = logrus.WarnLevel
 		break
 	case "error":
-		logrus.SetLevel(logrus.ErrorLevel)
+		log.Level = logrus.ErrorLevel
 		break
 	case "fatal":
-		logrus.SetLevel(logrus.FatalLevel)
+		log.Level = logrus.FatalLevel
 		break
 	case "panic":
-		logrus.SetLevel(logrus.PanicLevel)
+		log.Level = logrus.PanicLevel
 		break
 	default:
-		logrus.SetLevel(logrus.InfoLevel)
-		logrus.Warn("Log level invalid: ", level)
+		log.Level = logrus.InfoLevel
+		log.Warn("Log level invalid: ", level)
 		break
 	}
 }
 
-func New() Log {
-	return Log{}
+func SetFile(path string) {
+	file, err := os.OpenFile(path, os.O_CREATE|os.O_WRONLY, 0666)
+	if err == nil {
+		log.Formatter = &logrus.JSONFormatter{}
+		log.Out = file
+	} else {
+		log.Warn("Failed to log to file, using default stderr")
+	}
 }
 
-func Add(name string, value interface{}) Log {
+func New() Entries {
+	return Entries{}
+}
+
+func Add(name string, value interface{}) Entries {
 	return New().Add(name, value)
 }
 
-func (log Log) Add(name string, value interface{}) Log {
-	log[name] = value
-	return log
+func (entries Entries) Add(name string, value interface{}) Entries {
+	entries[name] = value
+	return entries
 }
 
 func Debug(message string) {
 	New().Debug(message)
 }
 
-func (log Log) Debug(message string) {
-	logrus.WithFields(logrus.Fields(log)).Debug(message)
+func (entries Entries) Debug(message string) {
+	log.WithFields(logrus.Fields(entries)).Debug(message)
 }
 
 func Info(message string) {
 	New().Info(message)
 }
 
-func (log Log) Info(message string) {
-	logrus.WithFields(logrus.Fields(log)).Info(message)
+func (entries Entries) Info(message string) {
+	log.WithFields(logrus.Fields(entries)).Info(message)
 }
 
 func Warn(message string) {
 	New().Warn(message)
 }
 
-func (log Log) Warn(message string) {
-	logrus.WithFields(logrus.Fields(log)).Warn(message)
+func (entries Entries) Warn(message string) {
+	log.WithFields(logrus.Fields(entries)).Warn(message)
 }
 
 func Error(message string) {
 	New().Error(message)
 }
 
-func (log Log) Error(message string) {
-	logrus.WithFields(logrus.Fields(log)).Error(message)
+func (entries Entries) Error(message string) {
+	log.WithFields(logrus.Fields(entries)).Error(message)
 }
