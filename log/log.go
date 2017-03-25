@@ -83,10 +83,10 @@ func (entries Entries) Warn(message string) {
 	log.WithFields(logrus.Fields(entries)).Warn(message)
 }
 
-func Error(message string) {
+func Error(message interface{}) {
 	New().Error(message)
 }
 
-func (entries Entries) Error(message string) {
+func (entries Entries) Error(message interface{}) {
 	log.WithFields(logrus.Fields(entries)).Error(message)
 }
