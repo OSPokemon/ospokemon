@@ -18,6 +18,7 @@ var options = map[string]*option{
 	"loglevel":      &option{"info", "One of [debug,info,warn,error,fatal,panic]"},
 	"logpath":       &option{"", "Log file path"},
 	"port":          &option{"80", "Server port to open"},
+	"usehttps":      &option{"false", "Open server port 443 (overrides \"port\" option)"},
 	"dbpath":        &option{"ospokemon.db", "Databse path to open"},
 	"webpath":       &option{"www", "Server homepage path"},
 	"patchpath":     &option{"patch", "Available patches path"},

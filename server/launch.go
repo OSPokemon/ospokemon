@@ -9,6 +9,10 @@ import (
 func Launch() {
 	routes()
 	go PollSessionExpire()
-	e := http.ListenAndServe(":"+option.String("port"), nil)
-	log.Error(e.Error())
+
+	if option.Bool("usehttps") {
+		log.Error(http.ListenAndServeTLS(":443", "ospokemon.cert", "ospokemon.key", nil))
+	} else {
+		log.Error(http.ListenAndServe(":"+option.String("port"), nil))
+	}
 }

@@ -2,6 +2,7 @@
 loglevel=debug
 logpath=
 port=8080
+usehttps=false
 dbpath=ospokemon.db
 webpath=www
 patchpath=patch
