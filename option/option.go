@@ -20,6 +20,7 @@ var options = map[string]*option{
 	"port":          &option{"80", "Server port to open"},
 	"dbpath":        &option{"ospokemon.db", "Databse path to open"},
 	"webpath":       &option{"www", "Server homepage path"},
+	"patchpath":     &option{"patch", "Available patches path"},
 	"refresh":       &option{"250", "Refresh rate in milliseconds"},
 	"sessionlife":   &option{"180", "Session lifetime in seconds"},
 	"allow-refresh": &option{"false", "Prevent closing session when losing websocket"},

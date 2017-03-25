@@ -4,6 +4,7 @@ logpath=
 port=8080
 dbpath=ospokemon.db
 webpath=www
+patchpath=patch
 refresh=250
 sessionlife=120
 allow-refresh=false

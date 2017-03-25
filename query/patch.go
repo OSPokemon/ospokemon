@@ -8,7 +8,7 @@ import (
 )
 
 func Patch() {
-	errors, ok := migrate.UpSync("sqlite3://"+option.String("dbpath"), "migrations")
+	errors, ok := migrate.UpSync("sqlite3://"+option.String("dbpath"), option.String("patchpath"))
 
 	if !ok {
 		for _, err := range errors {
@@ -18,7 +18,7 @@ func Patch() {
 }
 
 func CheckPatch() uint64 {
-	patch, _ := migrate.Version("sqlite3://"+option.String("dbpath"), "migrations")
+	patch, _ := migrate.Version("sqlite3://"+option.String("dbpath"), option.String("patchpath"))
 
 	return patch
 }
