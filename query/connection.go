@@ -3,8 +3,8 @@ package query
 import (
 	"database/sql"
 	_ "github.com/mattn/go-sqlite3"
-	"github.com/ospokemon/ospokemon/log"
-	"github.com/ospokemon/ospokemon/option"
+	"ospokemon.com/log"
+	"ospokemon.com/option"
 )
 
 var Connection *sql.DB

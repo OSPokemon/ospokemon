@@ -1,9 +1,9 @@
 package server
 
 import (
-	"github.com/ospokemon/ospokemon/log"
-	"github.com/ospokemon/ospokemon/option"
 	"net/http"
+	"ospokemon.com/log"
+	"ospokemon.com/option"
 )
 
 func Launch() {

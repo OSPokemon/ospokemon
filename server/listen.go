@@ -1,11 +1,11 @@
 package server
 
 import (
-	"github.com/ospokemon/ospokemon/game"
-	"github.com/ospokemon/ospokemon/log"
-	"github.com/ospokemon/ospokemon/option"
-	"github.com/ospokemon/ospokemon/query"
 	"golang.org/x/net/websocket"
+	"ospokemon.com/game"
+	"ospokemon.com/log"
+	"ospokemon.com/option"
+	"ospokemon.com/query"
 )
 
 func Listen(s *Session) {

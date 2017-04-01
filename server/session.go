@@ -3,10 +3,10 @@ package server
 import (
 	"encoding/json"
 	"github.com/cznic/mathutil"
-	"github.com/ospokemon/ospokemon/game"
-	"github.com/ospokemon/ospokemon/option"
 	"golang.org/x/net/websocket"
 	"net/http"
+	"ospokemon.com/game"
+	"ospokemon.com/option"
 	"strconv"
 	"sync"
 	"time"

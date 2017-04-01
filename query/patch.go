@@ -3,8 +3,8 @@ package query
 import (
 	_ "github.com/mattes/migrate/driver/sqlite3"
 	"github.com/mattes/migrate/migrate"
-	"github.com/ospokemon/ospokemon/log"
-	"github.com/ospokemon/ospokemon/option"
+	"ospokemon.com/log"
+	"ospokemon.com/option"
 )
 
 func Patch() {

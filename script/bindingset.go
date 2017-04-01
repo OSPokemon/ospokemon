@@ -2,7 +2,7 @@ package script
 
 import (
 	"errors"
-	"github.com/ospokemon/ospokemon/game"
+	"ospokemon.com/game"
 	"strconv"
 )
 

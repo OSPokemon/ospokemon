@@ -1,9 +1,9 @@
 package server
 
 import (
-	"github.com/ospokemon/ospokemon/game"
-	"github.com/ospokemon/ospokemon/query"
 	"net/http"
+	"ospokemon.com/game"
+	"ospokemon.com/query"
 )
 
 var LogoutHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

@@ -1,9 +1,9 @@
 package server
 
 import (
-	"github.com/ospokemon/ospokemon/log"
-	"github.com/ospokemon/ospokemon/query"
 	"net/http"
+	"ospokemon.com/log"
+	"ospokemon.com/query"
 )
 
 var LoginHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

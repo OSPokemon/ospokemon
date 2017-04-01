@@ -1,8 +1,8 @@
 package server
 
 import (
-	"github.com/ospokemon/ospokemon/game"
-	"github.com/ospokemon/ospokemon/query"
+	"ospokemon.com/game"
+	"ospokemon.com/query"
 	"time"
 )
 

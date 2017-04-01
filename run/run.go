@@ -1,8 +1,8 @@
 package run
 
 import (
-	"github.com/ospokemon/ospokemon/game"
-	"github.com/ospokemon/ospokemon/option"
+	"ospokemon.com/game"
+	"ospokemon.com/option"
 	"time"
 )
 

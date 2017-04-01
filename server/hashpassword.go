@@ -2,7 +2,7 @@ package server
 
 import (
 	"crypto/md5"
-	"github.com/ospokemon/ospokemon/option"
+	"ospokemon.com/option"
 )
 
 func hashpassword(password string) string {

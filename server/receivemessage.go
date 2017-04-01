@@ -2,11 +2,11 @@ package server
 
 import (
 	"encoding/json"
-	"github.com/ospokemon/ospokemon/event"
-	"github.com/ospokemon/ospokemon/game"
-	"github.com/ospokemon/ospokemon/log"
-	"github.com/ospokemon/ospokemon/script"
-	"github.com/ospokemon/ospokemon/space"
+	"ospokemon.com/event"
+	"ospokemon.com/game"
+	"ospokemon.com/log"
+	"ospokemon.com/script"
+	"ospokemon.com/space"
 	"time"
 )
 

@@ -1,8 +1,8 @@
 package server
 
 import (
-	"github.com/ospokemon/ospokemon/option"
 	"net/http"
+	"ospokemon.com/option"
 )
 
 var fileserver = http.FileServer(http.Dir(option.String("webpath")))

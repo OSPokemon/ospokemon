@@ -1,10 +1,10 @@
 package query
 
 import (
-	"github.com/ospokemon/ospokemon/event"
-	"github.com/ospokemon/ospokemon/game"
-	"github.com/ospokemon/ospokemon/log"
-	"github.com/ospokemon/ospokemon/space"
+	"ospokemon.com/event"
+	"ospokemon.com/game"
+	"ospokemon.com/log"
+	"ospokemon.com/space"
 )
 
 func PlayersInsert(player *game.Player) error {

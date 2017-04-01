@@ -1,11 +1,11 @@
-package main
+package ospokemon
 
 import (
-	"github.com/ospokemon/ospokemon/log"
-	_ "github.com/ospokemon/ospokemon/option"
-	"github.com/ospokemon/ospokemon/query"
-	"github.com/ospokemon/ospokemon/run"
-	"github.com/ospokemon/ospokemon/server"
+	"ospokemon.com/log"
+	_ "ospokemon.com/option"
+	"ospokemon.com/query"
+	"ospokemon.com/run"
+	"ospokemon.com/server"
 )
 
 const PATCH uint64 = 8

@@ -1,9 +1,9 @@
 package run
 
 import (
-	"github.com/ospokemon/ospokemon/event"
-	"github.com/ospokemon/ospokemon/game"
-	"github.com/ospokemon/ospokemon/query"
+	"ospokemon.com/event"
+	"ospokemon.com/game"
+	"ospokemon.com/query"
 )
 
 func init() {

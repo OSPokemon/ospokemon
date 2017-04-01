@@ -1,9 +1,9 @@
 package game
 
 import (
-	"github.com/ospokemon/ospokemon/event"
-	"github.com/ospokemon/ospokemon/json"
-	"github.com/ospokemon/ospokemon/space"
+	"ospokemon.com/event"
+	"ospokemon.com/json"
+	"ospokemon.com/space"
 	"time"
 )
 

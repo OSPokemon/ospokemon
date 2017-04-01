@@ -2,7 +2,7 @@ package run
 
 // import (
 // 	"github.com/cznic/mathutil"
-// 	"github.com/ospokemon/ospokemon/space"
+// 	"ospokemon.com/space"
 // )
 
 // func (s *Space) Divide() {

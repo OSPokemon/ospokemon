@@ -1,7 +1,7 @@
 package game
 
 import (
-	"github.com/ospokemon/ospokemon/json"
+	"ospokemon.com/json"
 )
 
 const PARTtoaster = "toaster"

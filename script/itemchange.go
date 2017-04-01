@@ -2,8 +2,8 @@ package script
 
 import (
 	"errors"
-	"github.com/ospokemon/ospokemon/game"
-	"github.com/ospokemon/ospokemon/query"
+	"ospokemon.com/game"
+	"ospokemon.com/query"
 	"strconv"
 )
 

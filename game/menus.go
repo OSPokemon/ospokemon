@@ -1,7 +1,7 @@
 package game
 
 import (
-	"github.com/ospokemon/ospokemon/log"
+	"ospokemon.com/log"
 )
 
 const PARTmenu = "menu"

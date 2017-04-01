@@ -1,9 +1,9 @@
 package query
 
 import (
-	"github.com/ospokemon/ospokemon/event"
-	"github.com/ospokemon/ospokemon/game"
-	"github.com/ospokemon/ospokemon/log"
+	"ospokemon.com/event"
+	"ospokemon.com/game"
+	"ospokemon.com/log"
 	"time"
 )
 

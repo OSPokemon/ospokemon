@@ -1,9 +1,9 @@
 package query
 
 import (
-	"github.com/ospokemon/ospokemon/event"
-	"github.com/ospokemon/ospokemon/game"
-	"github.com/ospokemon/ospokemon/space"
+	"ospokemon.com/event"
+	"ospokemon.com/game"
+	"ospokemon.com/space"
 )
 
 func EntitiesUniversesSelect(universe *game.Universe) (map[uint]*game.Entity, error) {

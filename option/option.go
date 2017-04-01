@@ -2,8 +2,8 @@ package option
 
 import (
 	"flag"
-	"github.com/ospokemon/ospokemon/log"
 	"io/ioutil"
+	"ospokemon.com/log"
 	"strconv"
 	"strings"
 	"time"

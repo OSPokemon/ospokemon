@@ -1,8 +1,8 @@
 package query
 
 import (
-	"github.com/ospokemon/ospokemon/event"
-	"github.com/ospokemon/ospokemon/log"
+	"ospokemon.com/event"
+	"ospokemon.com/log"
 )
 
 func PokemonDelete(id uint) error {

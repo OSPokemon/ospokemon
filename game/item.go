@@ -1,7 +1,7 @@
 package game
 
 import (
-	"github.com/ospokemon/ospokemon/space"
+	"ospokemon.com/space"
 )
 
 const PARTitem = "item"

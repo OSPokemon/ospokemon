@@ -10,7 +10,7 @@ The game is not currently live anywhere. The only way to play right now is to us
 
 # Developers / bugs
 
-This server is written in Go. The UI is written with minimal standard web stuff, like jQuery and Bootstrap. Feel free to add/change anything and pull request. The github issues page is not open yet.
+This server is written in Go. The UI is a webpage using jQuery and Bootstrap.
 
 # License
 

@@ -1,9 +1,9 @@
 package server
 
 import (
-	"github.com/ospokemon/ospokemon/log"
-	"github.com/ospokemon/ospokemon/query"
 	"golang.org/x/net/websocket"
+	"ospokemon.com/log"
+	"ospokemon.com/query"
 )
 
 var WebsocketHandler = websocket.Handler(func(conn *websocket.Conn) {

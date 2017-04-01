@@ -2,8 +2,8 @@ package game
 
 import (
 	"github.com/cznic/mathutil"
-	"github.com/ospokemon/ospokemon/log"
-	"github.com/ospokemon/ospokemon/space"
+	"ospokemon.com/log"
+	"ospokemon.com/space"
 	"time"
 )
 

@@ -1,8 +1,8 @@
 package query
 
 import (
-	"github.com/ospokemon/ospokemon/game"
-	"github.com/ospokemon/ospokemon/log"
+	"ospokemon.com/game"
+	"ospokemon.com/log"
 )
 
 func ClassesSelect(id uint) (*game.Class, error) {

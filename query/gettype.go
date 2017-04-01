@@ -1,7 +1,7 @@
 package query
 
 import (
-	"github.com/ospokemon/ospokemon/game"
+	"ospokemon.com/game"
 )
 
 func GetType(id uint) (*game.Type, error) {
