@@ -5,7 +5,7 @@ import (
 	"github.com/cznic/mathutil"
 	"golang.org/x/net/websocket"
 	"net/http"
-	"ospokemon.com/game"
+	"ospokemon.com"
 	"ospokemon.com/option"
 	"strconv"
 	"sync"
@@ -34,8 +34,8 @@ func (s *Session) Part() string {
 	return PARTsession
 }
 
-func (s *Session) Update(u *game.Universe, e *game.Entity, d time.Duration) {
-	player := game.Players[s.Username]
+func (s *Session) Update(u *ospokemon.Universe, e *ospokemon.Entity, d time.Duration) {
+	player := ospokemon.Players[s.Username]
 	if player == nil {
 		return
 	}

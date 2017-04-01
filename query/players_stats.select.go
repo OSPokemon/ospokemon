@@ -1,11 +1,11 @@
 package query
 
 import (
-	"ospokemon.com/game"
+	"ospokemon.com"
 	"ospokemon.com/log"
 )
 
-func PlayersStatsSelect(player *game.Player) (game.Stats, error) {
+func PlayersStatsSelect(player *ospokemon.Player) (ospokemon.Stats, error) {
 	rows, err := Connection.Query(
 		"SELECT stat, value, base, base FROM players_stats WHERE username=?",
 		player.Username,
@@ -14,11 +14,11 @@ func PlayersStatsSelect(player *game.Player) (game.Stats, error) {
 		return nil, err
 	}
 
-	stats := make(game.Stats)
+	stats := make(ospokemon.Stats)
 
 	for rows.Next() {
 		var namebuff string
-		stat := &game.Stat{}
+		stat := &ospokemon.Stat{}
 
 		if err = rows.Scan(&namebuff, &stat.Value, &stat.Max, &stat.Base); err != nil {
 			return stats, err

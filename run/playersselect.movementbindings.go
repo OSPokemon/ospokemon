@@ -1,8 +1,8 @@
 package run
 
 import (
+	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/game"
 	"ospokemon.com/log"
 	"ospokemon.com/query"
 )
@@ -12,7 +12,7 @@ func init() {
 }
 
 func PlayersSelectMovementBindings(args ...interface{}) {
-	player := args[0].(*game.Player)
+	player := args[0].(*ospokemon.Player)
 
 	mquery, err := query.BindingsMovementsPlayersSelect(player)
 
@@ -25,12 +25,12 @@ func PlayersSelectMovementBindings(args ...interface{}) {
 
 	if mquery != nil {
 		for key, direction := range mquery {
-			binding := game.MakeBinding()
+			binding := ospokemon.MakeBinding()
 			binding.Key = key
 
-			binding.AddPart(game.Walk(direction))
+			binding.AddPart(ospokemon.Walk(direction))
 
-			imaging := game.MakeImaging()
+			imaging := ospokemon.MakeImaging()
 			imaging.Image = "/img/ui/walk/" + direction + ".png"
 			binding.AddPart(imaging)
 

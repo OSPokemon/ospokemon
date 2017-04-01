@@ -1,16 +1,16 @@
 package run
 
 import (
+	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/game"
 	"ospokemon.com/space"
 )
 
 func init() {
 	event.On(event.Collision, func(args ...interface{}) {
-		entity1 := args[0].(*game.Entity)
-		entity2 := args[1].(*game.Entity)
-		universe := args[2].(*game.Universe)
+		entity1 := args[0].(*ospokemon.Entity)
+		entity2 := args[1].(*ospokemon.Entity)
+		universe := args[2].(*ospokemon.Universe)
 		vector := args[3].(space.Vector)
 
 		terrain := entity2.GetTerrain()

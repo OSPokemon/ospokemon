@@ -1,12 +1,12 @@
 package query
 
 import (
+	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/game"
 	"ospokemon.com/log"
 )
 
-func ItembagsPlayersDelete(player *game.Player) error {
+func ItembagsPlayersDelete(player *ospokemon.Player) error {
 	_, err := Connection.Exec(
 		"DELETE FROM itemslots_players WHERE username=?",
 		player.Username,

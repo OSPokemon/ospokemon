@@ -1,18 +1,18 @@
 package query
 
 import (
+	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/game"
 	"ospokemon.com/log"
 )
 
-func PokemonSelect(id uint) (*game.Pokemon, error) {
+func PokemonSelect(id uint) (*ospokemon.Pokemon, error) {
 	row := Connection.QueryRow(
 		"SELECT id, species, name, xp, level, gender, shiny FROM pokemon WHERE id=?",
 		id,
 	)
 
-	pokemon := game.MakePokemon()
+	pokemon := ospokemon.MakePokemon()
 
 	err := row.Scan(
 		&pokemon.Id,
@@ -25,11 +25,11 @@ func PokemonSelect(id uint) (*game.Pokemon, error) {
 	)
 
 	if err != nil {
-		game.Pokemons[id] = nil
+		ospokemon.Pokemons[id] = nil
 		return nil, err
 	}
 
-	game.Pokemons[id] = pokemon
+	ospokemon.Pokemons[id] = pokemon
 
 	log.Add("Pokemon", id).Info("pokemon select")
 

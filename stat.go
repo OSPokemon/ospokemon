@@ -1,4 +1,4 @@
-package game
+package ospokemon
 
 type Stat struct {
 	Value float64

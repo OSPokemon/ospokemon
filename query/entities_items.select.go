@@ -1,11 +1,11 @@
 package query
 
 import (
-	"ospokemon.com/game"
+	"ospokemon.com"
 	"ospokemon.com/log"
 )
 
-func EntitiesItemsSelect(universe *game.Universe) (map[uint]*game.Itemslot, error) {
+func EntitiesItemsSelect(universe *ospokemon.Universe) (map[uint]*ospokemon.Itemslot, error) {
 	rows, err := Connection.Query(
 		"SELECT entity, item, amount FROM entities_items WHERE universe=?",
 		universe.Id,
@@ -15,7 +15,7 @@ func EntitiesItemsSelect(universe *game.Universe) (map[uint]*game.Itemslot, erro
 		return nil, err
 	}
 
-	itemslots := make(map[uint]*game.Itemslot)
+	itemslots := make(map[uint]*ospokemon.Itemslot)
 
 	for rows.Next() {
 		var entityId, itembuff uint
@@ -30,7 +30,7 @@ func EntitiesItemsSelect(universe *game.Universe) (map[uint]*game.Itemslot, erro
 			return nil, err
 		}
 
-		itemslot := game.BuildItemslot(item, amountbuff)
+		itemslot := ospokemon.BuildItemslot(item, amountbuff)
 		itemslots[entityId] = itemslot
 	}
 

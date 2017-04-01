@@ -1,12 +1,12 @@
 package query
 
 import (
+	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/game"
 	"ospokemon.com/log"
 )
 
-func PlayersDelete(player *game.Player) error {
+func PlayersDelete(player *ospokemon.Player) error {
 	_, err := Connection.Exec("DELETE FROM players WHERE username=?", player.Username)
 
 	if err == nil {

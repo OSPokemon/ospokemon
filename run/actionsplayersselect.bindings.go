@@ -1,8 +1,8 @@
 package run
 
 import (
+	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/game"
 	"ospokemon.com/log"
 	"ospokemon.com/query"
 )
@@ -12,8 +12,8 @@ func init() {
 }
 
 func ActionsPlayersSelectBindings(args ...interface{}) {
-	player := args[0].(*game.Player)
-	actions := args[1].(game.Actions)
+	player := args[0].(*ospokemon.Player)
+	actions := args[1].(ospokemon.Actions)
 
 	aquery, err := query.ActionsBindingsPlayersSelect(player)
 
@@ -26,7 +26,7 @@ func ActionsPlayersSelectBindings(args ...interface{}) {
 
 	if aquery != nil {
 		for key, actionid := range aquery {
-			binding := game.MakeBinding()
+			binding := ospokemon.MakeBinding()
 			binding.Key = key
 			action := actions[actionid]
 

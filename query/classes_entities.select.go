@@ -1,11 +1,11 @@
 package query
 
 import (
-	"ospokemon.com/game"
+	"ospokemon.com"
 	"ospokemon.com/log"
 )
 
-func ClassesEntitiesSelect(universe *game.Universe) (map[uint]*game.Class, error) {
+func ClassesEntitiesSelect(universe *ospokemon.Universe) (map[uint]*ospokemon.Class, error) {
 	rows, err := Connection.Query(
 		"SELECT entity, class FROM classes_entities WHERE universe=?",
 		universe.Id,
@@ -14,7 +14,7 @@ func ClassesEntitiesSelect(universe *game.Universe) (map[uint]*game.Class, error
 		return nil, err
 	}
 
-	classes := make(map[uint]*game.Class)
+	classes := make(map[uint]*ospokemon.Class)
 
 	for rows.Next() {
 		var entityId, classbuff uint

@@ -1,11 +1,11 @@
 package query
 
 import (
-	"ospokemon.com/game"
+	"ospokemon.com"
 	"ospokemon.com/log"
 )
 
-func BindingsMovementsPlayersDelete(player *game.Player) error {
+func BindingsMovementsPlayersDelete(player *ospokemon.Player) error {
 	_, err := Connection.Exec(
 		"DELETE FROM bindings_movements_players WHERE username=?",
 		player.Username,

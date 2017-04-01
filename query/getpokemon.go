@@ -1,11 +1,11 @@
 package query
 
 import (
-	"ospokemon.com/game"
+	"ospokemon.com"
 )
 
-func GetPokemon(id uint) (*game.Pokemon, error) {
-	if pokemon, ok := game.Pokemons[id]; ok {
+func GetPokemon(id uint) (*ospokemon.Pokemon, error) {
+	if pokemon, ok := ospokemon.Pokemons[id]; ok {
 		return pokemon, nil
 	}
 

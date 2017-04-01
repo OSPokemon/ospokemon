@@ -1,18 +1,18 @@
 package query
 
 import (
-	"ospokemon.com/game"
+	"ospokemon.com"
 	"ospokemon.com/log"
 	"time"
 )
 
-func SpellsSelect(id uint) (*game.Spell, error) {
+func SpellsSelect(id uint) (*ospokemon.Spell, error) {
 	row := Connection.QueryRow(
 		"SELECT id, script, casttime, cooldown FROM spells WHERE id=?",
 		id,
 	)
 
-	spell := game.MakeSpell()
+	spell := ospokemon.MakeSpell()
 
 	var casttimebuff, cooldownbuff int64
 	if err := row.Scan(&spell.Id, &spell.Script, &casttimebuff, &cooldownbuff); err != nil {
@@ -62,7 +62,7 @@ func SpellsSelect(id uint) (*game.Spell, error) {
 	}
 	rows.Close()
 
-	game.Spells[id] = spell
+	ospokemon.Spells[id] = spell
 
 	log.Add("Spell", id).Info("spells select")
 

@@ -1,12 +1,12 @@
 package query
 
 import (
+	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/game"
 	"ospokemon.com/space"
 )
 
-func EntitiesUniversesSelect(universe *game.Universe) (map[uint]*game.Entity, error) {
+func EntitiesUniversesSelect(universe *ospokemon.Universe) (map[uint]*ospokemon.Entity, error) {
 	rows, err := Connection.Query(
 		"SELECT id, universe, x, y, dx, dy FROM entities_universes WHERE universe=?",
 		universe.Id,
@@ -16,10 +16,10 @@ func EntitiesUniversesSelect(universe *game.Universe) (map[uint]*game.Entity, er
 		return nil, err
 	}
 
-	entities := make(map[uint]*game.Entity)
+	entities := make(map[uint]*ospokemon.Entity)
 
 	for rows.Next() {
-		entity := game.MakeEntity()
+		entity := ospokemon.MakeEntity()
 		r := entity.Shape.(*space.Rect)
 
 		err = rows.Scan(&entity.Id, &entity.UniverseId, &r.Anchor.X, &r.Anchor.Y, &r.Dimension.DX, &r.Dimension.DY)

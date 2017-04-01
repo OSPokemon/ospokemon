@@ -1,12 +1,12 @@
 package query
 
 import (
+	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/game"
 	"ospokemon.com/log"
 )
 
-func ItembagsPlayersInsert(player *game.Player, itembag *game.Itembag) error {
+func ItembagsPlayersInsert(player *ospokemon.Player, itembag *ospokemon.Itembag) error {
 	for pos, itemslot := range itembag.Slots {
 		if itemslot == nil {
 			continue

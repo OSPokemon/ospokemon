@@ -1,4 +1,4 @@
-package game
+package ospokemon
 
 const PARTstats = "stats"
 

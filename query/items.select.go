@@ -1,18 +1,18 @@
 package query
 
 import (
-	"ospokemon.com/game"
+	"ospokemon.com"
 	"ospokemon.com/log"
 	"time"
 )
 
-func ItemsSelect(id uint) (*game.Item, error) {
+func ItemsSelect(id uint) (*ospokemon.Item, error) {
 	row := Connection.QueryRow(
 		"SELECT id, script, casttime, cooldown, tradable, stack, value, dx, dy FROM items WHERE id=?",
 		id,
 	)
 
-	item := game.MakeItem()
+	item := ospokemon.MakeItem()
 
 	var casttimebuff, cooldownbuff, tradeablebuff int64
 	if err := row.Scan(&item.Spell.Id, &item.Script, &casttimebuff, &cooldownbuff, &tradeablebuff, &item.Stack, &item.Value, &item.Dimension.DX, &item.Dimension.DY); err != nil {
@@ -66,7 +66,7 @@ func ItemsSelect(id uint) (*game.Item, error) {
 	// }
 	// rows.Close()
 
-	game.Items[id] = item
+	ospokemon.Items[id] = item
 
 	log.Add("Item", id).Info("items select")
 

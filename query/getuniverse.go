@@ -1,11 +1,11 @@
 package query
 
 import (
-	"ospokemon.com/game"
+	"ospokemon.com"
 )
 
-func GetUniverse(id uint) (*game.Universe, error) {
-	if universe, ok := game.Multiverse[id]; ok {
+func GetUniverse(id uint) (*ospokemon.Universe, error) {
+	if universe, ok := ospokemon.Multiverse[id]; ok {
 		return universe, nil
 	}
 

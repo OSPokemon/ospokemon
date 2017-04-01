@@ -1,8 +1,8 @@
 package run
 
 import (
+	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/game"
 	"ospokemon.com/log"
 	"ospokemon.com/query"
 	"ospokemon.com/space"
@@ -13,8 +13,8 @@ func init() {
 }
 
 func EntitiesUniversesSelectClasses(args ...interface{}) {
-	entities := args[0].(map[uint]*game.Entity)
-	universe := args[1].(*game.Universe)
+	entities := args[0].(map[uint]*ospokemon.Entity)
+	universe := args[1].(*ospokemon.Universe)
 	classes, err := query.ClassesEntitiesSelect(universe)
 
 	if err != nil {
@@ -25,7 +25,7 @@ func EntitiesUniversesSelectClasses(args ...interface{}) {
 	for entityId, class := range classes {
 		entity := entities[entityId]
 
-		entity.AddPart(game.BuildImaging(class.Animations))
+		entity.AddPart(ospokemon.BuildImaging(class.Animations))
 
 		rect := entity.Shape.(*space.Rect)
 		rect.Dimension.DX = class.Dimension.DX

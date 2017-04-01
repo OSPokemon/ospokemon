@@ -1,18 +1,18 @@
 package query
 
 import (
+	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/game"
 	"ospokemon.com/log"
 )
 
-func UniversesSelect(id uint) (*game.Universe, error) {
+func UniversesSelect(id uint) (*ospokemon.Universe, error) {
 	row := Connection.QueryRow(
 		"SELECT dx, dy, private FROM universes WHERE id=?",
 		id,
 	)
 
-	universe := game.MakeUniverse(id)
+	universe := ospokemon.MakeUniverse(id)
 	err := row.Scan(&universe.Space.Dimension.DX, &universe.Space.Dimension.DY, &universe.Private)
 
 	if err == nil {
@@ -21,7 +21,7 @@ func UniversesSelect(id uint) (*game.Universe, error) {
 		event.Fire(event.UniversesSelect, universe)
 	}
 
-	game.Multiverse[id] = universe
+	ospokemon.Multiverse[id] = universe
 
 	return universe, nil
 }

@@ -1,24 +1,24 @@
 package query
 
 import (
+	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/game"
 	"ospokemon.com/log"
 	"time"
 )
 
-func AccountsSelect(username string) (*game.Account, error) {
+func AccountsSelect(username string) (*ospokemon.Account, error) {
 	row := Connection.QueryRow(
 		"SELECT password, register FROM accounts WHERE username=?",
 		username,
 	)
 
-	account := game.MakeAccount(username)
+	account := ospokemon.MakeAccount(username)
 	var timebuff int64
 	err := row.Scan(&account.Password, &timebuff)
 
 	if err != nil {
-		game.Accounts[username] = nil
+		ospokemon.Accounts[username] = nil
 		return nil, err
 	}
 

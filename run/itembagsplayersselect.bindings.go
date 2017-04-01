@@ -1,8 +1,8 @@
 package run
 
 import (
+	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/game"
 	"ospokemon.com/log"
 	"ospokemon.com/query"
 )
@@ -12,8 +12,8 @@ func init() {
 }
 
 func ItembagsPlayersSelectBindings(args ...interface{}) {
-	player := args[0].(*game.Player)
-	itembag := args[1].(*game.Itembag)
+	player := args[0].(*ospokemon.Player)
+	itembag := args[1].(*ospokemon.Itembag)
 
 	bquery, err := query.BindingsItemsPlayersSelect(player)
 
@@ -26,7 +26,7 @@ func ItembagsPlayersSelectBindings(args ...interface{}) {
 
 	if bquery != nil {
 		for key, itemslotid := range bquery {
-			binding := game.MakeBinding()
+			binding := ospokemon.MakeBinding()
 			binding.Key = key
 			itemslot := itembag.Slots[itemslotid]
 			itemslot.AddPart(binding)

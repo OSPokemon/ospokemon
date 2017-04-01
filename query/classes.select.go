@@ -1,17 +1,17 @@
 package query
 
 import (
-	"ospokemon.com/game"
+	"ospokemon.com"
 	"ospokemon.com/log"
 )
 
-func ClassesSelect(id uint) (*game.Class, error) {
+func ClassesSelect(id uint) (*ospokemon.Class, error) {
 	row := Connection.QueryRow(
 		"SELECT dx, dy FROM classes WHERE id=?",
 		id,
 	)
 
-	class := game.MakeClass(id)
+	class := ospokemon.MakeClass(id)
 	err := row.Scan(&class.Dimension.DX, &class.Dimension.DY)
 
 	if err != nil {
@@ -34,7 +34,7 @@ func ClassesSelect(id uint) (*game.Class, error) {
 	}
 	rows.Close()
 
-	game.Classes[id] = class
+	ospokemon.Classes[id] = class
 
 	log.Add("Class", class.Id).Info("classes select")
 

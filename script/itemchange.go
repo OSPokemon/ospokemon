@@ -2,16 +2,16 @@ package script
 
 import (
 	"errors"
-	"ospokemon.com/game"
+	"ospokemon.com"
 	"ospokemon.com/query"
 	"strconv"
 )
 
 func init() {
-	game.Scripts["itemchange"] = ItemChange
+	ospokemon.Scripts["itemchange"] = ItemChange
 }
 
-func ItemChange(e *game.Entity, data map[string]interface{}) error {
+func ItemChange(e *ospokemon.Entity, data map[string]interface{}) error {
 	itembag := e.GetItembag()
 	if itembag == nil {
 		return errors.New("itemchange: itembag mising")
@@ -22,11 +22,11 @@ func ItemChange(e *game.Entity, data map[string]interface{}) error {
 		return errors.New("itemchange: toaster missing")
 	}
 
-	var item *game.Item
+	var item *ospokemon.Item
 	var err error
 
 	switch data_item := data["item"].(type) {
-	case *game.Item:
+	case *ospokemon.Item:
 		item = data_item
 		break
 	case uint:
@@ -63,7 +63,7 @@ func ItemChange(e *game.Entity, data map[string]interface{}) error {
 
 	if amount > 0 {
 		if itembag.Add(item, int(amount)) {
-			toaster.Add(&game.Toast{
+			toaster.Add(&ospokemon.Toast{
 				Color:   "green",
 				Image:   item.Animations["portrait"],
 				Message: "+" + strconv.Itoa(amount),
@@ -73,7 +73,7 @@ func ItemChange(e *game.Entity, data map[string]interface{}) error {
 		}
 	} else if amount < 0 {
 		if itembag.Remove(item, -int(amount)) {
-			toaster.Add(&game.Toast{
+			toaster.Add(&ospokemon.Toast{
 				Color:   "orange",
 				Image:   item.Animations["portrait"],
 				Message: strconv.Itoa(amount),

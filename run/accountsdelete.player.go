@@ -1,15 +1,15 @@
 package run
 
 import (
+	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/game"
 	"ospokemon.com/log"
 	"ospokemon.com/query"
 )
 
 func init() {
 	event.On(event.AccountsDelete, func(args ...interface{}) {
-		account := args[0].(*game.Account)
+		account := args[0].(*ospokemon.Account)
 		player := account.GetPlayer()
 		err := query.PlayersDelete(player)
 

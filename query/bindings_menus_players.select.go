@@ -1,11 +1,11 @@
 package query
 
 import (
-	"ospokemon.com/game"
+	"ospokemon.com"
 	"ospokemon.com/log"
 )
 
-func BindingsMenusPlayersSelect(player *game.Player) (map[string]string, error) {
+func BindingsMenusPlayersSelect(player *ospokemon.Player) (map[string]string, error) {
 	rows, err := Connection.Query(
 		"SELECT key, menu FROM bindings_menus_players WHERE username=?",
 		player.Username,

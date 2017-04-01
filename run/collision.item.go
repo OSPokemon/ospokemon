@@ -1,16 +1,16 @@
 package run
 
 import (
+	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/game"
 	"ospokemon.com/log"
 	"ospokemon.com/script"
 )
 
 func init() {
 	event.On(event.Collision, func(args ...interface{}) {
-		entity1 := args[0].(*game.Entity)
-		entity2 := args[1].(*game.Entity)
+		entity1 := args[0].(*ospokemon.Entity)
+		entity2 := args[1].(*ospokemon.Entity)
 
 		itemslot := entity2.GetItemslot()
 		if itemslot == nil {
@@ -27,7 +27,7 @@ func init() {
 			return
 		}
 
-		universe := game.Multiverse[entity2.UniverseId]
+		universe := ospokemon.Multiverse[entity2.UniverseId]
 		universe.Remove(entity2)
 	})
 }

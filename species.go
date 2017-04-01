@@ -1,4 +1,4 @@
-package game
+package ospokemon
 
 type Species struct {
 	Id          uint

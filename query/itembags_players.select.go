@@ -1,13 +1,13 @@
 package query
 
 import (
+	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/game"
 	"ospokemon.com/log"
 	"time"
 )
 
-func ItembagsPlayersSelect(player *game.Player) (*game.Itembag, error) {
+func ItembagsPlayersSelect(player *ospokemon.Player) (*ospokemon.Itembag, error) {
 	rows, err := Connection.Query(
 		"SELECT pos, item, amount FROM itemslots_players WHERE username=?",
 		player.Username,
@@ -16,7 +16,7 @@ func ItembagsPlayersSelect(player *game.Player) (*game.Itembag, error) {
 		return nil, err
 	}
 
-	itembag := game.MakeItembag(player.BagSize)
+	itembag := ospokemon.MakeItembag(player.BagSize)
 
 	for rows.Next() {
 		var idbuff, amountbuff int
@@ -31,7 +31,7 @@ func ItembagsPlayersSelect(player *game.Player) (*game.Itembag, error) {
 			return itembag, err
 		}
 
-		itemslot := game.BuildItemslot(item, amountbuff)
+		itemslot := ospokemon.BuildItemslot(item, amountbuff)
 		itemslot.Id = idbuff
 		itembag.Slots[idbuff] = itemslot
 	}

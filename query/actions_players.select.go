@@ -1,13 +1,13 @@
 package query
 
 import (
+	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/game"
 	"ospokemon.com/log"
 	"time"
 )
 
-func ActionsPlayersSelect(player *game.Player) (game.Actions, error) {
+func ActionsPlayersSelect(player *ospokemon.Player) (ospokemon.Actions, error) {
 	rows, err := Connection.Query(
 		"SELECT spell, timer FROM actions_players WHERE username=?",
 		player.Username,
@@ -18,7 +18,7 @@ func ActionsPlayersSelect(player *game.Player) (game.Actions, error) {
 		return nil, err
 	}
 
-	actions := make(game.Actions)
+	actions := make(ospokemon.Actions)
 
 	for rows.Next() {
 		var spellbuff uint
@@ -30,7 +30,7 @@ func ActionsPlayersSelect(player *game.Player) (game.Actions, error) {
 		}
 
 		if spell, err := GetSpell(spellbuff); spell != nil {
-			action := game.BuildAction(spell)
+			action := ospokemon.BuildAction(spell)
 
 			if t := time.Duration(timebuff); timebuff > 0 {
 				action.Timer = &t

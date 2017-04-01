@@ -1,5 +1,4 @@
-package game
-
+package ospokemon
 
 type Scripter struct {
 	Script string
@@ -13,4 +12,3 @@ func MakeScripter() Scripter {
 }
 
 var Scripts = make(map[string]func(*Entity, map[string]interface{}) error)
-

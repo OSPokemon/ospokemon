@@ -2,8 +2,8 @@ package run
 
 import (
 	"math"
+	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/game"
 	"ospokemon.com/space"
 )
 
@@ -12,7 +12,7 @@ func init() {
 }
 
 func MovementImaging(args ...interface{}) {
-	e := args[0].(*game.Entity)
+	e := args[0].(*ospokemon.Entity)
 	v, _ := args[1].(space.Vector)
 
 	i := e.GetImaging()

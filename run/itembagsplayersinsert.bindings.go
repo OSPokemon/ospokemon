@@ -1,8 +1,8 @@
 package run
 
 import (
+	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/game"
 	"ospokemon.com/log"
 	"ospokemon.com/query"
 )
@@ -12,8 +12,8 @@ func init() {
 }
 
 func ItembagsPlayersInsertBindings(args ...interface{}) {
-	player := args[0].(*game.Player)
-	itembag := args[1].(*game.Itembag)
+	player := args[0].(*ospokemon.Player)
+	itembag := args[1].(*ospokemon.Itembag)
 
 	insert := make(map[string]int)
 	for id, itemslot := range itembag.Slots {

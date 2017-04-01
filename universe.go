@@ -1,4 +1,4 @@
-package game
+package ospokemon
 
 import (
 	"github.com/cznic/mathutil"
@@ -62,7 +62,7 @@ func (u *Universe) Add(e *Entity) {
 	e.Id = u.GenerateId()
 	u.Entities[e.Id] = e
 
-	log.Add("Universe", u.Id).Add("Entity", e.Id).Debug("game.Universe.Add")
+	log.Add("Universe", u.Id).Add("Entity", e.Id).Debug("ospokemon.Universe.Add")
 
 	// event.Fire(event.UniverseAdd, u, e)
 }
@@ -72,7 +72,7 @@ func (u *Universe) AddSpawner(spawner *Spawner) {
 }
 
 func (u *Universe) Remove(e *Entity) {
-	log.Add("Universe", u.Id).Add("Entity", e.Id).Debug("game.Universe.Remove")
+	log.Add("Universe", u.Id).Add("Entity", e.Id).Debug("ospokemon.Universe.Remove")
 
 	delete(u.Entities, e.Id)
 	e.Id = 0

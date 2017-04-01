@@ -2,8 +2,8 @@ package server
 
 import (
 	"encoding/json"
+	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/game"
 	"ospokemon.com/log"
 	"ospokemon.com/script"
 	"ospokemon.com/space"
@@ -11,12 +11,12 @@ import (
 )
 
 func ReceiveMessage(s *Session, m *WebsocketMessage) {
-	p := game.Players[s.Username]
+	p := ospokemon.Players[s.Username]
 
 	s.Refresh()
 
 	if m.Event == "Ping" {
-		p.GetToaster().Add(&game.Toast{
+		p.GetToaster().Add(&ospokemon.Toast{
 			Color:   "blue",
 			Message: "Pong",
 			Image:   "/img/ospokemon.png",
@@ -43,19 +43,19 @@ func ReceiveMessage(s *Session, m *WebsocketMessage) {
 	}
 }
 
-func keydown(player *game.Player, key string) {
+func keydown(player *ospokemon.Player, key string) {
 	if binding := player.GetBindings()[key]; binding != nil {
 		event.Fire(event.BindingDown, player, binding)
 	}
 }
 
-func keyup(player *game.Player, key string) {
+func keyup(player *ospokemon.Player, key string) {
 	if binding := player.GetBindings()[key]; binding != nil {
 		event.Fire(event.BindingUp, player, binding)
 	}
 }
 
-func bindingset(player *game.Player, m string) {
+func bindingset(player *ospokemon.Player, m string) {
 	data := make(map[string]interface{})
 	json.Unmarshal([]byte(m), &data)
 
@@ -64,7 +64,7 @@ func bindingset(player *game.Player, m string) {
 	}
 }
 
-func clickuniverse(player *game.Player, m string) {
+func clickuniverse(player *ospokemon.Player, m string) {
 	data := make(map[string]interface{})
 	json.Unmarshal([]byte(m), &data)
 
@@ -88,13 +88,13 @@ func clickuniverse(player *game.Player, m string) {
 	movement.Target = &point
 }
 
-func clickentity(player *game.Player, m string) {
+func clickentity(player *ospokemon.Player, m string) {
 	data := make(map[string]interface{})
 	json.Unmarshal([]byte(m), &data)
 
 	if entityId, ok := data["entity"].(float64); ok {
 		playerEntity := player.GetEntity()
-		universe := game.Multiverse[playerEntity.UniverseId]
+		universe := ospokemon.Multiverse[playerEntity.UniverseId]
 		entity := universe.Entities[uint(entityId)]
 
 		if dialog := entity.GetDialog(); dialog != nil {
@@ -103,13 +103,13 @@ func clickentity(player *game.Player, m string) {
 	}
 }
 
-func dialogchoice(player *game.Player, m string) {
+func dialogchoice(player *ospokemon.Player, m string) {
 	entity := player.GetEntity()
 
 	if dialog := player.GetDialog(); dialog != nil {
 		if nextDialog := dialog.Next(m); nextDialog != nil {
 
-			if script := game.Scripts[nextDialog.Script]; script != nil {
+			if script := ospokemon.Scripts[nextDialog.Script]; script != nil {
 				if err := script(entity, nextDialog.Data); err != nil {
 					log.Add("Player", player.Username).Add("Choice", m).Add("Error", err.Error()).Error("dialog choice")
 					return
@@ -123,14 +123,14 @@ func dialogchoice(player *game.Player, m string) {
 	}
 }
 
-func menutoggle(player *game.Player, m string) {
+func menutoggle(player *ospokemon.Player, m string) {
 	menus := player.GetMenus()
-	menus.Toggle(game.Menu(m))
+	menus.Toggle(ospokemon.Menu(m))
 }
 
-func chat(player *game.Player, m string) {
+func chat(player *ospokemon.Player, m string) {
 	timer := 3 * time.Second
-	chatmessage := &game.ChatMessage{
+	chatmessage := &ospokemon.ChatMessage{
 		Message: m,
 		Timer:   &timer,
 	}

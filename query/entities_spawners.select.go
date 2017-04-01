@@ -1,13 +1,13 @@
 package query
 
 import (
-	"ospokemon.com/game"
+	"ospokemon.com"
 	"ospokemon.com/log"
 	"time"
 )
 
-func EntitiesSpawnersSelect(universe *game.Universe) (map[uint]*game.Spawner, error) {
-	spawners := make(map[uint]*game.Spawner)
+func EntitiesSpawnersSelect(universe *ospokemon.Universe) (map[uint]*ospokemon.Spawner, error) {
+	spawners := make(map[uint]*ospokemon.Spawner)
 
 	rows, err := Connection.Query(
 		"SELECT entity, speed FROM entities_spawners WHERE universe=?",
@@ -25,7 +25,7 @@ func EntitiesSpawnersSelect(universe *game.Universe) (map[uint]*game.Spawner, er
 			return nil, err
 		}
 
-		spawner := game.MakeSpawner()
+		spawner := ospokemon.MakeSpawner()
 
 		if t := time.Duration(speedbuff); speedbuff > 0 {
 			spawner.Speed = t * time.Millisecond

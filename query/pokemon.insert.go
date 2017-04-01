@@ -1,12 +1,12 @@
 package query
 
 import (
+	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/game"
 	"ospokemon.com/log"
 )
 
-func PokemonInsert(pokemon *game.Pokemon) error {
+func PokemonInsert(pokemon *ospokemon.Pokemon) error {
 	_, err := Connection.Exec(
 		"INSERT INTO pokemon (id, species, name, xp, level, gender, shiny) VALUES (?, ?, ?, ?, ?, ?, ?)",
 		pokemon.Id,

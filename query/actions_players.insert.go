@@ -1,12 +1,12 @@
 package query
 
 import (
+	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/game"
 	"ospokemon.com/log"
 )
 
-func ActionsPlayersInsert(player *game.Player, actions game.Actions) error {
+func ActionsPlayersInsert(player *ospokemon.Player, actions ospokemon.Actions) error {
 	for spell, action := range actions {
 		timebuff := 0
 		if action.Timer != nil {

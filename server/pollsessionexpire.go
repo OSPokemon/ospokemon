@@ -1,7 +1,7 @@
 package server
 
 import (
-	"ospokemon.com/game"
+	"ospokemon.com"
 	"ospokemon.com/query"
 	"time"
 )
@@ -10,7 +10,7 @@ func PollSessionExpire() {
 	for now := range time.Tick(1 * time.Second) {
 		for _, s := range Sessions {
 			if s.Expire.Before(now) {
-				account := game.Accounts[s.Username]
+				account := ospokemon.Accounts[s.Username]
 
 				if account != nil {
 					query.AccountsDelete(account)

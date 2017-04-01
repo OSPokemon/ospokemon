@@ -1,11 +1,11 @@
 package query
 
 import (
-	"ospokemon.com/game"
+	"ospokemon.com"
 )
 
-func GetSpell(id uint) (*game.Spell, error) {
-	if spell, ok := game.Spells[id]; ok {
+func GetSpell(id uint) (*ospokemon.Spell, error) {
+	if spell, ok := ospokemon.Spells[id]; ok {
 		return spell, nil
 	}
 

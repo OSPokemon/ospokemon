@@ -1,8 +1,8 @@
 package run
 
 import (
+	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/game"
 	"ospokemon.com/query"
 )
 
@@ -11,8 +11,8 @@ func init() {
 }
 
 func BindingDownAction(args ...interface{}) {
-	player := args[0].(*game.Player)
-	binding := args[1].(*game.Binding)
+	player := args[0].(*ospokemon.Player)
+	binding := args[1].(*ospokemon.Binding)
 	entity := player.GetEntity()
 	universe, _ := query.GetUniverse(entity.UniverseId)
 

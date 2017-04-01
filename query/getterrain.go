@@ -1,11 +1,11 @@
 package query
 
 import (
-	"ospokemon.com/game"
+	"ospokemon.com"
 )
 
-func GetTerrain(id uint) (*game.Terrain, error) {
-	if t, ok := game.Terrains[id]; ok {
+func GetTerrain(id uint) (*ospokemon.Terrain, error) {
+	if t, ok := ospokemon.Terrains[id]; ok {
 		return t, nil
 	}
 

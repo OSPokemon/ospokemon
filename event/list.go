@@ -6,10 +6,10 @@ const BindingUp = "BindingUp"
 const Movement = "Movement"
 const Collision = "Collision"
 
-const ActionCast = "game.ActionCast"
+const ActionCast = "ospokemon.ActionCast"
 
-const UniverseAdd = "game.Universe.Add"
-const UniverseRemove = "game.Universe.Remove"
+const UniverseAdd = "ospokemon.Universe.Add"
+const UniverseRemove = "ospokemon.Universe.Remove"
 
 const AccountsSelect = "query.AccountsSelect"
 const AccountsInsert = "query.AccountsInsert"

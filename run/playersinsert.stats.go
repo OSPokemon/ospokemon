@@ -1,8 +1,8 @@
 package run
 
 import (
+	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/game"
 	"ospokemon.com/log"
 	"ospokemon.com/query"
 )
@@ -12,12 +12,12 @@ func init() {
 }
 
 func PlayersInsertStats(args ...interface{}) {
-	player := args[0].(*game.Player)
+	player := args[0].(*ospokemon.Player)
 	stats := player.GetStats()
 
 	if len(stats) < 1 {
-		stats = map[string]*game.Stat{
-			"speed": &game.Stat{5, 5, 5},
+		stats = map[string]*ospokemon.Stat{
+			"speed": &ospokemon.Stat{5, 5, 5},
 		}
 
 		log.Add("Username", player.Username).Debug("players insert stats: grant default stats")

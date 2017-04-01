@@ -1,11 +1,11 @@
 package query
 
 import (
-	"ospokemon.com/game"
+	"ospokemon.com"
 	"ospokemon.com/log"
 )
 
-func PlayersStatsInsert(player *game.Player, stats game.Stats) error {
+func PlayersStatsInsert(player *ospokemon.Player, stats ospokemon.Stats) error {
 	for name, stat := range stats {
 		_, err := Connection.Exec(
 			"INSERT INTO players_stats (username, stat, value, base) VALUES (?, ?, ?, ?)",

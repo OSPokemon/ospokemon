@@ -2,7 +2,7 @@ package server
 
 import (
 	"net/http"
-	"ospokemon.com/game"
+	"ospokemon.com"
 	"ospokemon.com/query"
 )
 
@@ -12,7 +12,7 @@ var SignupHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	account := game.MakeAccount(r.FormValue("username"))
+	account := ospokemon.MakeAccount(r.FormValue("username"))
 	account.Password = hashpassword(r.FormValue("password"))
 
 	if err := query.AccountsInsert(account); err != nil {

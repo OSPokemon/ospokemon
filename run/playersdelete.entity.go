@@ -1,8 +1,8 @@
 package run
 
 import (
+	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/game"
 	"ospokemon.com/query"
 )
 
@@ -11,7 +11,7 @@ func init() {
 }
 
 func PlayersDeleteEntity(args ...interface{}) {
-	player := args[0].(*game.Player)
+	player := args[0].(*ospokemon.Player)
 	entity := player.GetEntity()
 	universe, _ := query.GetUniverse(entity.UniverseId)
 	universe.Remove(entity)

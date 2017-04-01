@@ -1,13 +1,13 @@
 package query
 
 import (
+	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/game"
 	"ospokemon.com/log"
 	"ospokemon.com/space"
 )
 
-func PlayersInsert(player *game.Player) error {
+func PlayersInsert(player *ospokemon.Player) error {
 	entity := player.GetEntity()
 	r := entity.Shape.(*space.Rect)
 	_, err := Connection.Exec(
@@ -26,7 +26,7 @@ func PlayersInsert(player *game.Player) error {
 	if err == nil {
 		log.Add("Username", player.Username).Info("players insert")
 
-		delete(game.Players, player.Username)
+		delete(ospokemon.Players, player.Username)
 		event.Fire(event.PlayersInsert, player)
 	}
 

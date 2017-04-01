@@ -1,11 +1,11 @@
 package query
 
 import (
-	"ospokemon.com/game"
+	"ospokemon.com"
 	"ospokemon.com/log"
 )
 
-func BindingsMovementsPlayersInsert(player *game.Player, movements map[string]string) error {
+func BindingsMovementsPlayersInsert(player *ospokemon.Player, movements map[string]string) error {
 	for key, direction := range movements {
 		_, err := Connection.Exec(
 			"INSERT INTO bindings_movements_players (username, key, direction) VALUES (?, ?, ?)",

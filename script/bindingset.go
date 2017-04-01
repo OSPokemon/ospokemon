@@ -2,15 +2,15 @@ package script
 
 import (
 	"errors"
-	"ospokemon.com/game"
+	"ospokemon.com"
 	"strconv"
 )
 
 func init() {
-	game.Scripts["bindingset"] = BindingSet
+	ospokemon.Scripts["bindingset"] = BindingSet
 }
 
-func BindingSet(e *game.Entity, data map[string]interface{}) error {
+func BindingSet(e *ospokemon.Entity, data map[string]interface{}) error {
 	bindings := e.GetBindings()
 	if bindings == nil {
 		return errors.New("bindingset: bindings missing")

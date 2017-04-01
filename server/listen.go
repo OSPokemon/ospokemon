@@ -2,7 +2,7 @@ package server
 
 import (
 	"golang.org/x/net/websocket"
-	"ospokemon.com/game"
+	"ospokemon.com"
 	"ospokemon.com/log"
 	"ospokemon.com/option"
 	"ospokemon.com/query"
@@ -18,16 +18,16 @@ func Listen(s *Session) {
 				log.Warn(err.Error())
 			}
 
-			if account := game.Accounts[s.Username]; !option.Bool("allow-refresh") && account != nil {
+			if account := ospokemon.Accounts[s.Username]; !option.Bool("allow-refresh") && account != nil {
 				query.AccountsDelete(account)
 				query.AccountsInsert(account)
 			}
 
 			s.Websocket.Close()
 
-			if player := game.Players[s.Username]; player != nil {
+			if player := ospokemon.Players[s.Username]; player != nil {
 				entity := player.GetEntity()
-				universe := game.Multiverse[entity.UniverseId]
+				universe := ospokemon.Multiverse[entity.UniverseId]
 
 				universe.Remove(entity)
 			}

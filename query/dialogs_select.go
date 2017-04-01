@@ -1,11 +1,11 @@
 package query
 
 import (
-	"ospokemon.com/game"
+	"ospokemon.com"
 	"ospokemon.com/log"
 )
 
-func DialogsSelect(universe *game.Universe) (map[uint]*game.Dialog, error) {
+func DialogsSelect(universe *ospokemon.Universe) (map[uint]*ospokemon.Dialog, error) {
 	rows, err := Connection.Query(
 		"SELECT entity, id, parent, lead, text, script FROM dialogs WHERE universe=?",
 		universe.Id,
@@ -14,16 +14,16 @@ func DialogsSelect(universe *game.Universe) (map[uint]*game.Dialog, error) {
 		return nil, err
 	}
 
-	dialogs := make(map[uint]map[uint]*game.Dialog)
+	dialogs := make(map[uint]map[uint]*ospokemon.Dialog)
 	for rows.Next() {
 		var entityId uint
-		dialog := game.MakeDialog()
+		dialog := ospokemon.MakeDialog()
 		if err = rows.Scan(&entityId, &dialog.Id, &dialog.Parent, &dialog.Lead, &dialog.Text, &dialog.Script); err != nil {
 			return nil, err
 		}
 
 		if dialogs[entityId] == nil {
-			dialogs[entityId] = make(map[uint]*game.Dialog)
+			dialogs[entityId] = make(map[uint]*ospokemon.Dialog)
 		}
 		dialogs[entityId][dialog.Id] = dialog
 	}
@@ -55,7 +55,7 @@ func DialogsSelect(universe *game.Universe) (map[uint]*game.Dialog, error) {
 		}
 	}
 
-	compiledDialogs := make(map[uint]*game.Dialog)
+	compiledDialogs := make(map[uint]*ospokemon.Dialog)
 	for entityId, entityDialogs := range dialogs {
 		compiledDialogs[entityId] = entityDialogs[0]
 	}

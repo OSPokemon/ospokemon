@@ -1,11 +1,11 @@
 package query
 
 import (
-	"ospokemon.com/game"
+	"ospokemon.com"
 )
 
-func GetPlayer(username string) (*game.Player, error) {
-	if player, ok := game.Players[username]; ok {
+func GetPlayer(username string) (*ospokemon.Player, error) {
+	if player, ok := ospokemon.Players[username]; ok {
 		return player, nil
 	}
 

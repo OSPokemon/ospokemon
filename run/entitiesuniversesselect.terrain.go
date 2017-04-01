@@ -1,8 +1,8 @@
 package run
 
 import (
+	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/game"
 	"ospokemon.com/log"
 	"ospokemon.com/query"
 )
@@ -12,8 +12,8 @@ func init() {
 }
 
 func EntitiesUniversesSelectTerrain(args ...interface{}) {
-	entities := args[0].(map[uint]*game.Entity)
-	universe := args[1].(*game.Universe)
+	entities := args[0].(map[uint]*ospokemon.Entity)
+	universe := args[1].(*ospokemon.Universe)
 	terrains, err := query.EntitiesTerrainsSelect(universe)
 
 	if err != nil {
@@ -24,7 +24,7 @@ func EntitiesUniversesSelectTerrain(args ...interface{}) {
 		entity := entities[entityId]
 		entity.AddPart(terrain)
 
-		imaging := game.MakeImaging()
+		imaging := ospokemon.MakeImaging()
 		imaging.Image = terrain.Image
 		entity.AddPart(imaging)
 	}

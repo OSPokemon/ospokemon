@@ -1,8 +1,8 @@
 package run
 
 import (
+	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/game"
 	"ospokemon.com/log"
 	"ospokemon.com/query"
 )
@@ -12,8 +12,8 @@ func init() {
 }
 
 func ActionsPlayersInsertBindings(args ...interface{}) {
-	player := args[0].(*game.Player)
-	actions := args[1].(game.Actions)
+	player := args[0].(*ospokemon.Player)
+	actions := args[1].(ospokemon.Actions)
 
 	insert := make(map[string]uint)
 	for _, action := range actions {

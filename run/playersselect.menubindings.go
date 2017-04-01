@@ -1,8 +1,8 @@
 package run
 
 import (
+	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/game"
 	"ospokemon.com/log"
 	"ospokemon.com/query"
 )
@@ -12,7 +12,7 @@ func init() {
 }
 
 func PlayersSelectMenuBindings(args ...interface{}) {
-	player := args[0].(*game.Player)
+	player := args[0].(*ospokemon.Player)
 
 	mquery, err := query.BindingsMenusPlayersSelect(player)
 
@@ -25,12 +25,12 @@ func PlayersSelectMenuBindings(args ...interface{}) {
 
 	if mquery != nil {
 		for key, menu := range mquery {
-			binding := game.MakeBinding()
+			binding := ospokemon.MakeBinding()
 			binding.Key = key
 
-			binding.AddPart(game.Menu(menu))
+			binding.AddPart(ospokemon.Menu(menu))
 
-			imaging := game.MakeImaging()
+			imaging := ospokemon.MakeImaging()
 			imaging.Image = "/img/ui/menu/" + menu + ".png"
 			binding.AddPart(imaging)
 

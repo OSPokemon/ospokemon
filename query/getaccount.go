@@ -1,17 +1,17 @@
 package query
 
 import (
-	"ospokemon.com/game"
+	"ospokemon.com"
 )
 
-func GetAccount(username string) (*game.Account, error) {
-	if game.Accounts[username] == nil {
+func GetAccount(username string) (*ospokemon.Account, error) {
+	if ospokemon.Accounts[username] == nil {
 		if a, err := AccountsSelect(username); a != nil {
-			game.Accounts[username] = a
+			ospokemon.Accounts[username] = a
 		} else {
 			return nil, err
 		}
 	}
 
-	return game.Accounts[username], nil
+	return ospokemon.Accounts[username], nil
 }

@@ -1,11 +1,11 @@
 package query
 
 import (
-	"ospokemon.com/game"
+	"ospokemon.com"
 	"ospokemon.com/log"
 )
 
-func EntitiesTerrainsSelect(universe *game.Universe) (map[uint]*game.Terrain, error) {
+func EntitiesTerrainsSelect(universe *ospokemon.Universe) (map[uint]*ospokemon.Terrain, error) {
 	rows, err := Connection.Query(
 		"SELECT entity, terrain FROM entities_terrains WHERE universe=?",
 		universe.Id,
@@ -14,7 +14,7 @@ func EntitiesTerrainsSelect(universe *game.Universe) (map[uint]*game.Terrain, er
 		return nil, err
 	}
 
-	terrains := make(map[uint]*game.Terrain)
+	terrains := make(map[uint]*ospokemon.Terrain)
 
 	for rows.Next() {
 		var entityId, terrainbuff uint

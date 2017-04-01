@@ -1,8 +1,8 @@
 package run
 
 import (
+	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/game"
 	"ospokemon.com/log"
 	"ospokemon.com/query"
 )
@@ -12,8 +12,8 @@ func init() {
 }
 
 func EntitiesUniversesSelectDialogs(args ...interface{}) {
-	entities := args[0].(map[uint]*game.Entity)
-	universe := args[1].(*game.Universe)
+	entities := args[0].(map[uint]*ospokemon.Entity)
+	universe := args[1].(*ospokemon.Universe)
 	dialogs, err := query.DialogsSelect(universe)
 
 	if err != nil {

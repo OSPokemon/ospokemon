@@ -2,13 +2,13 @@ package server
 
 import (
 	"net/http"
-	"ospokemon.com/game"
+	"ospokemon.com"
 	"ospokemon.com/query"
 )
 
 var LogoutHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	if s := readsession(r); s != nil {
-		account := game.Accounts[s.Username]
+		account := ospokemon.Accounts[s.Username]
 		query.AccountsDelete(account)
 		query.AccountsInsert(account)
 

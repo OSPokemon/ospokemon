@@ -1,8 +1,8 @@
 package run
 
 import (
+	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/game"
 	"ospokemon.com/log"
 	"ospokemon.com/query"
 )
@@ -12,7 +12,7 @@ func init() {
 }
 
 func PlayersSelectItembag(args ...interface{}) {
-	player := args[0].(*game.Player)
+	player := args[0].(*ospokemon.Player)
 	itembag, err := query.ItembagsPlayersSelect(player)
 
 	if err != nil {

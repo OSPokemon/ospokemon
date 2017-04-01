@@ -1,17 +1,17 @@
 package query
 
 import (
-	"ospokemon.com/game"
+	"ospokemon.com"
 	"ospokemon.com/log"
 )
 
-func TypesSelect(id uint) (*game.Type, error) {
+func TypesSelect(id uint) (*ospokemon.Type, error) {
 	row := Connection.QueryRow(
 		"SELECT image FROM types WHERE id=?",
 		id,
 	)
 
-	t := game.MakeType(id)
+	t := ospokemon.MakeType(id)
 	err := row.Scan(&t.Image)
 
 	if err != nil {
@@ -37,7 +37,7 @@ func TypesSelect(id uint) (*game.Type, error) {
 	}
 	rows.Close()
 
-	game.Types[id] = t
+	ospokemon.Types[id] = t
 
 	log.Add("Type", id).Info("types select")
 

@@ -1,12 +1,12 @@
 package query
 
 import (
+	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/game"
 	"ospokemon.com/log"
 )
 
-func AccountsDelete(account *game.Account) error {
+func AccountsDelete(account *ospokemon.Account) error {
 	_, err := Connection.Exec("DELETE FROM accounts WHERE username=?", account.Username)
 
 	if err == nil {

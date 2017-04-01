@@ -1,17 +1,17 @@
 package query
 
 import (
-	"ospokemon.com/game"
+	"ospokemon.com"
 	"ospokemon.com/log"
 )
 
-func SpeciesSelect(id uint) (*game.Species, error) {
+func SpeciesSelect(id uint) (*ospokemon.Species, error) {
 	row := Connection.QueryRow(
 		"SELECT name, genderratio, catchfactor, hatchsteps, height, width, xpfunc FROM species WHERE id=?",
 		id,
 	)
 
-	species := game.MakeSpecies(id)
+	species := ospokemon.MakeSpecies(id)
 
 	var genderratiobuff float64
 	err := row.Scan(

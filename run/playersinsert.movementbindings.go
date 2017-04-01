@@ -1,8 +1,8 @@
 package run
 
 import (
+	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/game"
 	"ospokemon.com/log"
 	"ospokemon.com/query"
 )
@@ -12,13 +12,13 @@ func init() {
 }
 
 func PlayersInsertMovementBindings(args ...interface{}) {
-	player := args[0].(*game.Player)
+	player := args[0].(*ospokemon.Player)
 	bindings := player.GetBindings()
 
 	if len(bindings) < 1 {
-		bindings = make(game.Bindings)
+		bindings = make(ospokemon.Bindings)
 
-		movementbindings := map[string]game.Walk{
+		movementbindings := map[string]ospokemon.Walk{
 			"a": "left",
 			"s": "down",
 			"d": "right",
@@ -26,7 +26,7 @@ func PlayersInsertMovementBindings(args ...interface{}) {
 		}
 
 		for key, direction := range movementbindings {
-			binding := game.MakeBinding()
+			binding := ospokemon.MakeBinding()
 			binding.Key = key
 			binding.AddPart(direction)
 			bindings[binding.Key] = binding

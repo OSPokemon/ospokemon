@@ -1,8 +1,8 @@
 package run
 
 import (
+	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/game"
 	"ospokemon.com/log"
 	"ospokemon.com/query"
 )
@@ -12,11 +12,11 @@ func init() {
 }
 
 func PlayersInsertItembag(args ...interface{}) {
-	player := args[0].(*game.Player)
+	player := args[0].(*ospokemon.Player)
 	itembag := player.GetItembag()
 
 	if itembag == nil {
-		itembag = game.MakeItembag(player.BagSize)
+		itembag = ospokemon.MakeItembag(player.BagSize)
 		log.Add("Username", player.Username).Debug("players insert itembag: grant empty bag")
 	}
 

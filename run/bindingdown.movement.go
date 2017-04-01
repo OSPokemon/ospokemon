@@ -1,8 +1,8 @@
 package run
 
 import (
+	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/game"
 )
 
 func init() {
@@ -10,8 +10,8 @@ func init() {
 }
 
 func BindingDownMovement(args ...interface{}) {
-	player := args[0].(*game.Player)
-	bindings := args[1].(*game.Binding)
+	player := args[0].(*ospokemon.Player)
+	bindings := args[1].(*ospokemon.Binding)
 
 	movement := player.GetMovement()
 

@@ -1,8 +1,8 @@
 package run
 
 import (
+	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/game"
 	"ospokemon.com/log"
 	"ospokemon.com/query"
 )
@@ -12,13 +12,13 @@ func init() {
 }
 
 func PlayersInsertMenuBindings(args ...interface{}) {
-	player := args[0].(*game.Player)
+	player := args[0].(*ospokemon.Player)
 	bindings := player.GetBindings()
 
 	if len(bindings) < 1 {
-		bindings = make(game.Bindings)
+		bindings = make(ospokemon.Bindings)
 
-		menubindings := map[string]game.Menu{
+		menubindings := map[string]ospokemon.Menu{
 			"Enter":  "chat",
 			"c":      "player",
 			"b":      "itembag",
@@ -27,7 +27,7 @@ func PlayersInsertMenuBindings(args ...interface{}) {
 		}
 
 		for key, menu := range menubindings {
-			binding := game.MakeBinding()
+			binding := ospokemon.MakeBinding()
 			binding.Key = key
 			binding.AddPart(menu)
 			bindings[binding.Key] = binding

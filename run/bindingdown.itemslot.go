@@ -1,8 +1,8 @@
 package run
 
 import (
+	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/game"
 	"ospokemon.com/log"
 )
 
@@ -11,8 +11,8 @@ func init() {
 }
 
 func BindingDownItemslot(args ...interface{}) {
-	player := args[0].(*game.Player)
-	binding := args[1].(*game.Binding)
+	player := args[0].(*ospokemon.Player)
+	binding := args[1].(*ospokemon.Binding)
 
 	itemslot := binding.GetItemslot()
 	if itemslot == nil {
