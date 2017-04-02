@@ -8,7 +8,7 @@ type Terrain struct {
 	Image     string
 }
 
-var Terrains = make(map[uint]*Terrain)
+var terrains = make(map[uint]*Terrain)
 
 type TerrainLink uint
 
@@ -27,4 +27,21 @@ func (t *Terrain) Part() string {
 func (parts Parts) GetTerrain() *Terrain {
 	terrain, _ := parts[PARTterrain].(*Terrain)
 	return terrain
+}
+
+func GetTerrain(id uint) (*Terrain, error) {
+	if terrains[id] == nil {
+		if t, err := Terrains.Select(id); err == nil {
+			terrains[id] = t
+		} else {
+			return nil, err
+		}
+	}
+
+	return terrains[id], nil
+}
+
+// persistence headers
+var Terrains struct {
+	Select func(uint) (*Terrain, error)
 }

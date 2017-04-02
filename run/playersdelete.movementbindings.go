@@ -4,7 +4,7 @@ import (
 	"ospokemon.com"
 	"ospokemon.com/event"
 	"ospokemon.com/log"
-	"ospokemon.com/query"
+	"ospokemon.com/persistence"
 )
 
 func init() {
@@ -13,7 +13,7 @@ func init() {
 
 func PlayersDeleteMovementBindings(args ...interface{}) {
 	player := args[0].(*ospokemon.Player)
-	err := query.BindingsMovementsPlayersDelete(player)
+	err := persistence.BindingsMovementsPlayersDelete(player)
 
 	if err != nil {
 		log.Add("Player", player.Username).Add("Error", err.Error()).Error("players delete movementbindings")

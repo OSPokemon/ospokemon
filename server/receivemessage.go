@@ -11,7 +11,7 @@ import (
 )
 
 func ReceiveMessage(s *Session, m *WebsocketMessage) {
-	p := ospokemon.Players[s.Username]
+	p, _ := ospokemon.GetPlayer(s.Username)
 
 	s.Refresh()
 

@@ -2,7 +2,6 @@ package server
 
 import (
 	"ospokemon.com"
-	"ospokemon.com/query"
 	"time"
 )
 
@@ -10,11 +9,11 @@ func PollSessionExpire() {
 	for now := range time.Tick(1 * time.Second) {
 		for _, s := range Sessions {
 			if s.Expire.Before(now) {
-				account := ospokemon.Accounts[s.Username]
+				account, _ := ospokemon.GetAccount(s.Username)
 
 				if account != nil {
-					query.AccountsDelete(account)
-					query.AccountsInsert(account)
+					ospokemon.Accounts.Delete(account)
+					ospokemon.Accounts.Insert(account)
 				}
 
 				if s.Websocket != nil {

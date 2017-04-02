@@ -5,7 +5,6 @@ import (
 	"ospokemon.com"
 	"ospokemon.com/log"
 	"ospokemon.com/option"
-	"ospokemon.com/query"
 )
 
 func Listen(s *Session) {
@@ -18,14 +17,14 @@ func Listen(s *Session) {
 				log.Warn(err.Error())
 			}
 
-			if account := ospokemon.Accounts[s.Username]; !option.Bool("allow-refresh") && account != nil {
-				query.AccountsDelete(account)
-				query.AccountsInsert(account)
+			if account, _ := ospokemon.GetAccount(s.Username); !option.Bool("allow-refresh") && account != nil {
+				ospokemon.Accounts.Delete(account)
+				ospokemon.Accounts.Insert(account)
 			}
 
 			s.Websocket.Close()
 
-			if player := ospokemon.Players[s.Username]; player != nil {
+			if player, _ := ospokemon.GetPlayer(s.Username); player != nil {
 				entity := player.GetEntity()
 				universe := ospokemon.Multiverse[entity.UniverseId]
 

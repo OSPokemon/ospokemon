@@ -11,7 +11,6 @@ const ActionCast = "ospokemon.ActionCast"
 const UniverseAdd = "ospokemon.Universe.Add"
 const UniverseRemove = "ospokemon.Universe.Remove"
 
-const AccountsSelect = "query.AccountsSelect"
 const AccountsInsert = "query.AccountsInsert"
 const AccountsDelete = "query.AccountsDelete"
 

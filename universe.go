@@ -81,3 +81,19 @@ func (u *Universe) Remove(e *Entity) {
 }
 
 var Multiverse = make(map[uint]*Universe)
+
+func GetUniverse(id uint) (*Universe, error) {
+	if Multiverse[id] == nil {
+		if m, err := Universes.Select(id); err == nil {
+			Multiverse[id] = m
+		} else {
+			return nil, err
+		}
+	}
+
+	return Multiverse[id], nil
+}
+
+var Universes struct {
+	Select func(uint) (*Universe, error)
+}

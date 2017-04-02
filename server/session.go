@@ -35,7 +35,7 @@ func (s *Session) Part() string {
 }
 
 func (s *Session) Update(u *ospokemon.Universe, e *ospokemon.Entity, d time.Duration) {
-	player := ospokemon.Players[s.Username]
+	player, _ := ospokemon.GetPlayer(s.Username)
 	if player == nil {
 		return
 	}

@@ -4,7 +4,7 @@ import (
 	"ospokemon.com"
 	"ospokemon.com/event"
 	"ospokemon.com/log"
-	"ospokemon.com/query"
+	"ospokemon.com/persistence"
 )
 
 func init() {
@@ -23,7 +23,7 @@ func PlayersInsertStats(args ...interface{}) {
 		log.Add("Username", player.Username).Debug("players insert stats: grant default stats")
 	}
 
-	err := query.PlayersStatsInsert(player, stats)
+	err := persistence.PlayersStatsInsert(player, stats)
 
 	if err != nil {
 		log.Add("Username", player.Username).Add("Stats", stats).Add("Error", err.Error()).Error("players insert stats")

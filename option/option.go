@@ -77,7 +77,7 @@ func readfile(path string) error {
 
 		setting := strings.Split(line, "=")
 		if options[setting[0]] == nil {
-			log.Add("Setting", setting).Warn("Setting name not recognized")
+			log.Add("Setting", setting[0]).Add("Value", setting[1]).Warn("option: name not recognized")
 			continue
 		}
 		if len(setting) == 2 {

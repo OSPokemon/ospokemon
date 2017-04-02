@@ -4,7 +4,7 @@ import (
 	"ospokemon.com"
 	"ospokemon.com/event"
 	"ospokemon.com/log"
-	"ospokemon.com/query"
+	"ospokemon.com/persistence"
 	"ospokemon.com/space"
 )
 
@@ -15,7 +15,7 @@ func init() {
 func EntitiesUniversesSelectItemslots(args ...interface{}) {
 	entities := args[0].(map[uint]*ospokemon.Entity)
 	universe := args[1].(*ospokemon.Universe)
-	itemslots, err := query.EntitiesItemsSelect(universe)
+	itemslots, err := persistence.EntitiesItemsSelect(universe)
 
 	if err != nil {
 		log.Add("Universe", universe.Id).Add("Error", err.Error()).Error("run.EntitiesUniversesSelectItemslots")

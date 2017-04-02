@@ -3,7 +3,6 @@ package script
 import (
 	"errors"
 	"ospokemon.com"
-	"ospokemon.com/query"
 	"strconv"
 )
 
@@ -30,12 +29,12 @@ func ItemChange(e *ospokemon.Entity, data map[string]interface{}) error {
 		item = data_item
 		break
 	case uint:
-		item, err = query.GetItem(data_item)
+		item, err = ospokemon.GetItem(data_item)
 		break
 	case string:
 		itemid64, err := strconv.ParseUint(data_item, 10, 0)
 		if err == nil {
-			item, err = query.GetItem(uint(itemid64))
+			item, err = ospokemon.GetItem(uint(itemid64))
 		}
 		break
 	default:

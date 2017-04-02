@@ -1,1 +1,1 @@
-package ospokemon // import "ospokemon.com/ospokemon"
+package main // import "ospokemon.com/ospokemon"

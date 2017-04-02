@@ -4,7 +4,7 @@ import (
 	"ospokemon.com"
 	"ospokemon.com/event"
 	"ospokemon.com/log"
-	"ospokemon.com/query"
+	"ospokemon.com/persistence"
 )
 
 func init() {
@@ -14,7 +14,7 @@ func init() {
 func PlayersSelectStats(args ...interface{}) {
 	player := args[0].(*ospokemon.Player)
 
-	stats, err := query.PlayersStatsSelect(player)
+	stats, err := persistence.PlayersStatsSelect(player)
 
 	if err != nil {
 		log.Add("Username", player.Username).Add("Error", err.Error()).Error("players select stats")

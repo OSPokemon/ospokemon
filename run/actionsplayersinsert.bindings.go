@@ -4,7 +4,7 @@ import (
 	"ospokemon.com"
 	"ospokemon.com/event"
 	"ospokemon.com/log"
-	"ospokemon.com/query"
+	"ospokemon.com/persistence"
 )
 
 func init() {
@@ -22,7 +22,7 @@ func ActionsPlayersInsertBindings(args ...interface{}) {
 		}
 	}
 
-	err := query.ActionsBindingsPlayersInsert(player, insert)
+	err := persistence.ActionsBindingsPlayersInsert(player, insert)
 
 	if err != nil {
 		log.Add("player", player.Username).Add("Error", err.Error()).Error("actions players insert bindings")

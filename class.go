@@ -10,7 +10,7 @@ type Class struct {
 	Animations map[string]string
 }
 
-var Classes = make(map[uint]*Class)
+var classes = make(map[uint]*Class)
 
 func MakeClass(id uint) *Class {
 	c := &Class{
@@ -20,4 +20,21 @@ func MakeClass(id uint) *Class {
 	}
 
 	return c
+}
+
+func GetClass(id uint) (*Class, error) {
+	if classes[id] == nil {
+		if c, err := Classes.Select(id); err == nil {
+			classes[id] = c
+		} else {
+			return nil, err
+		}
+	}
+
+	return classes[id], nil
+}
+
+// persistence headers
+var Classes struct {
+	Select func(uint) (*Class, error)
 }

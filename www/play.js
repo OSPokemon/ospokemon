@@ -115,7 +115,13 @@ ospokemon.event = {
 	}
 }
 
-ospokemon.websocket = new WebSocket('ws://' + window.location.host + '/api/websocket')
+var websocketAddress = 'ws'
+if (window.location.protocol.includes('s')) {
+	websocketAddress += 's'
+}
+websocketAddress += '://' + window.location.host + '/api/websocket'
+console.log(websocketAddress)
+ospokemon.websocket = new WebSocket("ws://" + window.location.host + "/api/websocket")
 
 ospokemon.websocket.onmessage = function (e) {
 	var data = JSON.parse(e.data)

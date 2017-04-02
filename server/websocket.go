@@ -2,14 +2,15 @@ package server
 
 import (
 	"golang.org/x/net/websocket"
+	"ospokemon.com"
 	"ospokemon.com/log"
-	"ospokemon.com/query"
 )
 
 var WebsocketHandler = websocket.Handler(func(conn *websocket.Conn) {
 	s := readsession(conn.Request())
 
 	if s == nil {
+		log.Add("RemoteAddr", conn.Request().RemoteAddr).Debug("websocket: session error")
 		return
 	}
 
@@ -18,10 +19,9 @@ var WebsocketHandler = websocket.Handler(func(conn *websocket.Conn) {
 
 	s.Websocket = conn
 
-	p, err := query.GetPlayer(s.Username)
-
+	p, err := ospokemon.GetPlayer(s.Username)
 	if err != nil {
-		log.Add("Username", s.Username).Add("Error", err.Error()).Error("WebsocketHandler")
+		log.Add("Username", s.Username).Add("Error", err.Error()).Error("websocket: player error")
 		return
 	}
 
@@ -29,8 +29,8 @@ var WebsocketHandler = websocket.Handler(func(conn *websocket.Conn) {
 
 	e := p.GetEntity()
 
-	if u, err := query.GetUniverse(e.UniverseId); err != nil {
-		log.Add("Universe", e.UniverseId).Add("Error", err.Error()).Error("WebsocketHandler")
+	if u, err := ospokemon.GetUniverse(e.UniverseId); err != nil {
+		log.Add("Universe", e.UniverseId).Add("Error", err.Error()).Error("websocket: universe error")
 	} else {
 		u.Add(e)
 		Listen(s)

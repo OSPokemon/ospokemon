@@ -4,7 +4,7 @@ import (
 	"ospokemon.com"
 	"ospokemon.com/event"
 	"ospokemon.com/log"
-	"ospokemon.com/query"
+	"ospokemon.com/persistence"
 )
 
 func init() {
@@ -14,7 +14,7 @@ func init() {
 func PlayersSelectMenuBindings(args ...interface{}) {
 	player := args[0].(*ospokemon.Player)
 
-	mquery, err := query.BindingsMenusPlayersSelect(player)
+	mquery, err := persistence.BindingsMenusPlayersSelect(player)
 
 	if err != nil {
 		log.Add("Username", player.Username).Add("Error", err.Error()).Error("players select menubindings")

@@ -4,7 +4,7 @@ import (
 	"ospokemon.com"
 	"ospokemon.com/event"
 	"ospokemon.com/log"
-	"ospokemon.com/query"
+	"ospokemon.com/persistence"
 )
 
 func init() {
@@ -15,7 +15,7 @@ func ItembagsPlayersSelectBindings(args ...interface{}) {
 	player := args[0].(*ospokemon.Player)
 	itembag := args[1].(*ospokemon.Itembag)
 
-	bquery, err := query.BindingsItemsPlayersSelect(player)
+	bquery, err := persistence.BindingsItemsPlayersSelect(player)
 
 	if err != nil {
 		log.Add("Username", player.Username).Add("Error", err.Error()).Error("itembags players select bindings")

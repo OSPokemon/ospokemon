@@ -13,7 +13,7 @@ type Spell struct {
 	Scripter
 }
 
-var Spells = make(map[uint]*Spell)
+var spells = make(map[uint]*Spell)
 
 func MakeSpell() *Spell {
 	return &Spell{
@@ -29,4 +29,21 @@ func (s *Spell) Json() json.Json {
 		"cooldown":   s.Cooldown,
 		"animations": s.Animations,
 	}
+}
+
+func GetSpell(id uint) (*Spell, error) {
+	if spells[id] == nil {
+		if s, err := Spells.Select(id); s != nil {
+			spells[id] = s
+		} else {
+			return nil, err
+		}
+	}
+
+	return spells[id], nil
+}
+
+// persistence headers
+var Spells struct {
+	Select func(uint) (*Spell, error)
 }

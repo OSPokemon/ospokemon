@@ -10,6 +10,7 @@ func init() {
 	event.On(event.AccountsDelete, func(args ...interface{}) {
 		account := args[0].(*ospokemon.Account)
 		session := account.Parts[server.PARTsession].(*server.Session)
+		account.RemovePart(session)
 		delete(server.Sessions, session.SessionId)
 	})
 }

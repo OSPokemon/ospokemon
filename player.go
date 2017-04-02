@@ -19,7 +19,7 @@ type Player struct {
 	Parts
 }
 
-var Players = make(map[string]*Player)
+var players = make(map[string]*Player)
 
 func MakePlayer() *Player {
 	return &Player{
@@ -65,4 +65,23 @@ func (player *Player) Json() json.Json {
 		"username": player.Username,
 		"level":    player.Level,
 	}
+}
+
+func GetPlayer(username string) (*Player, error) {
+	if players[username] == nil {
+		if p, err := Players.Select(username); err == nil {
+			players[username] = p
+		} else {
+			return nil, err
+		}
+	}
+
+	return players[username], nil
+}
+
+// persistence headers
+var Players struct {
+	Select func(string) (*Player, error)
+	Insert func(*Player) error
+	Delete func(*Player) error
 }
