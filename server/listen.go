@@ -17,7 +17,8 @@ func Listen(s *Session) {
 				log.Warn(err.Error())
 			}
 
-			if account, _ := ospokemon.GetAccount(s.Username); !option.Bool("allow-refresh") && account != nil {
+			account, _ := ospokemon.GetAccount(s.Username)
+			if !option.Bool("allow-refresh") && account != nil && account.Parts[PARTsession] != nil {
 				ospokemon.Accounts.Delete(account)
 				ospokemon.Accounts.Insert(account)
 			}
