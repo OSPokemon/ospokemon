@@ -15,8 +15,13 @@ var LogoutHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request
 			return
 		}
 
-		ospokemon.Accounts.Delete(account)
-		ospokemon.Accounts.Insert(account)
+		accountSession, _ := account.Parts[PARTsession].(*Session)
+		if accountSession != nil {
+			ospokemon.Accounts.Delete(account)
+			ospokemon.Accounts.Insert(account)
+		} else {
+			log.Add("SessionId", s.SessionId).Warn("logout: session already expired")
+		}
 
 		w.Header().Set("Set-Cookie", "SessionId=0; Path=/;")
 		http.Redirect(w, r, "/login/#"+s.Username, 307)
