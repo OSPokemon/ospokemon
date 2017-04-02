@@ -120,8 +120,7 @@ if (window.location.protocol.includes('s')) {
 	websocketAddress += 's'
 }
 websocketAddress += '://' + window.location.host + '/api/websocket'
-console.log(websocketAddress)
-ospokemon.websocket = new WebSocket("ws://" + window.location.host + "/api/websocket")
+ospokemon.websocket = new WebSocket(websocketAddress)
 
 ospokemon.websocket.onmessage = function (e) {
 	var data = JSON.parse(e.data)
