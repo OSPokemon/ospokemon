@@ -28,6 +28,9 @@ func ItemChange(e *ospokemon.Entity, data map[string]interface{}) error {
 	case *ospokemon.Item:
 		item = data_item
 		break
+	case int:
+		item, err = ospokemon.GetItem(uint(data_item))
+		break
 	case uint:
 		item, err = ospokemon.GetItem(data_item)
 		break

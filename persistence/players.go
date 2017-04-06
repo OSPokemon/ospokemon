@@ -15,16 +15,16 @@ func init() {
 
 func PlayersSelect(username string) (*ospokemon.Player, error) {
 	row := Connection.QueryRow(
-		"SELECT level, experience, money, class, bagsize, universe, x, y FROM players WHERE username=?",
+		"SELECT level, experience, money, class, universe, x, y FROM players WHERE username=?",
 		username,
 	)
 
-	var levelbuff, experiencebuff, moneybuff, classbuff, bagsizebuff uint
+	var levelbuff, experiencebuff, moneybuff, classbuff uint
 
 	entity := ospokemon.MakeEntity()
 	r := entity.Shape.(*space.Rect)
 
-	err := row.Scan(&levelbuff, &experiencebuff, &moneybuff, &classbuff, &bagsizebuff, &entity.UniverseId, &r.Anchor.X, &r.Anchor.Y)
+	err := row.Scan(&levelbuff, &experiencebuff, &moneybuff, &classbuff, &entity.UniverseId, &r.Anchor.X, &r.Anchor.Y)
 	if err != nil {
 		return nil, err
 	}
@@ -34,7 +34,7 @@ func PlayersSelect(username string) (*ospokemon.Player, error) {
 		return nil, err
 	}
 
-	player := ospokemon.BuildPlayer(username, bagsizebuff, class, entity)
+	player := ospokemon.BuildPlayer(username, class, entity)
 	player.Level = levelbuff
 	player.Experience = experiencebuff
 	player.Money = moneybuff
@@ -50,13 +50,12 @@ func PlayersInsert(player *ospokemon.Player) error {
 	entity := player.GetEntity()
 	r := entity.Shape.(*space.Rect)
 	_, err := Connection.Exec(
-		"INSERT INTO players (username, level, experience, money, class, bagsize, universe, x, y) values (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		"INSERT INTO players (username, level, experience, money, class, universe, x, y) values (?, ?, ?, ?, ?, ?, ?, ?)",
 		player.Username,
 		player.Level,
 		player.Experience,
 		player.Money,
 		player.Class,
-		player.BagSize,
 		entity.UniverseId,
 		r.Anchor.X,
 		r.Anchor.Y,

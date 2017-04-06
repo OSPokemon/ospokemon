@@ -18,7 +18,7 @@ var spells = make(map[uint]*Spell)
 func MakeSpell() *Spell {
 	return &Spell{
 		Animations: make(map[string]string),
-		Scripter:   MakeScripter(),
+		Scripter:   *MakeScripter(),
 	}
 }
 

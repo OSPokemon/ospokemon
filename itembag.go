@@ -9,13 +9,13 @@ const PARTitembag = "itembag"
 
 type Itembag struct {
 	Timers map[uint]*time.Duration
-	Slots  []*Itemslot
+	Slots  map[uint]*Itemslot
 }
 
-func MakeItembag(size uint) *Itembag {
+func MakeItembag() *Itembag {
 	bag := &Itembag{
 		Timers: make(map[uint]*time.Duration),
-		Slots:  make([]*Itemslot, size),
+		Slots:  make(map[uint]*Itemslot),
 	}
 
 	return bag
@@ -33,51 +33,27 @@ func (parts Parts) GetItembag() *Itembag {
 func (itembag *Itembag) GetItems() map[uint]int {
 	items := make(map[uint]int)
 
-	for _, itemslot := range itembag.Slots {
+	for itemid, itemslot := range itembag.Slots {
 		if itemslot != nil {
-			items[itemslot.Item.Id] = items[itemslot.Item.Id] + itemslot.Amount
+			items[itemid] = itemslot.Amount
 		}
 	}
 
 	return items
 }
 
-func (itembag *Itembag) GetItemslots(itemid uint) []*Itemslot {
-	itemslots := make([]*Itemslot, 0)
-
-	for _, itemslot := range itembag.Slots {
-		if itemslot != nil && itemslot.Item.Id == itemid {
-			itemslots = append(itemslots, itemslot)
-		}
-	}
-
-	return itemslots
-}
-
 func (itembag *Itembag) Add(item *Item, amount int) bool {
-	for _, itemslot := range itembag.GetItemslots(item.Id) {
+	if itembag.GetItems()[item.Id]+amount > item.Stack {
+		return false
+	}
+
+	if itemslot := itembag.Slots[item.Id]; itemslot == nil {
+		itembag.Slots[item.Id] = BuildItemslot(item, amount)
+	} else {
 		itemslot.Amount += amount
-
-		if itemslot.Amount < item.Stack {
-			return true
-		}
-		amount = itemslot.Amount - item.Stack
 	}
 
-	for id, itemslot := range itembag.Slots {
-		if itemslot == nil {
-			itemslot = BuildItemslot(item, amount)
-			itemslot.Id = id
-			itembag.Slots[id] = itemslot
-
-			if itemslot.Amount <= item.Stack {
-				return true
-			}
-			amount = itemslot.Amount - item.Stack
-		}
-	}
-
-	return false
+	return true
 }
 
 func (itembag *Itembag) Remove(item *Item, amount int) bool {
@@ -85,32 +61,21 @@ func (itembag *Itembag) Remove(item *Item, amount int) bool {
 		return false
 	}
 
-	for _, itemslot := range itembag.GetItemslots(item.Id) {
-		itemslot.Amount -= amount
-		amount = 0
+	itemslot := itembag.Slots[item.Id]
+	itemslot.Amount -= amount
 
-		if itemslot.Amount < 1 {
-			amount -= itemslot.Amount
-			itembag.Slots[itemslot.Id] = nil
-		}
-
-		if amount < 1 {
-			return true
-		}
-	}
-
-	return false
+	return true
 }
 
 func (itembag *Itembag) Json() json.Json {
 	data := json.Json{}
 	for id, itemslot := range itembag.Slots {
 		if itemslot == nil {
-			data[json.StringInt(id)] = nil
+			data[json.StringUint(id)] = nil
 		} else {
 			itemslotJson := itemslot.Json()
 			itemslotJson["timer"] = json.FmtDuration(itembag.Timers[itemslot.Item.Id])
-			data[json.StringInt(id)] = itemslotJson
+			data[json.StringUint(id)] = itemslotJson
 		}
 	}
 	return data

@@ -7,15 +7,14 @@ import (
 const PARTitemslot = "itemslot"
 
 type Itemslot struct {
-	Id     int
 	Item   *Item
+	Sort   int
 	Amount int
 	Parts
 }
 
 func MakeItemslot() *Itemslot {
 	itemslot := &Itemslot{
-		Id:    -1,
 		Parts: make(Parts),
 	}
 

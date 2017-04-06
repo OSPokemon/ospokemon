@@ -9,20 +9,20 @@ import (
 
 func ItembagsPlayersSelect(player *ospokemon.Player) (*ospokemon.Itembag, error) {
 	rows, err := Connection.Query(
-		"SELECT pos, item, amount FROM itemslots_players WHERE username=?",
+		"SELECT sort, item, amount FROM itemslots_players WHERE username=?",
 		player.Username,
 	)
 	if err != nil {
 		return nil, err
 	}
 
-	itembag := ospokemon.MakeItembag(player.BagSize)
+	itembag := ospokemon.MakeItembag()
 
 	for rows.Next() {
-		var idbuff, amountbuff int
+		var amountbuff, sortbuff int
 		var itembuff uint
 
-		if err = rows.Scan(&idbuff, &itembuff, &amountbuff); err != nil {
+		if err = rows.Scan(&sortbuff, &itembuff, &amountbuff); err != nil {
 			return itembag, err
 		}
 
@@ -31,9 +31,8 @@ func ItembagsPlayersSelect(player *ospokemon.Player) (*ospokemon.Itembag, error)
 			return itembag, err
 		}
 
-		itemslot := ospokemon.BuildItemslot(item, amountbuff)
-		itemslot.Id = idbuff
-		itembag.Slots[idbuff] = itemslot
+		itembag.Slots[itembuff] = ospokemon.BuildItemslot(item, amountbuff)
+		itembag.Slots[itembuff].Sort = sortbuff
 	}
 	rows.Close()
 
@@ -70,15 +69,15 @@ func ItembagsPlayersSelect(player *ospokemon.Player) (*ospokemon.Itembag, error)
 }
 
 func ItembagsPlayersInsert(player *ospokemon.Player, itembag *ospokemon.Itembag) error {
-	for pos, itemslot := range itembag.Slots {
+	for _, itemslot := range itembag.Slots {
 		if itemslot == nil {
 			continue
 		}
 
 		_, err := Connection.Exec(
-			"INSERT INTO itemslots_players (username, pos, item, amount) VALUES (?, ?, ?, ?)",
+			"INSERT INTO itemslots_players (username, sort, item, amount) VALUES (?, ?, ?, ?)",
 			player.Username,
-			pos,
+			itemslot.Sort,
 			itemslot.Item.Id,
 			itemslot.Amount,
 		)

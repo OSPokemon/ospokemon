@@ -17,12 +17,12 @@ func AccountsInsertPlayer(args ...interface{}) {
 	if player == nil {
 		class, _ := ospokemon.GetClass(0)
 		entity := ospokemon.MakeEntity()
-		player = ospokemon.BuildPlayer(account.Username, ospokemon.DEFAULT_BAG_SIZE, class, entity)
+		player = ospokemon.BuildPlayer(account.Username, class, entity)
 		player.Username = account.Username
 		log.Add("Username", player.Username).Debug("account insert player: grant empty player")
 
 		if err := ospokemon.Players.Insert(player); err != nil {
-			log.Add("Username", player.Username).Add("Error", err.Error()).Error("Account insert player")
+			log.Add("Username", player.Username).Add("Error", err.Error()).Error("accounts insert player")
 		}
 	}
 }

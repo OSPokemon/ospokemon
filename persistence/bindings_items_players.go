@@ -5,9 +5,9 @@ import (
 	"ospokemon.com/log"
 )
 
-func BindingsItemsPlayersSelect(player *ospokemon.Player) (map[string]int, error) {
+func BindingsItemsPlayersSelect(player *ospokemon.Player) (map[string]uint, error) {
 	rows, err := Connection.Query(
-		"SELECT key, itemslot FROM bindings_items_players WHERE username=?",
+		"SELECT key, itemid FROM bindings_items_players WHERE username=?",
 		player.Username,
 	)
 
@@ -15,17 +15,17 @@ func BindingsItemsPlayersSelect(player *ospokemon.Player) (map[string]int, error
 		return nil, err
 	}
 
-	itemslots := make(map[string]int)
+	itemslots := make(map[string]uint)
 
 	for rows.Next() {
 		var keybuff string
-		var itemslot int
+		var itemidbuf uint
 
-		if err = rows.Scan(&keybuff, &itemslot); err != nil {
+		if err = rows.Scan(&keybuff, &itemidbuf); err != nil {
 			return itemslots, err
 		}
 
-		itemslots[keybuff] = itemslot
+		itemslots[keybuff] = itemidbuf
 	}
 	rows.Close()
 
@@ -34,7 +34,7 @@ func BindingsItemsPlayersSelect(player *ospokemon.Player) (map[string]int, error
 	return itemslots, nil
 }
 
-func BindingsItemsPlayersInsert(player *ospokemon.Player, itemslots map[string]int) error {
+func BindingsItemsPlayersInsert(player *ospokemon.Player, itemslots map[string]uint) error {
 	for key, itemslotid := range itemslots {
 		_, err := Connection.Exec(
 			"INSERT INTO bindings_items_players (username, key, itemslot) VALUES (?, ?, ?)",

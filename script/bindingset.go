@@ -52,29 +52,32 @@ func BindingSet(e *ospokemon.Entity, data map[string]interface{}) error {
 		return errors.New("bindingset: actions missing")
 	}
 
-	itemslotid := -1
-	switch data_itemslot := data["itemslot"].(type) {
+	var itemid uint
+	switch data_itemid := data["itemid"].(type) {
 	case int:
-		itemslotid = data_itemslot
+		itemid = uint(data_itemid)
+		break
+	case uint:
+		itemid = data_itemid
 		break
 	case nil:
 		break
 	case string:
-		itemslotidi, err := strconv.Atoi(data_itemslot)
+		itemidi, err := strconv.Atoi(data_itemid)
 		if err != nil {
-			itemslotid = itemslotidi
+			itemid = uint(itemidi)
 			break
 		}
 	case float64:
-		itemslotid = int(data_itemslot)
+		itemid = uint(data_itemid)
 		break
 	default:
 		return errors.New("bindingset: itemslot format")
 	}
 
-	if !(itemslotid < 0) {
+	if !(itemid < 0) {
 		if itembag := e.GetItembag(); itembag != nil {
-			if itemslot := itembag.Slots[itemslotid]; itemslot != nil {
+			if itemslot := itembag.Slots[itemid]; itemslot != nil {
 				bindings.SetItemslot(key, itemslot)
 				return nil
 			}

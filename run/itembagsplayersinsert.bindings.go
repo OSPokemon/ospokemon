@@ -15,7 +15,7 @@ func ItembagsPlayersInsertBindings(args ...interface{}) {
 	player := args[0].(*ospokemon.Player)
 	itembag := args[1].(*ospokemon.Itembag)
 
-	insert := make(map[string]int)
+	insert := make(map[string]uint)
 	for id, itemslot := range itembag.Slots {
 		if itemslot == nil {
 			continue

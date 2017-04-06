@@ -16,7 +16,7 @@ func PlayersInsertItembag(args ...interface{}) {
 	itembag := player.GetItembag()
 
 	if itembag == nil {
-		itembag = ospokemon.MakeItembag(player.BagSize)
+		itembag = ospokemon.MakeItembag()
 		log.Add("Username", player.Username).Debug("players insert itembag: grant empty bag")
 	}
 

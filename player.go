@@ -6,7 +6,6 @@ import (
 	"time"
 )
 
-const DEFAULT_BAG_SIZE = 10
 const PARTplayer = "player"
 
 type Player struct {
@@ -15,7 +14,6 @@ type Player struct {
 	Experience uint
 	Money      uint
 	Class      uint
-	BagSize    uint
 	Parts
 }
 
@@ -27,13 +25,12 @@ func MakePlayer() *Player {
 	}
 }
 
-func BuildPlayer(username string, bagSize uint, class *Class, entity *Entity) *Player {
+func BuildPlayer(username string, class *Class, entity *Entity) *Player {
 	player := MakePlayer()
 	player.Username = username
 	player.Class = class.Id
-	player.BagSize = bagSize
 	player.AddPart(entity)
-	player.AddPart(MakeItembag(bagSize))
+	player.AddPart(MakeItembag())
 	player.AddPart(make(Bindings))
 	player.AddPart(MakeMenus())
 	player.AddPart(&Movement{})
