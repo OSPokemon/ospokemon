@@ -8,7 +8,7 @@ import (
 	"ospokemon.com/server"
 )
 
-const PATCH uint64 = 8
+const PATCH uint64 = 9
 
 func main() {
 	log.Add("Patch", PATCH).Info("OSPokemon")
