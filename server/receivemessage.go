@@ -108,15 +108,20 @@ func dialogchoice(player *ospokemon.Player, m string) {
 
 	if dialog := player.GetDialog(); dialog != nil {
 		if nextDialog := dialog.Next(m); nextDialog != nil {
-
-			if script := ospokemon.Scripts[nextDialog.Script]; script != nil {
-				if err := script(entity, nextDialog.Data); err != nil {
-					log.Add("Player", player.Username).Add("Choice", m).Add("Error", err.Error()).Error("dialog choice")
+			for _, tester := range nextDialog.Tests {
+				if !tester.Test(player) {
 					return
 				}
 			}
 
 			player.AddPart(nextDialog)
+
+			for _, scripter := range nextDialog.Scripts {
+				if err := scripter.Run(entity); err != nil {
+					log.Add("Player", player.Username).Add("Choice", m).Add("Error", err.Error()).Error("dialog choice")
+					return
+				}
+			}
 		} else if len(dialog.Choices) < 1 {
 			player.RemovePart(dialog)
 		}

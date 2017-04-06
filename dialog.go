@@ -11,15 +11,16 @@ type Dialog struct {
 	Parent  uint
 	Lead    string
 	Text    string
+	Tests   []DialogTest
 	Choices []*Dialog
-	Script  string
-	Data    map[string]interface{}
+	Scripts map[string]*Scripter
 }
 
 func MakeDialog() *Dialog {
 	return &Dialog{
+		Tests:   make([]DialogTest, 0),
 		Choices: make([]*Dialog, 0),
-		Data:    make(map[string]interface{}),
+		Scripts: make(map[string]*Scripter),
 	}
 }
 
