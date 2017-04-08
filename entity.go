@@ -27,6 +27,14 @@ func MakeEntity() *Entity {
 	return entity
 }
 
+func (e *Entity) SetClass(c *Class) {
+	r := e.Shape.(*space.Rect)
+	r.Dimension.DX = c.Dimension.DX
+	r.Dimension.DY = c.Dimension.DY
+
+	e.AddPart(BuildImaging(c.Animations))
+}
+
 func (e *Entity) Part() string {
 	return PARTentity
 }

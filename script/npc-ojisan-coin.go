@@ -23,7 +23,7 @@ func NPCOjisanCoin(e *ospokemon.Entity, data map[string]interface{}) error {
 	if npcOjisanCoins[player.Username] > 4 {
 		dialog := ospokemon.MakeDialog()
 		dialog.Lead = "Here's 1 coin"
-		dialog.Text = "I would like to thank you. Please accept my humble thanks..."
+		dialog.Text = "You are truly generous...<br/><br/>Please take this! Try it on!"
 		player.AddPart(dialog)
 
 		ItemChange(e, map[string]interface{}{"item": 2, "amount": 1})

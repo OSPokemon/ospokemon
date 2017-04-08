@@ -8,7 +8,7 @@
 		amount: '',
 	},
 	build: function(data) {
-		$(this).bind('click', this, this.click)
+		$(this).mousedown(this.mousedown)
 		$(this).draggable({ scroll: false, revert: "invalid" })
 
 		if (data) {
@@ -25,6 +25,10 @@
 			$('img', this).attr("src", this.image)
 		}
 
+		if (data.item && this.itemid != data.item.id) {
+			this.itemid = data.item.id
+		}
+
 		if (this.key != data.key) {
 			this.key = data.key
 			$('.key', this).text(this.key)
@@ -32,7 +36,6 @@
 
 		if (this.amount != data.amount) {
 			this.amount = data.amount
-
 			$('.amount', this).text(this.amount)
 		}
 
@@ -41,6 +44,13 @@
 			this.log = false
 		}
 	},
-	click: function(button) {
+	mousedown: function(event) {
+		if (event.button == 2) {
+			if (this.itemid) {
+				ospokemon.websocket.Send('Item.Cast', this.itemid+'')
+				event.stopPropagation()
+				return false
+			}
+		}
 	}
 })

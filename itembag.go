@@ -2,6 +2,7 @@ package ospokemon
 
 import (
 	"ospokemon.com/json"
+	"ospokemon.com/log"
 	"time"
 )
 
@@ -69,6 +70,7 @@ func (itembag *Itembag) Remove(item *Item, amount int) bool {
 
 func (itembag *Itembag) Json() json.Json {
 	data := json.Json{}
+
 	for id, itemslot := range itembag.Slots {
 		if itemslot == nil {
 			data[json.StringUint(id)] = nil
@@ -78,5 +80,35 @@ func (itembag *Itembag) Json() json.Json {
 			data[json.StringUint(id)] = itemslotJson
 		}
 	}
+
 	return data
+}
+
+func (itembag *Itembag) Update(u *Universe, e *Entity, d time.Duration) {
+	for itemid, timer := range itembag.Timers {
+		if timer == nil {
+			continue
+		}
+
+		item, err := GetItem(itemid)
+		if err != nil {
+			log.Add("Error", err).Add("ItemId", itemid).Error("itembag: update")
+			continue
+		}
+
+		*timer = *timer - d
+
+		if *timer <= item.Cooldown && *timer+d > item.Cooldown {
+			itemslot := itembag.Slots[itemid]
+			err := itemslot.Item.Run(e)
+
+			if err != nil {
+				log.Add("Error", err).Add("ItemId", itemid).Error("itembag: itemcast")
+			}
+		}
+
+		if *timer <= 0 {
+			itembag.Timers[itemid] = nil
+		}
+	}
 }

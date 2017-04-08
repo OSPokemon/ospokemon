@@ -2,7 +2,6 @@ package ospokemon
 
 import (
 	"ospokemon.com/json"
-	"ospokemon.com/space"
 	"time"
 )
 
@@ -29,17 +28,17 @@ func BuildPlayer(username string, class *Class, entity *Entity) *Player {
 	player := MakePlayer()
 	player.Username = username
 	player.Class = class.Id
+
 	player.AddPart(entity)
+	entity.SetClass(class)
+	player.AddPart(entity.Parts[PARTimaging])
+
 	player.AddPart(MakeItembag())
 	player.AddPart(make(Bindings))
 	player.AddPart(MakeMenus())
 	player.AddPart(&Movement{})
-	player.AddPart(BuildImaging(class.Animations))
 	player.AddPart(MakeToaster())
 
-	rect := entity.Shape.(*space.Rect)
-	rect.Dimension.DX = class.Dimension.DX
-	rect.Dimension.DY = class.Dimension.DY
 	entity.Parts = player.Parts
 
 	return player

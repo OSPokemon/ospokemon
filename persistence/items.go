@@ -51,24 +51,25 @@ func ItemsSelect(id uint) (*ospokemon.Item, error) {
 	}
 	rows.Close()
 
-	// TODO get item data
-	// rows, err = Connection.Query(
-	// 	"SELECT key, value FROM items_data WHERE item=?",
-	// 	i.Id,
-	// )
-	// if err != nil {
-	// 	return err
-	// }
+	rows, err = Connection.Query(
+		"SELECT key, value FROM items_data WHERE item=?",
+		id,
+	)
+	if err != nil {
+		return nil, err
+	}
 
-	// for rows.Next() {
-	// 	var keybuff, valuebuff string
-	// 	err = rows.Scan(&keybuff, &valuebuff)
-	// 	if err != nil {
-	// 		return err
-	// 	}
-	// 	i.Data[keybuff] = valuebuff
-	// }
-	// rows.Close()
+	for rows.Next() {
+		var keybuff, valuebuff string
+		err = rows.Scan(&keybuff, &valuebuff)
+
+		if err != nil {
+			return nil, err
+		}
+
+		item.Data[keybuff] = valuebuff
+	}
+	rows.Close()
 
 	log.Add("Item", id).Info("items select")
 

@@ -7,6 +7,7 @@ import (
 	"ospokemon.com/log"
 	"ospokemon.com/script"
 	"ospokemon.com/space"
+	"strconv"
 	"time"
 )
 
@@ -26,6 +27,8 @@ func ReceiveMessage(s *Session, m *WebsocketMessage) {
 		keydown(p, m.Message)
 	} else if m.Event == "Key.Up" {
 		keyup(p, m.Message)
+	} else if m.Event == "Item.Cast" {
+		itemcast(p, m.Message)
 	} else if m.Event == "Binding.Set" {
 		bindingset(p, m.Message)
 	} else if m.Event == "Click.Universe" {
@@ -53,6 +56,32 @@ func keyup(player *ospokemon.Player, key string) {
 	if binding := player.GetBindings()[key]; binding != nil {
 		event.Fire(event.BindingUp, player, binding)
 	}
+}
+
+func itemcast(player *ospokemon.Player, itemidS string) {
+	itemidI, err := strconv.Atoi(itemidS)
+	if err != nil {
+		log.Add("Error", err).Error("receivemessage: itemcast")
+		return
+	}
+
+	itemid := uint(itemidI)
+
+	itembag := player.GetItembag()
+	if itembag.Timers[itemid] != nil {
+		log.Add("Player", player.Username).Add("ItemId", itemid).Add("Timer", itembag.Timers[itemid]).Debug("receivemessage: itemcast: item cooldown")
+		return
+	}
+
+	itemslot := itembag.Slots[itemid]
+	if itemslot == nil {
+		log.Add("Error", err).Add("ItemId", itemid).Error("receivemessage: item not found")
+		return
+	}
+
+	item := itemslot.Item
+	timer := item.CastTime + item.Cooldown
+	itembag.Timers[itemslot.Item.Id] = &timer
 }
 
 func bindingset(player *ospokemon.Player, m string) {
