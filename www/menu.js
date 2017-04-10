@@ -25,17 +25,13 @@
 		})
 	},
 	keydown: function(e) {
-		var key = String.fromCharCode(e.keyCode)
-
-		if (!ospokemon.menu.repeat[key]) {
-			ospokemon.menu.repeat[key] = true
-			ospokemon.websocket.Send('Key.Down', key)
+		if (!ospokemon.menu.repeat[e.key]) {
+			ospokemon.menu.repeat[e.key] = true
+			ospokemon.websocket.Send('Key.Down', e.key)
 		}
 	},
 	keyup: function(e) {
-		var key = String.fromCharCode(e.keyCode)
-
-		ospokemon.menu.repeat[key] = false
-		ospokemon.websocket.Send('Key.Up', key)
+		ospokemon.menu.repeat[e.key] = false
+		ospokemon.websocket.Send('Key.Up', e.key)
 	}
 })
