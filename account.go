@@ -13,8 +13,6 @@ type Account struct {
 	Parts
 }
 
-var accounts = make(map[string]*Account)
-
 func MakeAccount(username string) *Account {
 	a := &Account{
 		Username: username,
@@ -29,20 +27,21 @@ func (a *Account) Part() string {
 }
 
 func GetAccount(username string) (*Account, error) {
-	if accounts[username] == nil {
+	if Accounts.Cache[username] == nil {
 		if a, err := Accounts.Select(username); a != nil {
-			accounts[username] = a
+			Accounts.Cache[username] = a
 		} else {
 			return nil, err
 		}
 	}
 
-	return accounts[username], nil
+	return Accounts.Cache[username], nil
 }
 
 // persistence headers
-var Accounts struct {
+var Accounts = struct {
+	Cache  map[string]*Account
 	Select func(string) (*Account, error)
 	Insert func(*Account) error
 	Delete func(*Account) error
-}
+}{make(map[string]*Account), nil, nil, nil}
