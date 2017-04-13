@@ -11,19 +11,7 @@ const ActionCast = "ospokemon.ActionCast"
 const UniverseAdd = "ospokemon.Universe.Add"
 const UniverseRemove = "ospokemon.Universe.Remove"
 
-const ActionsPlayersSelect = "query.ActionsPlayersSelect"
-const ActionsPlayersInsert = "query.ActionsPlayersInsert"
-const ActionsPlayersDelete = "query.ActionsPlayersDelete"
-
 const EntitiesUniversesSelect = "query.EntitiesUniversesSelect"
-
-const ItembagsPlayersSelect = "query.ItembagsPlayersSelect"
-const ItembagsPlayersInsert = "query.ItembagsPlayersInsert"
-const ItembagsPlayersDelete = "query.ItembagsPlayersDelete"
-
-const PlayersSelect = "query.PlayersSelect"
-const PlayersInsert = "query.PlayersInsert"
-const PlayersDelete = "query.PlayersDelete"
 
 const PokemonSelect = "query.PokemonSelect"
 const PokemonInsert = "query.PokemonInsert"

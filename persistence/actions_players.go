@@ -2,7 +2,6 @@ package persistence
 
 import (
 	"ospokemon.com"
-	"ospokemon.com/event"
 	"ospokemon.com/log"
 	"time"
 )
@@ -46,12 +45,12 @@ func ActionsPlayersSelect(player *ospokemon.Player) (ospokemon.Actions, error) {
 
 	log.Add("Username", player.Username).Add("Actions", actions).Debug("actions_players select")
 
-	event.Fire(event.ActionsPlayersSelect, player, actions)
-
 	return actions, nil
 }
 
-func ActionsPlayersInsert(player *ospokemon.Player, actions ospokemon.Actions) error {
+func ActionsPlayersInsert(player *ospokemon.Player) error {
+	actions := player.GetActions()
+
 	for spell, action := range actions {
 		timebuff := 0
 		if action.Timer != nil {
@@ -71,8 +70,6 @@ func ActionsPlayersInsert(player *ospokemon.Player, actions ospokemon.Actions) e
 	}
 
 	log.Add("Username", player.Username).Add("Actions", actions).Debug("actions_players insert")
-
-	event.Fire(event.ActionsPlayersInsert, player, actions)
 	return nil
 }
 

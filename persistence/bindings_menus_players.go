@@ -33,7 +33,17 @@ func BindingsMenusPlayersSelect(player *ospokemon.Player) (map[string]string, er
 	return menus, nil
 }
 
-func BindingsMenusPlayersInsert(player *ospokemon.Player, menus map[string]string) error {
+func BindingsMenusPlayersInsert(player *ospokemon.Player) error {
+	menus := make(map[string]ospokemon.Menu)
+
+	if bindings := player.GetBindings(); bindings != nil {
+		for key, binding := range bindings {
+			if menu := binding.GetMenu(); menu != "" {
+				menus[key] = menu
+			}
+		}
+	}
+
 	for key, menu := range menus {
 		_, err := Connection.Exec(
 			"INSERT INTO bindings_menus_players (username, key, menu) VALUES (?, ?, ?)",

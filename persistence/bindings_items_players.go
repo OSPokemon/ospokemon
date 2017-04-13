@@ -34,13 +34,23 @@ func BindingsItemsPlayersSelect(player *ospokemon.Player) (map[string]uint, erro
 	return itemslots, nil
 }
 
-func BindingsItemsPlayersInsert(player *ospokemon.Player, itemslots map[string]uint) error {
-	for key, itemslotid := range itemslots {
+func BindingsItemsPlayersInsert(player *ospokemon.Player) error {
+	itemslots := make(map[string]uint)
+
+	if bindings := player.GetBindings(); bindings != nil {
+		for key, binding := range bindings {
+			if itemslot := binding.GetItemslot(); itemslot != nil {
+				itemslots[key] = itemslot.Item.Id
+			}
+		}
+	}
+
+	for key, itemid := range itemslots {
 		_, err := Connection.Exec(
-			"INSERT INTO bindings_items_players (username, key, itemslot) VALUES (?, ?, ?)",
+			"INSERT INTO bindings_items_players (username, key, itemid) VALUES (?, ?, ?)",
 			player.Username,
 			key,
-			itemslotid,
+			itemid,
 		)
 
 		if err != nil {

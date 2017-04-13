@@ -34,8 +34,18 @@ func ActionsBindingsPlayersSelect(player *ospokemon.Player) (map[string]uint, er
 	return bindings, nil
 }
 
-func ActionsBindingsPlayersInsert(player *ospokemon.Player, insert map[string]uint) error {
-	for key, action := range insert {
+func ActionsBindingsPlayersInsert(player *ospokemon.Player) error {
+	actions := make(map[string]uint)
+
+	if bindings := player.GetBindings(); bindings != nil {
+		for key, binding := range bindings {
+			if action := binding.GetAction(); action != nil {
+				actions[key] = action.Spell.Id
+			}
+		}
+	}
+
+	for key, action := range actions {
 		_, err := Connection.Exec(
 			"INSERT INTO actions_bindings_players (username, key, spell) VALUES (?, ?, ?)",
 			player.Username,
@@ -48,7 +58,7 @@ func ActionsBindingsPlayersInsert(player *ospokemon.Player, insert map[string]ui
 		}
 	}
 
-	log.Add("Username", player.Username).Add("Bindings", insert).Debug("actions_bindings_players insert")
+	log.Add("Username", player.Username).Add("Bindings", actions).Debug("actions_bindings_players insert")
 
 	return nil
 }

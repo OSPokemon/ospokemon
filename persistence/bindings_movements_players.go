@@ -33,7 +33,17 @@ func BindingsMovementsPlayersSelect(player *ospokemon.Player) (map[string]string
 	return movements, nil
 }
 
-func BindingsMovementsPlayersInsert(player *ospokemon.Player, movements map[string]string) error {
+func BindingsMovementsPlayersInsert(player *ospokemon.Player) error {
+	movements := make(map[string]ospokemon.Walk)
+
+	if bindings := player.GetBindings(); bindings != nil {
+		for key, binding := range bindings {
+			if walk := binding.GetWalk(); walk != "" {
+				movements[key] = walk
+			}
+		}
+	}
+
 	for key, direction := range movements {
 		_, err := Connection.Exec(
 			"INSERT INTO bindings_movements_players (username, key, direction) VALUES (?, ?, ?)",

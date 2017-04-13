@@ -2,7 +2,6 @@ package persistence
 
 import (
 	"ospokemon.com"
-	"ospokemon.com/event"
 	"ospokemon.com/log"
 	"time"
 )
@@ -62,13 +61,11 @@ func ItembagsPlayersSelect(player *ospokemon.Player) (*ospokemon.Itembag, error)
 	rows.Close()
 
 	log.Add("Username", player.Username).Add("Itembag", itembag.Slots).Debug("itembags_players select")
-
-	event.Fire(event.ItembagsPlayersSelect, player, itembag)
-
 	return itembag, nil
 }
 
-func ItembagsPlayersInsert(player *ospokemon.Player, itembag *ospokemon.Itembag) error {
+func ItembagsPlayersInsert(player *ospokemon.Player) error {
+	itembag := player.GetItembag()
 	for _, itemslot := range itembag.Slots {
 		if itemslot == nil {
 			continue
@@ -106,9 +103,6 @@ func ItembagsPlayersInsert(player *ospokemon.Player, itembag *ospokemon.Itembag)
 	}
 
 	log.Add("Username", player.Username).Add("Itembag", itembag.Slots).Debug("itembags_players insert")
-
-	event.Fire(event.ItembagsPlayersInsert, player, itembag)
-
 	return nil
 }
 
@@ -117,7 +111,6 @@ func ItembagsPlayersDelete(player *ospokemon.Player) error {
 		"DELETE FROM itemslots_players WHERE username=?",
 		player.Username,
 	)
-
 	if err != nil {
 		return err
 	}
@@ -126,12 +119,10 @@ func ItembagsPlayersDelete(player *ospokemon.Player) error {
 		"DELETE FROM itembags_players WHERE username=?",
 		player.Username,
 	)
-
 	if err != nil {
-		log.Add("Username", player.Username).Debug("itembags_players delete")
-
-		event.Fire(event.ItembagsPlayersDelete, player)
+		return err
 	}
 
+	log.Add("Username", player.Username).Debug("itembags_players delete")
 	return err
 }

@@ -33,7 +33,8 @@ func PlayersStatsSelect(player *ospokemon.Player) (ospokemon.Stats, error) {
 	return stats, nil
 }
 
-func PlayersStatsInsert(player *ospokemon.Player, stats ospokemon.Stats) error {
+func PlayersStatsInsert(player *ospokemon.Player) error {
+	stats := player.GetStats()
 	for name, stat := range stats {
 		_, err := Connection.Exec(
 			"INSERT INTO players_stats (username, stat, value, base) VALUES (?, ?, ?, ?)",
