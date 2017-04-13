@@ -4,10 +4,11 @@ import (
 	"golang.org/x/net/websocket"
 	"ospokemon.com"
 	"ospokemon.com/log"
+	"ospokemon.com/server/session"
 )
 
 var WebsocketHandler = websocket.Handler(func(conn *websocket.Conn) {
-	s := readsession(conn.Request())
+	s := session.Find(conn.Request())
 
 	if s == nil {
 		log.Add("RemoteAddr", conn.Request().RemoteAddr).Debug("websocket: session error")

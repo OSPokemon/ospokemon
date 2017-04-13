@@ -2,26 +2,14 @@ package server
 
 import (
 	"net/http"
-	"ospokemon.com"
 	"ospokemon.com/log"
+	"ospokemon.com/server/api/logout"
+	"ospokemon.com/server/session"
 )
 
 var LogoutHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	if s := readsession(r); s != nil {
-		account, err := ospokemon.GetAccount(s.Username)
-
-		if err != nil {
-			log.Add("Error", err).Error("logout: get account")
-			return
-		}
-
-		accountSession, _ := account.Parts[PARTsession].(*Session)
-		if accountSession != nil {
-			ospokemon.Accounts.Delete(account)
-			ospokemon.Accounts.Insert(account)
-		} else {
-			log.Add("SessionId", s.SessionId).Warn("logout: session already expired")
-		}
+	if s := session.Find(r); s != nil {
+		logout.LogoutPlayer(s.Username)
 
 		w.Header().Set("Set-Cookie", "SessionId=0; Path=/;")
 		http.Redirect(w, r, "/login/#"+s.Username, 307)

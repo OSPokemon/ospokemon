@@ -1,8 +1,8 @@
 package persistence
 
 import (
+	"errors"
 	"ospokemon.com"
-	"ospokemon.com/event"
 	"ospokemon.com/log"
 	"time"
 )
@@ -29,8 +29,6 @@ func AccountsSelect(username string) (*ospokemon.Account, error) {
 
 	account.Register = time.Unix(timebuff, 0)
 
-	log.Add("Username", username).Info("accounts select")
-
 	if player, err := ospokemon.GetPlayer(username); err == nil {
 		player.AddPart(account)
 		player.AddPart(player)
@@ -39,6 +37,7 @@ func AccountsSelect(username string) (*ospokemon.Account, error) {
 		return nil, err
 	}
 
+	log.Add("Username", username).Info("accounts select")
 	return account, nil
 }
 
@@ -50,27 +49,30 @@ func AccountsInsert(account *ospokemon.Account) error {
 		account.Register.Unix(),
 	)
 
-	if err == nil {
-		log.Add("Username", account.Username).Info("accounts insert")
-
-		if player := account.GetPlayer(); player != nil {
-			ospokemon.Players.Insert(account.GetPlayer())
-		}
-
-		event.Fire(event.AccountsInsert, account)
+	if err != nil {
+		return errors.New("accounts insert: " + err.Error())
 	}
 
-	return err
+	err = ospokemon.Players.Insert(account.GetPlayer())
+	if err != nil {
+		return err
+	}
+
+	log.Add("Username", account.Username).Info("accounts insert")
+	return nil
 }
 
 func AccountsDelete(account *ospokemon.Account) error {
 	_, err := Connection.Exec("DELETE FROM accounts WHERE username=?", account.Username)
-
-	if err == nil {
-		log.Add("Username", account.Username).Info("accounts delete")
-		ospokemon.Players.Delete(account.GetPlayer())
-		event.Fire(event.AccountsDelete, account)
+	if err != nil {
+		return err
 	}
 
-	return err
+	err = ospokemon.Players.Delete(account.GetPlayer())
+	if err != nil {
+		return errors.New("accounts delete: " + err.Error())
+	}
+
+	log.Add("Username", account.Username).Info("accounts delete")
+	return nil
 }

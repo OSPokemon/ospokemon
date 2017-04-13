@@ -6,12 +6,13 @@ import (
 	"ospokemon.com/event"
 	"ospokemon.com/log"
 	"ospokemon.com/script"
+	"ospokemon.com/server/session"
 	"ospokemon.com/space"
 	"strconv"
 	"time"
 )
 
-func ReceiveMessage(s *Session, m *WebsocketMessage) {
+func ReceiveMessage(s *session.Session, m *session.WebsocketMessage) {
 	p, _ := ospokemon.GetPlayer(s.Username)
 
 	s.Refresh()

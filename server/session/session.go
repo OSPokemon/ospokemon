@@ -1,8 +1,7 @@
-package server
+package session
 
 import (
 	"encoding/json"
-	"github.com/cznic/mathutil"
 	"golang.org/x/net/websocket"
 	"net/http"
 	"ospokemon.com"
@@ -22,13 +21,7 @@ type Session struct {
 	sync.Mutex
 }
 
-func NewSession(username string) *Session {
-	return &Session{
-		Username:  username,
-		SessionId: uint(sessionIdGen.Next()),
-		Expire:    time.Now().Add(time.Duration(option.Int("sessionlife")) * time.Second),
-	}
-}
+var Sessions = make(map[uint]*Session)
 
 func (s *Session) Part() string {
 	return PARTsession
@@ -102,7 +95,3 @@ func (s *Session) Refresh() {
 func (s *Session) Send(message string) {
 	websocket.Message.Send(s.Websocket, message)
 }
-
-var Sessions = make(map[uint]*Session)
-
-var sessionIdGen, _ = mathutil.NewFC32(0, 999999, true)

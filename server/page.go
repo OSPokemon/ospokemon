@@ -3,12 +3,13 @@ package server
 import (
 	"net/http"
 	"ospokemon.com/option"
+	"ospokemon.com/server/session"
 )
 
 var fileserver = http.FileServer(http.Dir(option.String("webpath")))
 
 var PageHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	if s := readsession(r); s != nil {
+	if s := session.Find(r); s != nil {
 		s.Refresh()
 	}
 

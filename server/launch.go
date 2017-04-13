@@ -8,7 +8,7 @@ import (
 
 func Launch() {
 	routes()
-	go PollSessionExpire()
+	go PollSessionExpirations()
 
 	if option.Bool("usehttps") {
 		log.Error(http.ListenAndServeTLS(":443", "ospokemon.cert", "ospokemon.key", nil))
