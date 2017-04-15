@@ -30,15 +30,17 @@ var LoginHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request)
 
 	if account.Password != password {
 		log.Add("Username", username).Warn("login: incorrect password")
+		delete(ospokemon.Accounts.Cache, username)
+		delete(ospokemon.Players.Cache, username)
 		http.Redirect(w, r, "/login/?password#"+username, 307)
 		return
 	}
 
 	if s := session.Get(account); s == nil {
 		s = session.Add(account)
-		s.WriteSessionId(w)
 		log.Add("Username", username).Add("SessionId", s.SessionId).Info("login: create session")
 	}
 
+	session.Get(account).WriteSessionId(w)
 	http.Redirect(w, r, "/", 307)
 })
