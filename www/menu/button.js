@@ -46,11 +46,15 @@
 	},
 	mousedown: function(event) {
 		if (event.button == 2) {
-			if (this.itemid) {
-				ospokemon.websocket.Send('Item.Cast', this.itemid+'')
-				event.stopPropagation()
-				return false
-			}
+			this.fire()
+			event.stopPropagation()
+			return false
+		}
+	},
+	fire: function() {
+		if (this.itemid) {
+			ospokemon.websocket.Send('Item.Cast', {'item': this.itemid+''})
+			return
 		}
 	}
 })

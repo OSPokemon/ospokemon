@@ -7,6 +7,6 @@
 		$('span', this).html(text)
 	},
 	click: function() {
-		ospokemon.websocket.Send('Dialog.Choice', this.text)
+		ospokemon.websocket.Send('Dialog.Choice', {choice: this.text})
 	}
 })
