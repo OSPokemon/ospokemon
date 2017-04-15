@@ -27,6 +27,8 @@ func Listen(s *session.Session) {
 
 			if !option.Bool("allow-refresh") {
 				logout.LogoutPlayer(s.Username)
+			} else {
+				logout.RemoveEntity(s.Username)
 			}
 
 			return

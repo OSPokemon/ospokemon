@@ -18,12 +18,7 @@ func LogoutPlayer(username string) {
 	ospokemon.Accounts.Delete(account)
 	ospokemon.Accounts.Insert(account)
 
-	if player, _ := ospokemon.GetPlayer(username); player != nil {
-		entity := player.GetEntity()
-		universe := ospokemon.Multiverse[entity.UniverseId]
-
-		universe.Remove(entity)
-	}
+	RemoveEntity(username)
 
 	delete(ospokemon.Accounts.Cache, username)
 	delete(ospokemon.Players.Cache, username)
