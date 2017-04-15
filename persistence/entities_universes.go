@@ -2,7 +2,6 @@ package persistence
 
 import (
 	"ospokemon.com"
-	"ospokemon.com/event"
 	"ospokemon.com/space"
 )
 
@@ -30,9 +29,75 @@ func EntitiesUniversesSelect(universe *ospokemon.Universe) (map[uint]*ospokemon.
 	}
 	rows.Close()
 
-	event.Fire(event.EntitiesUniversesSelect, entities, universe)
+	// classes
+	classes, err := ClassesEntitiesSelect(universe)
+	if err != nil {
+		return nil, err
+	}
+	for entityId, class := range classes {
+		entity := entities[entityId]
+
+		entity.AddPart(ospokemon.BuildImaging(class.Animations))
+
+		rect := entity.Shape.(*space.Rect)
+		rect.Dimension.DX = class.Dimension.DX
+		rect.Dimension.DY = class.Dimension.DY
+	}
+
+	// dialogs
+	dialogs, err := DialogsSelect(universe)
+	if err != nil {
+		return nil, err
+	}
+	for entityId, dialog := range dialogs {
+		entities[entityId].AddPart(dialog)
+	}
+
+	// itemslots
+	itemslots, err := EntitiesItemsSelect(universe)
+	if err != nil {
+		return nil, err
+	}
+	for entityId, itemslot := range itemslots {
+		entity := entities[entityId]
+		entity.AddPart(itemslot)
+		entity.AddPart(itemslot.GetImaging())
+		itemslot.Parts = entity.Parts
+
+		rect := entity.Shape.(*space.Rect)
+		item := itemslot.Item
+		rect.Dimension.DX = item.Dimension.DX
+		rect.Dimension.DY = item.Dimension.DY
+	}
+
+	// spawners
+	spawners, err := EntitiesSpawnersSelect(universe)
+	if err != nil {
+		return nil, err
+	}
+	for entityId, spawner := range spawners {
+		spawner.Child = entities[entityId]
+		spawner.Child.AddPart(spawner)
+		universe.AddSpawner(spawner)
+	}
+
+	// terrain
+	terrains, err := EntitiesTerrainsSelect(universe)
+	if err != nil {
+		return nil, err
+	}
+	for entityId, terrain := range terrains {
+		entity := entities[entityId]
+		entity.AddPart(terrain)
+
+		imaging := ospokemon.MakeImaging()
+		imaging.Image = terrain.Image
+		entity.AddPart(imaging)
+	}
+
+	// delete temp id
 	for _, entity := range entities {
-		entity.Id = 0 // delete temp id
+		entity.Id = 0
 	}
 
 	return entities, nil

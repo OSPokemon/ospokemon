@@ -2,8 +2,6 @@ package persistence
 
 import (
 	"ospokemon.com"
-	"ospokemon.com/event"
-	"ospokemon.com/log"
 )
 
 func init() {
@@ -18,11 +16,16 @@ func UniversesSelect(id uint) (*ospokemon.Universe, error) {
 
 	universe := ospokemon.MakeUniverse(id)
 	err := row.Scan(&universe.Space.Dimension.DX, &universe.Space.Dimension.DY, &universe.Private)
+	if err != nil {
+		return nil, err
+	}
 
-	if err == nil {
-		log.Add("Universe", id).Info("universes select")
-
-		event.Fire(event.UniversesSelect, universe)
+	entities, err := EntitiesUniversesSelect(universe)
+	if err != nil {
+		return nil, err
+	}
+	for _, entity := range entities {
+		universe.Add(entity)
 	}
 
 	ospokemon.Multiverse[id] = universe
