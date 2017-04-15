@@ -7,8 +7,6 @@ import (
 	"ospokemon.com/log"
 	"ospokemon.com/script"
 	"ospokemon.com/server/session"
-	"ospokemon.com/space"
-	"strconv"
 	"time"
 )
 
@@ -59,108 +57,58 @@ func keyup(player *ospokemon.Player, key string) {
 	}
 }
 
-func itemcast(player *ospokemon.Player, itemidS string) {
-	itemidI, err := strconv.Atoi(itemidS)
-	if err != nil {
+func itemcast(player *ospokemon.Player, m string) {
+	data := make(map[string]interface{})
+
+	if err := json.Unmarshal([]byte(m), &data); err != nil {
 		log.Add("Error", err).Error("receivemessage: itemcast")
-		return
+	} else if err := script.ItemCast(player.GetEntity(), data); err != nil {
+		log.Add("Username", player.Username).Add("Error", err).Error("receivemessage: itemcast")
 	}
-
-	itemid := uint(itemidI)
-
-	itembag := player.GetItembag()
-	if itembag.Timers[itemid] != nil {
-		log.Add("Player", player.Username).Add("ItemId", itemid).Add("Timer", itembag.Timers[itemid]).Debug("receivemessage: itemcast: item cooldown")
-		return
-	}
-
-	itemslot := itembag.Slots[itemid]
-	if itemslot == nil {
-		log.Add("Error", err).Add("ItemId", itemid).Error("receivemessage: item not found")
-		return
-	}
-
-	item := itemslot.Item
-	timer := item.CastTime + item.Cooldown
-	itembag.Timers[itemslot.Item.Id] = &timer
 }
 
 func bindingset(player *ospokemon.Player, m string) {
 	data := make(map[string]interface{})
-	json.Unmarshal([]byte(m), &data)
 
-	if err := script.BindingSet(player.GetEntity(), data); err != nil {
-		log.Add("Username", player.Username).Error(err.Error())
+	if err := json.Unmarshal([]byte(m), &data); err != nil {
+		log.Add("Error", err).Error("receivemessage: bindingset")
+	} else if err := script.BindingSet(player.GetEntity(), data); err != nil {
+		log.Add("Username", player.Username).Add("Error", err).Error("receivemessage: bindingset")
 	}
 }
 
 func clickuniverse(player *ospokemon.Player, m string) {
 	data := make(map[string]interface{})
-	json.Unmarshal([]byte(m), &data)
 
-	point := space.Point{}
-	if pointx, ok := data["x"].(float64); ok {
-		point.X = pointx
-	} else {
-		return
+	if err := json.Unmarshal([]byte(m), &data); err != nil {
+		log.Add("Error", err).Error("receivemessage: clickuniverse")
+	} else if err := script.ClickUniverse(player.GetEntity(), data); err != nil {
+		log.Add("Username", player.Username).Add("Error", err).Error("receivemessage: clickuniverse")
 	}
-	if pointy, ok := data["y"].(float64); ok {
-		point.Y = pointy
-	} else {
-		return
-	}
-
-	movement := player.GetMovement()
-	movement.Up = false
-	movement.Down = false
-	movement.Left = false
-	movement.Right = false
-	movement.Target = &point
 }
 
 func clickentity(player *ospokemon.Player, m string) {
 	data := make(map[string]interface{})
-	json.Unmarshal([]byte(m), &data)
 
-	if entityId, ok := data["entity"].(float64); ok {
-		playerEntity := player.GetEntity()
-		universe := ospokemon.Multiverse[playerEntity.UniverseId]
-		entity := universe.Entities[uint(entityId)]
-
-		if dialog := entity.GetDialog(); dialog != nil {
-			player.AddPart(dialog)
-		}
+	if err := json.Unmarshal([]byte(m), &data); err != nil {
+		log.Add("Error", err).Error("receivemessage: clickuniverse")
+	} else if err := script.ClickEntity(player.GetEntity(), data); err != nil {
+		log.Add("Username", player.Username).Add("Error", err).Error("receivemessage: clickentity")
 	}
 }
 
 func dialogchoice(player *ospokemon.Player, m string) {
-	entity := player.GetEntity()
+	data := make(map[string]interface{})
 
-	if dialog := player.GetDialog(); dialog != nil {
-		if nextDialog := dialog.Next(m); nextDialog != nil {
-			for _, tester := range nextDialog.Tests {
-				if !tester.Test(player) {
-					return
-				}
-			}
-
-			player.AddPart(nextDialog)
-
-			for _, scripter := range nextDialog.Scripts {
-				if err := scripter.Run(entity); err != nil {
-					log.Add("Player", player.Username).Add("Choice", m).Add("Error", err.Error()).Error("dialog choice")
-					return
-				}
-			}
-		} else if len(dialog.Choices) < 1 {
-			player.RemovePart(dialog)
-		}
+	if err := json.Unmarshal([]byte(m), &data); err != nil {
+		log.Add("Error", err).Error("receivemessage: dialogchoice")
+	} else if err := script.DialogChoice(player.GetEntity(), data); err != nil {
+		log.Add("Username", player.Username).Add("Error", err.Error()).Error("receivemessage: itemcast")
 	}
 }
 
 func menutoggle(player *ospokemon.Player, m string) {
-	menus := player.GetMenus()
-	menus.Toggle(ospokemon.Menu(m))
+	player.GetMenus().Toggle(ospokemon.Menu(m))
 }
 
 func chat(player *ospokemon.Player, m string) {

@@ -3,6 +3,7 @@ package script
 import (
 	"errors"
 	"ospokemon.com"
+	"ospokemon.com/script/util"
 	"strconv"
 )
 
@@ -21,31 +22,9 @@ func ItemChange(e *ospokemon.Entity, data map[string]interface{}) error {
 		return errors.New("itemchange: toaster missing")
 	}
 
-	var item *ospokemon.Item
-	var err error
-
-	switch data_item := data["item"].(type) {
-	case *ospokemon.Item:
-		item = data_item
-		break
-	case int:
-		item, err = ospokemon.GetItem(uint(data_item))
-		break
-	case uint:
-		item, err = ospokemon.GetItem(data_item)
-		break
-	case string:
-		itemid64, err := strconv.ParseUint(data_item, 10, 0)
-		if err == nil {
-			item, err = ospokemon.GetItem(uint(itemid64))
-		}
-		break
-	default:
-		err = errors.New("itemchange: item format")
-	}
-
+	item, err := util.GetItem(data["item"])
 	if err != nil {
-		return err
+		return errors.New("itemchange: " + err.Error())
 	}
 
 	var amount int

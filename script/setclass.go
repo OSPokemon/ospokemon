@@ -9,6 +9,7 @@ import (
 
 func init() {
 	ospokemon.Scripts["set-class"] = SetClass
+	ospokemon.Scripts["setclass"] = SetClass
 }
 
 func SetClass(e *ospokemon.Entity, data map[string]interface{}) error {
