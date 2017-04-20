@@ -50,18 +50,18 @@ func PlayersSelect(username string) (*ospokemon.Player, error) {
 	}
 	player.AddPart(itembag)
 
-	err = BindingsPlayersSelect(player)
-	if err != nil {
-		return nil, err
-	}
-
 	stats, err := PlayersStatsSelect(player)
 	if err != nil {
 		return nil, err
 	}
 	player.AddPart(stats)
 
-	log.Add("Username", player.Username).Info("players select")
+	err = BindingsPlayersSelect(player)
+	if err != nil {
+		return nil, err
+	}
+
+	log.Add("Username", player.Username).Debug("players select")
 	return player, nil
 }
 
@@ -104,7 +104,7 @@ func PlayersInsert(player *ospokemon.Player) error {
 		return err
 	}
 
-	log.Add("Username", player.Username).Info("players insert")
+	log.Add("Username", player.Username).Debug("players insert")
 	return err
 }
 
@@ -134,6 +134,6 @@ func PlayersDelete(player *ospokemon.Player) error {
 		return err
 	}
 
-	log.Add("Username", player.Username).Info("players delete")
+	log.Add("Username", player.Username).Debug("players delete")
 	return nil
 }

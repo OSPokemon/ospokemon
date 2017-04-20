@@ -60,7 +60,7 @@ func ItembagsPlayersSelect(player *ospokemon.Player) (*ospokemon.Itembag, error)
 	}
 	rows.Close()
 
-	log.Add("Username", player.Username).Add("Itembag", itembag.Slots).Debug("itembags_players select")
+	log.Add("Username", player.Username).Add("Itembag", itembag.GetItems()).Debug("itembags_players select")
 	return itembag, nil
 }
 

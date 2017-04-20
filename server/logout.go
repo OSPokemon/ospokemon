@@ -9,6 +9,7 @@ import (
 
 var LogoutHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	if s := session.Find(r); s != nil {
+		log.Add("Username", s.Username).Add("SessionId", s.SessionId).Info("api/logout")
 		logout.LogoutPlayer(s.Username)
 
 		w.Header().Set("Set-Cookie", "SessionId=0; Path=/;")

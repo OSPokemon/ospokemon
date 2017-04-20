@@ -5,7 +5,6 @@ import (
 	"golang.org/x/net/websocket"
 	"net/http"
 	"ospokemon.com"
-	"ospokemon.com/log"
 	"ospokemon.com/option"
 	"strconv"
 	"time"
@@ -23,7 +22,6 @@ func Add(account *ospokemon.Account) *Session {
 	account.AddPart(session)
 	Sessions[session.SessionId] = session
 
-	log.Add("Username", account.Username).Add("SessionId", session.SessionId).Info("session: add")
 	return session
 }
 
@@ -44,7 +42,6 @@ func Find(r *http.Request) *Session {
 
 func Remove(account *ospokemon.Account) {
 	if session := Get(account); session != nil {
-		log.Add("Username", account.Username).Add("SessionId", session.SessionId).Info("session: remove")
 		delete(Sessions, session.SessionId)
 	}
 }

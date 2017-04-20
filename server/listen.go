@@ -16,14 +16,15 @@ func Listen(s *session.Session) {
 			s.Websocket.Close()
 
 			if err.Error() != "EOF" {
-				log.Warn(err.Error())
+				log.Add("Error", err).Error("websocket error")
 			}
 
 			account := ospokemon.Accounts.Cache[s.Username]
 			if account == nil {
-				log.Add("Username", s.Username).Add("SessionId", s.SessionId).Warn("websocket: close: account missing")
 				return
 			}
+
+			log.Add("Username", s.Username).Add("Universe", account.GetEntity().UniverseId).Add("SessionId", s.SessionId).Info("websocket closed")
 
 			if !option.Bool("allow-refresh") {
 				logout.LogoutPlayer(s.Username)

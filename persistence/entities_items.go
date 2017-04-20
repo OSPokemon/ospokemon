@@ -15,6 +15,7 @@ func EntitiesItemsSelect(universe *ospokemon.Universe) (map[uint]*ospokemon.Item
 		return nil, err
 	}
 
+	itemslotslog := make(map[uint]uint)
 	itemslots := make(map[uint]*ospokemon.Itemslot)
 
 	for rows.Next() {
@@ -32,9 +33,10 @@ func EntitiesItemsSelect(universe *ospokemon.Universe) (map[uint]*ospokemon.Item
 
 		itemslot := ospokemon.BuildItemslot(item, amountbuff)
 		itemslots[entityId] = itemslot
+		itemslotslog[entityId] = itemslot.Item.Id
 	}
 
-	log.Add("Universe", universe.Id).Add("Itemslots", itemslots).Debug("entities_items select")
+	log.Add("Universe", universe.Id).Add("Itemslots", itemslotslog).Debug("entities_items select")
 
 	return itemslots, nil
 }

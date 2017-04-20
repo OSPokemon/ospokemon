@@ -14,6 +14,7 @@ func EntitiesTerrainsSelect(universe *ospokemon.Universe) (map[uint]*ospokemon.T
 		return nil, err
 	}
 
+	terrainslog := make(map[uint]uint)
 	terrains := make(map[uint]*ospokemon.Terrain)
 
 	for rows.Next() {
@@ -30,9 +31,10 @@ func EntitiesTerrainsSelect(universe *ospokemon.Universe) (map[uint]*ospokemon.T
 		}
 
 		terrains[entityId] = terrain
+		terrainslog[entityId] = terrain.Id
 	}
 
-	log.Add("Universe", universe.Id).Add("Terrains", terrains).Debug("entities_terrains select")
+	log.Add("Universe", universe.Id).Add("Terrains", terrainslog).Debug("entities_terrains select")
 
 	return terrains, err
 }

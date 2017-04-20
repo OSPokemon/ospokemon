@@ -70,7 +70,7 @@ func ActionsBindingsPlayersDelete(player *ospokemon.Player) error {
 	)
 
 	if err == nil {
-		log.Add("Username", player.Username).Info("actions_bindings_players delete")
+		log.Add("Username", player.Username).Debug("actions_bindings_players delete")
 	}
 
 	return err

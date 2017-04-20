@@ -17,6 +17,8 @@ func EntitiesSpawnersSelect(universe *ospokemon.Universe) (map[uint]*ospokemon.S
 		return nil, err
 	}
 
+	spawnerslog := make([]uint, 0)
+
 	for rows.Next() {
 		var entityId uint
 		var speedbuff uint64
@@ -32,9 +34,10 @@ func EntitiesSpawnersSelect(universe *ospokemon.Universe) (map[uint]*ospokemon.S
 		}
 
 		spawners[entityId] = spawner
+		spawnerslog = append(spawnerslog, entityId)
 	}
 
-	log.Add("Universe", universe.Id).Add("Spawners", spawners).Debug("entities_spawners select")
+	log.Add("Universe", universe.Id).Add("Spawners", spawnerslog).Debug("entities_spawners select")
 
 	return spawners, nil
 }

@@ -29,7 +29,7 @@ func BindingsItemsPlayersSelect(player *ospokemon.Player) (map[string]uint, erro
 	}
 	rows.Close()
 
-	log.Add("Username", player.Username).Add("Itemslots", itemslots).Debug("bindings_items_players select")
+	log.Add("Username", player.Username).Add("Bindings", itemslots).Debug("bindings_items_players select")
 
 	return itemslots, nil
 }
@@ -69,7 +69,7 @@ func BindingsItemsPlayersDelete(player *ospokemon.Player) error {
 	)
 
 	if err == nil {
-		log.Add("Username", player.Username).Info("bindings_items_players delete")
+		log.Add("Username", player.Username).Debug("bindings_items_players delete")
 	}
 
 	return err
