@@ -37,7 +37,7 @@ func SetClass(e *ospokemon.Entity, data map[string]interface{}) error {
 	}
 
 	e.SetClass(class)
-	log.Add("EntityId", e.Id).Add("Universe", e.UniverseId).Add("Class", class.Id).Info("set-class")
-
+	e.GetPlayer().Class = class.Id
+	log.Add("EntityId", e.Id).Add("Universe", e.UniverseId).Add("Class", class.Id).Info("setclass")
 	return nil
 }

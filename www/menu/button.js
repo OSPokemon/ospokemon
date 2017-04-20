@@ -5,11 +5,11 @@
 			image: ''
 		},
 		key: '',
-		amount: '',
+		amount: ''
 	},
 	build: function(data) {
 		$(this).mousedown(this.mousedown)
-		$(this).draggable({ scroll: false, revert: "invalid" })
+		$(this).draggable({scroll: false, revert: "invalid"})
 
 		if (data) {
 			this.update(data)

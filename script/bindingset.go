@@ -3,7 +3,8 @@ package script
 import (
 	"errors"
 	"ospokemon.com"
-	"strconv"
+	"ospokemon.com/log"
+	"ospokemon.com/script/util"
 )
 
 func init() {
@@ -21,71 +22,43 @@ func BindingSet(e *ospokemon.Entity, data map[string]interface{}) error {
 		return errors.New("bindingset: key missing")
 	}
 
-	var spellid uint
-	switch data_spell := data["spell"].(type) {
-	case int:
-		spellid = uint(data_spell)
-		break
-	case uint:
-		spellid = data_spell
-		break
-	case nil:
-		break
-	case string:
-		spellid64, err := strconv.ParseUint(data_spell, 10, 0)
-		if err == nil {
-			spellid = uint(spellid64)
-			break
-		}
-	default:
-		return errors.New("bindingset: spell format")
-	}
-
-	if spellid > 0 {
-		if actions := e.GetActions(); actions != nil {
-			if action := actions[spellid]; action != nil {
-				bindings.SetAction(key, action)
-				return nil
-			}
-			return errors.New("bindingset: action missing")
-		}
-		return errors.New("bindingset: actions missing")
-	}
-
-	var itemid uint
-	switch data_itemid := data["itemid"].(type) {
-	case int:
-		itemid = uint(data_itemid)
-		break
-	case uint:
-		itemid = data_itemid
-		break
-	case nil:
-		break
-	case string:
-		itemidi, err := strconv.Atoi(data_itemid)
+	// spell binding
+	if data["spell"] != nil {
+		spell, err := util.GetSpell(data["item"])
 		if err != nil {
-			itemid = uint(itemidi)
-			break
+			return errors.New("bindingset: " + err.Error())
 		}
-	case float64:
-		itemid = uint(data_itemid)
-		break
-	default:
-		return errors.New("bindingset: itemslot format")
+
+		if actions := e.GetActions(); actions == nil {
+			return errors.New("bindingset: actions missing")
+		} else if action := actions[spell.Id]; action == nil {
+			return errors.New("bindingset: action missing")
+		} else {
+			log.Add("Username", e.GetPlayer().Username).Add("Key", key).Add("Spell", action.Spell.Id).Info("bindingset: spell")
+			bindings.SetAction(key, action)
+			return nil
+		}
 	}
 
-	if !(itemid < 0) {
-		if itembag := e.GetItembag(); itembag != nil {
-			if itemslot := itembag.Slots[itemid]; itemslot != nil {
-				bindings.SetItemslot(key, itemslot)
-				return nil
-			}
+	// item binding
+	if data["item"] != nil {
+		item, err := util.GetItem(data["item"])
+		if err != nil {
+			return errors.New("bindingset: " + err.Error())
+		}
+
+		if itembag := e.GetItembag(); itembag == nil {
+			return errors.New("bindingset: itembag missing")
+		} else if itemslot := itembag.Slots[item.Id]; itemslot == nil {
 			return errors.New("bindingset: itemslot missing")
+		} else {
+			log.Add("Username", e.GetPlayer().Username).Add("Key", key).Add("Item", itemslot.Item.Id).Info("bindingset: itemslot")
+			bindings.SetItemslot(key, itemslot)
+			return nil
 		}
-		return errors.New("bindingset: itembag missing")
 	}
 
+	// walk binding
 	if walk, _ := data["walk"].(string); walk != "" {
 		if movement := e.GetMovement(); movement != nil {
 			bindings.SetWalk(key, walk)
@@ -94,6 +67,7 @@ func BindingSet(e *ospokemon.Entity, data map[string]interface{}) error {
 		return errors.New("bindingset: movement missing")
 	}
 
+	// menu binding
 	if menu, _ := data["menu"].(string); menu != "" {
 		if menus := e.GetMenus(); menus != nil {
 			bindings.SetMenu(key, menu)

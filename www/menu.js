@@ -25,9 +25,18 @@
 		})
 	},
 	keydown: function(e) {
-		if (!ospokemon.menu.repeat[e.key]) {
-			ospokemon.menu.repeat[e.key] = true
-			ospokemon.websocket.Send('Key.Down', e.key)
+		var key = e.key
+		if (!key) {
+			key = String.fromCharCode(e.charCode).toLowerCase()
+		}
+		if (!key) {
+			console.error("keydown detected, keycode unavailable. event follows.")
+			console.error(e)
+		}
+
+		if (!ospokemon.menu.repeat[key]) {
+			ospokemon.menu.repeat[key] = true
+			ospokemon.websocket.Send('Key.Down', key)
 		}
 	},
 	keyup: function(e) {

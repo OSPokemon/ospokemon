@@ -52,10 +52,7 @@ func BindingsPlayersSelect(player *ospokemon.Player) error {
 	for key, itemslotid := range iquery {
 		binding := ospokemon.MakeBinding()
 		binding.Key = key
-		itemslot := itembag.Slots[itemslotid]
-		itemslot.AddPart(binding)
-		binding.Parts = itemslot.Parts
-
+		binding.SetItemslot(itembag.Slots[itemslotid])
 		bindings[key] = binding
 	}
 
@@ -68,11 +65,7 @@ func BindingsPlayersSelect(player *ospokemon.Player) error {
 	for key, actionid := range aquery {
 		binding := ospokemon.MakeBinding()
 		binding.Key = key
-		action := actions[actionid]
-
-		binding.AddPart(action)
-		binding.AddPart(action.GetImaging())
-
+		binding.SetAction(actions[actionid])
 		bindings[key] = binding
 	}
 

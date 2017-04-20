@@ -4,20 +4,19 @@
 	build: function() {
 		ospokemon.menu.bindings = this
 
-		ospokemon.element.get('menu/bindings/button').then(function(el) {
+		ospokemon.element.get('menu/button').then(function(el) {
 			for (var bindingcount = 0; bindingcount < 10; bindingcount++) {
 				var key = (bindingcount + 1) % 10 // 1, 2, 3, ..., 0
 
 				var data = {
 					key: key+'',
-					spell: false,
-					item: false,
-					timer: 0,
-					image: false
+					imaging: {image: ''},
+					amount: ''
 				}
 
-				ospokemon.menu.bindings.buttons[key] = el.build(data)
-				$(ospokemon.menu.bindings).append(ospokemon.menu.bindings.buttons[key])
+				var button = ospokemon.menu.bindings.buttons[key] = el.build(data)
+				$(button).droppable({accept: '.menu-button', drop: ospokemon.menu.bindings.drop})
+				$(ospokemon.menu.bindings).append(button)
 			}
 		})
 
@@ -38,6 +37,31 @@
 			if (data.bindings[key]) {
 				ospokemon.menu.bindings.buttons[key].update(data.bindings[key])
 			}
+		}
+	},
+	drop: function(event, ui) {
+		if (!event) {
+			return
+		}
+
+		var bind = ui.draggable[0]
+
+		if (bind.itemid) {
+			bind.style = ""
+
+			ospokemon.websocket.Send('Binding.Set', {
+				'key': this.key,
+				'item': bind.itemid
+			})
+		} else if (bind.spell) {
+			bind.style = ""
+
+			ospokemon.websocket.Send('Binding.Set', {
+				'key': this.key,
+				'spell': bind.spell
+			})
+		} else {
+			console.error('binding type not recognized')
 		}
 	}
 })

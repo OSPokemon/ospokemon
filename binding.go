@@ -28,11 +28,13 @@ func (parts Parts) GetBinding() *Binding {
 }
 
 func (binding *Binding) SetAction(action *Action) {
+	action.AddPart(action)
 	action.AddPart(binding)
 	binding.Parts = action.Parts
 }
 
 func (binding *Binding) SetItemslot(itemslot *Itemslot) {
+	itemslot.AddPart(itemslot)
 	itemslot.AddPart(binding)
 	binding.Parts = itemslot.Parts
 }
@@ -70,11 +72,13 @@ func (binding *Binding) Json() json.Json {
 	if imaging := binding.GetImaging(); imaging != nil {
 		json["imaging"] = imaging.Json()
 	}
+
 	if walk := binding.GetWalk(); walk != "" {
 		json["walk"] = walk
-	}
-	if menu := binding.GetMenu(); menu != "" {
+	} else if menu := binding.GetMenu(); menu != "" {
 		json["menu"] = menu
+	} else if itemslot := binding.GetItemslot(); itemslot != nil {
+		json["item"] = itemslot.Json()
 	}
 
 	return json
