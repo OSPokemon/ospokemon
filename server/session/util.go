@@ -19,14 +19,8 @@ func Add(account *ospokemon.Account) *Session {
 		Expire:    time.Now().Add(time.Duration(option.Int("sessionlife")) * time.Second),
 	}
 
-	account.AddPart(session)
 	Sessions[session.SessionId] = session
 
-	return session
-}
-
-func Get(account *ospokemon.Account) *Session {
-	session, _ := account.Parts[PARTsession].(*Session)
 	return session
 }
 
@@ -37,6 +31,15 @@ func Find(r *http.Request) *Session {
 		}
 	}
 
+	return nil
+}
+
+func Get(account *ospokemon.Account) *Session {
+	for _, session := range Sessions {
+		if session.Username == account.Username {
+			return session
+		}
+	}
 	return nil
 }
 

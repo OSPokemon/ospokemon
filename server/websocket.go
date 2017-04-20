@@ -26,7 +26,6 @@ var WebsocketHandler = websocket.Handler(func(conn *websocket.Conn) {
 	} else {
 		log.Add("Universe", p.GetEntity().UniverseId).Add("Username", s.Username).Add("SessionId", s.SessionId).Info("websocket opened")
 
-		p.AddPart(s)
 		u.Add(p.GetEntity())
 		Listen(s)
 	}

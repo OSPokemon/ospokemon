@@ -11,8 +11,6 @@ import (
 	"time"
 )
 
-const PARTsession = "session"
-
 type Session struct {
 	Username  string
 	SessionId uint
@@ -23,31 +21,25 @@ type Session struct {
 
 var Sessions = make(map[uint]*Session)
 
-func (s *Session) Part() string {
-	return PARTsession
-}
+func (s *Session) Frame() {
+	if s.Websocket == nil {
+		return
+	}
 
-func (s *Session) Update(u *ospokemon.Universe, e *ospokemon.Entity, d time.Duration) {
 	player, _ := ospokemon.GetPlayer(s.Username)
 	if player == nil {
 		return
 	}
 
-	data := make(map[string]interface{})
-	universeData := make(map[uint]interface{})
-
-	data["universe"] = universeData
-	data["username"] = s.Username
-
-	data["entityid"] = e.Id
-
-	for entityId, entity := range u.Entities {
-		if entity == nil {
-			continue
-		}
-
-		universeData[entityId] = entity.Json()
+	entity := player.GetEntity()
+	universe, _ := ospokemon.GetUniverse(entity.UniverseId)
+	if universe == nil {
+		return
 	}
+
+	data := make(map[string]interface{})
+	data["entityid"] = entity.Id
+	data["universe"] = universe.Frame
 
 	menus := player.GetMenus()
 	if menus["player"] {

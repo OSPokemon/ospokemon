@@ -2,6 +2,7 @@ package ospokemon
 
 import (
 	"github.com/cznic/mathutil"
+	"ospokemon.com/json"
 	"ospokemon.com/log"
 	"ospokemon.com/space"
 	"time"
@@ -15,6 +16,7 @@ type Universe struct {
 	Private  bool
 	// internals
 	bodyIdGen *mathutil.FC32
+	Frame     json.Json
 }
 
 type Space struct {
@@ -37,6 +39,7 @@ func MakeUniverse(universeid uint) *Universe {
 		},
 		Entities:  make(map[uint]*Entity),
 		bodyIdGen: bodyIdGen,
+		Frame:     nil,
 	}
 }
 
@@ -45,13 +48,16 @@ func (u *Universe) GenerateId() uint {
 }
 
 func (u *Universe) Update(d time.Duration) {
-	for _, e := range u.Entities {
-		if e == nil {
+	frame := json.Json{}
+	for entityId, entity := range u.Entities {
+		if entity == nil {
 			continue
 		}
 
-		e.Update(u, d)
+		entity.Update(u, d)
+		frame[json.StringUint(entityId)] = entity.Json()
 	}
+	u.Frame = frame
 
 	for _, spawner := range u.Spawners {
 		spawner.Update(u, d)
@@ -77,8 +83,6 @@ func (u *Universe) Remove(e *Entity) {
 
 	delete(u.Entities, e.Id)
 	e.Id = 0
-
-	// event.Fire(event.UniverseRemove, u, e)
 }
 
 var Multiverse = make(map[uint]*Universe)
