@@ -5,7 +5,7 @@ import (
 	"ospokemon.com/space"
 )
 
-func EntitiesUniversesSelect(universe *ospokemon.Universe) (map[uint]*ospokemon.Entity, error) {
+func EntitiesUniversesSelect(universe *ospokemon.Universe) ([]*ospokemon.Entity, error) {
 	rows, err := Connection.Query(
 		"SELECT id, universe, x, y, dx, dy FROM entities_universes WHERE universe=?",
 		universe.Id,
@@ -23,7 +23,7 @@ func EntitiesUniversesSelect(universe *ospokemon.Universe) (map[uint]*ospokemon.
 
 		err = rows.Scan(&entity.Id, &entity.UniverseId, &r.Anchor.X, &r.Anchor.Y, &r.Dimension.DX, &r.Dimension.DY)
 		if err != nil {
-			return entities, err
+			return nil, err
 		}
 		entities[entity.Id] = entity
 	}
@@ -95,10 +95,13 @@ func EntitiesUniversesSelect(universe *ospokemon.Universe) (map[uint]*ospokemon.
 		entity.AddPart(imaging)
 	}
 
-	// delete temp id
+	// build array to return
+	i := 0
+	ret := make([]*ospokemon.Entity, len(entities))
 	for _, entity := range entities {
-		entity.Id = 0
+		ret[i] = entity
+		i++
 	}
 
-	return entities, nil
+	return ret, nil
 }

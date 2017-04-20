@@ -58,13 +58,14 @@ func (u *Universe) Update(d time.Duration) {
 	}
 }
 
-func (u *Universe) Add(e *Entity) {
-	e.Id = u.GenerateId()
-	u.Entities[e.Id] = e
-
-	log.Add("Universe", u.Id).Add("Entity", e.Id).Debug("ospokemon.Universe.Add")
-
-	// event.Fire(event.UniverseAdd, u, e)
+func (u *Universe) Add(entities ...*Entity) {
+	entitieslog := make([]uint, len(entities))
+	for i, e := range entities {
+		e.Id = u.GenerateId()
+		u.Entities[e.Id] = e
+		entitieslog[i] = e.Id
+	}
+	log.Add("Universe", u.Id).Add("Entity", entitieslog).Debug("ospokemon.Universe.Add")
 }
 
 func (u *Universe) AddSpawner(spawner *Spawner) {

@@ -24,9 +24,7 @@ func UniversesSelect(id uint) (*ospokemon.Universe, error) {
 	if err != nil {
 		return nil, err
 	}
-	for _, entity := range entities {
-		universe.Add(entity)
-	}
+	universe.Add(entities...)
 
 	ospokemon.Multiverse[id] = universe
 
