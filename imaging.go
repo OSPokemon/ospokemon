@@ -1,9 +1,5 @@
 package ospokemon
 
-import (
-	"ospokemon.com/json"
-)
-
 const PARTimaging = "imaging"
 
 type Imaging struct {
@@ -36,11 +32,4 @@ func (i *Imaging) Part() string {
 func (parts Parts) GetImaging() *Imaging {
 	imaging, _ := parts[PARTimaging].(*Imaging)
 	return imaging
-}
-
-func (imaging *Imaging) Json() json.Json {
-	return json.Json{
-		"image":      imaging.Image,
-		"animations": imaging.Animations,
-	}
 }

@@ -1,9 +1,7 @@
 ({
 	class: 'menu.button',
 	emptyData: {
-		imaging: {
-			image: ''
-		},
+		image: '',
 		key: '',
 		amount: ''
 	},
@@ -20,8 +18,8 @@
 			data = ospokemon.element.elements['menu/button'].script.emptyData
 		}
 
-		if (this.image != data.imaging.image) {
-			this.image = data.imaging.image
+		if (this.image != data.image) {
+			this.image = data.image
 			$('img', this).attr("src", this.image)
 		}
 

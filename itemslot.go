@@ -45,7 +45,7 @@ func (itemslot *Itemslot) Json() json.Json {
 	}
 
 	if imaging := itemslot.GetImaging(); imaging != nil {
-		json["imaging"] = imaging.Json()
+		json["image"] = imaging.Image
 	}
 	if entity := itemslot.GetEntity(); entity != nil {
 		json["entity"] = entity.Id

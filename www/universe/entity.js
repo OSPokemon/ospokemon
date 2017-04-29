@@ -13,8 +13,8 @@
 
 		this.id = data.id
 
-		if (image.attr('src') != data.imaging.image) {
-			image.attr('src', data.imaging.image)
+		if (image.attr('src') != data.image) {
+			image.attr('src', data.image)
 		}
 
 		if (this.x != data.shape.anchor.x || this.y != data.shape.anchor.y) {

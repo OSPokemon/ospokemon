@@ -82,7 +82,7 @@ func (entity *Entity) Json() json.Json {
 	}
 
 	if imaging := entity.GetImaging(); imaging != nil {
-		json["imaging"] = imaging.Json()
+		json["image"] = imaging.Image
 	}
 	if player := entity.GetPlayer(); player != nil {
 		json["player"] = player.Json()

@@ -70,7 +70,7 @@ func (binding *Binding) Json() json.Json {
 	}
 
 	if imaging := binding.GetImaging(); imaging != nil {
-		json["imaging"] = imaging.Json()
+		json["image"] = imaging.Image
 	}
 
 	if walk := binding.GetWalk(); walk != "" {
