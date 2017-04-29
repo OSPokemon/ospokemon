@@ -6,42 +6,42 @@ import (
 	"ospokemon.com/event"
 	"ospokemon.com/log"
 	"ospokemon.com/script"
-	"ospokemon.com/server/session"
+	"ospokemon.com/server/sessionman"
 	"time"
 )
 
-func ReceiveMessage(s *session.Session, m *session.WebsocketMessage) {
-	p, _ := ospokemon.GetPlayer(s.Username)
+func ReceiveMessage(session *sessionman.Session, message *sessionman.WebsocketMessage) {
+	p, _ := ospokemon.GetPlayer(session.Username)
 
-	s.Refresh()
+	session.Refresh()
 
-	if m.Event == "Ping" {
+	if message.Event == "Ping" {
 		p.GetToaster().Add(&ospokemon.Toast{
 			Color:   "blue",
 			Message: "Pong",
 			Image:   "/img/ospokemon.png",
 		})
-		s.Send("Pong")
-	} else if m.Event == "Key.Down" {
-		keydown(p, m.Message)
-	} else if m.Event == "Key.Up" {
-		keyup(p, m.Message)
-	} else if m.Event == "Item.Cast" {
-		itemcast(p, m.Message)
-	} else if m.Event == "Binding.Set" {
-		bindingset(p, m.Message)
-	} else if m.Event == "Click.Universe" {
-		clickuniverse(p, m.Message)
-	} else if m.Event == "Click.Entity" {
-		clickentity(p, m.Message)
-	} else if m.Event == "Menu.Toggle" {
-		menutoggle(p, m.Message)
-	} else if m.Event == "Dialog.Choice" {
-		dialogchoice(p, m.Message)
-	} else if m.Event == "Chat" {
-		chat(p, m.Message)
+		session.Send("Pong")
+	} else if message.Event == "Key.Down" {
+		keydown(p, message.Message)
+	} else if message.Event == "Key.Up" {
+		keyup(p, message.Message)
+	} else if message.Event == "Item.Cast" {
+		itemcast(p, message.Message)
+	} else if message.Event == "Binding.Set" {
+		bindingset(p, message.Message)
+	} else if message.Event == "Click.Universe" {
+		clickuniverse(p, message.Message)
+	} else if message.Event == "Click.Entity" {
+		clickentity(p, message.Message)
+	} else if message.Event == "Menu.Toggle" {
+		menutoggle(p, message.Message)
+	} else if message.Event == "Dialog.Choice" {
+		dialogchoice(p, message.Message)
+	} else if message.Event == "Chat" {
+		chat(p, message.Message)
 	} else {
-		log.Add("Message", m).Add("Username", p.Username).Warn("ReceiveMessage: unrecognized message type")
+		log.Add("Message", message).Add("Username", p.Username).Warn("ReceiveMessage: unrecognized message type")
 	}
 }
 

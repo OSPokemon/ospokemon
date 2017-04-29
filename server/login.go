@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"ospokemon.com"
 	"ospokemon.com/log"
-	"ospokemon.com/server/session"
+	"ospokemon.com/server/sessionman"
 )
 
 var LoginHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -13,7 +13,7 @@ var LoginHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	if s := session.Find(r); s != nil {
+	if session := sessionman.FromRequestCookie(r); session != nil {
 		http.Redirect(w, r, "/", 307)
 		return
 	}
@@ -36,11 +36,11 @@ var LoginHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	if s := session.Get(account); s == nil {
-		s = session.Add(account)
-		log.Add("Username", username).Add("SessionId", s.SessionId).Info("login: create session")
+	if session := sessionman.Get(account); session == nil {
+		session = sessionman.Add(account)
+		log.Add("Username", username).Add("SessionId", session.SessionId).Info("login: create session")
 	}
 
-	session.Get(account).WriteSessionId(w)
+	sessionman.Get(account).WriteSessionId(w)
 	http.Redirect(w, r, "/", 307)
 })

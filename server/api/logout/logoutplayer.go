@@ -3,7 +3,7 @@ package logout
 import (
 	"ospokemon.com"
 	"ospokemon.com/log"
-	"ospokemon.com/server/session"
+	"ospokemon.com/server/sessionman"
 )
 
 func LogoutPlayer(username string) {
@@ -13,7 +13,7 @@ func LogoutPlayer(username string) {
 		return
 	}
 
-	session.Remove(account)
+	sessionman.Remove(account)
 
 	ospokemon.Accounts.Delete(account)
 	ospokemon.Accounts.Insert(account)

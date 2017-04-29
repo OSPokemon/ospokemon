@@ -3,20 +3,20 @@ package server
 import (
 	"ospokemon.com/log"
 	"ospokemon.com/server/api/logout"
-	"ospokemon.com/server/session"
+	"ospokemon.com/server/sessionman"
 	"time"
 )
 
 func PollSessionExpirations() {
 	for now := range time.Tick(1 * time.Second) {
-		for _, s := range session.Sessions {
-			if s.Expire.Before(now) {
+		for _, session := range sessionman.Cache {
+			if session.Expire.Before(now) {
 
-				log.Add("Username", s.Username).Add("SessionId", s.SessionId).Info("session expired")
-				logout.LogoutPlayer(s.Username)
+				log.Add("Username", session.Username).Add("SessionId", session.SessionId).Info("session expired")
+				logout.LogoutPlayer(session.Username)
 
-				if s.Websocket != nil {
-					s.Websocket.Close()
+				if session.Websocket != nil {
+					session.Websocket.Close()
 				}
 			}
 		}

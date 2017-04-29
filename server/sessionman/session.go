@@ -1,12 +1,11 @@
-package session
+package sessionman
 
 import (
 	"encoding/json"
 	"golang.org/x/net/websocket"
-	"net/http"
 	"ospokemon.com"
+	"ospokemon.com/log"
 	"ospokemon.com/option"
-	"strconv"
 	"sync"
 	"time"
 )
@@ -19,15 +18,25 @@ type Session struct {
 	sync.Mutex
 }
 
-var Sessions = make(map[uint]*Session)
+func (s *Session) Refresh() {
+	s.Expire = time.Now().Add(time.Duration(option.Int("sessionlife")) * time.Second)
+}
+
+func (s *Session) Send(message string) {
+	websocket.Message.Send(s.Websocket, message)
+}
+
+//move this
 
 func (s *Session) Frame() {
 	if s.Websocket == nil {
+		log.Add("SessionId", s.SessionId).Add("Username", s.Username).Warn("session.Frame: websocket missing")
 		return
 	}
 
-	player, _ := ospokemon.GetPlayer(s.Username)
+	player := ospokemon.Players.Cache[s.Username]
 	if player == nil {
+		log.Add("SessionId", s.SessionId).Add("Username", s.Username).Warn("session.Frame: player missing")
 		return
 	}
 
@@ -39,7 +48,7 @@ func (s *Session) Frame() {
 
 	data := make(map[string]interface{})
 	data["entityid"] = entity.Id
-	data["universe"] = universe.Frame
+	data["universe"] = universe.FullFrame
 
 	menus := player.GetMenus()
 	if menus["player"] {
@@ -74,16 +83,4 @@ func (s *Session) Frame() {
 	})
 
 	s.Send(string(snapshot))
-}
-
-func (s *Session) WriteSessionId(w http.ResponseWriter) {
-	w.Header().Set("Set-Cookie", "SessionId="+strconv.Itoa(int(s.SessionId))+"; Path=/;")
-}
-
-func (s *Session) Refresh() {
-	s.Expire = time.Now().Add(time.Duration(option.Int("sessionlife")) * time.Second)
-}
-
-func (s *Session) Send(message string) {
-	websocket.Message.Send(s.Websocket, message)
 }

@@ -1,4 +1,4 @@
-package session
+package sessionman
 
 type WebsocketMessage struct {
 	Username string

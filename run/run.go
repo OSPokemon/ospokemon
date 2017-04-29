@@ -3,7 +3,7 @@ package run
 import (
 	"ospokemon.com"
 	"ospokemon.com/option"
-	"ospokemon.com/server/session"
+	"ospokemon.com/server/sessionman"
 	"time"
 )
 
@@ -15,7 +15,7 @@ func Run() {
 			universe.Update(d)
 		}
 
-		for _, s := range session.Sessions {
+		for _, s := range sessionman.Cache {
 			s.Frame()
 		}
 	}
