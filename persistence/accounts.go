@@ -37,7 +37,7 @@ func AccountsSelect(username string) (*ospokemon.Account, error) {
 		return nil, err
 	}
 
-	log.Add("Username", username).Info("accounts select")
+	log.Add("Username", username).Debug("accounts select")
 	return account, nil
 }
 
@@ -58,7 +58,7 @@ func AccountsInsert(account *ospokemon.Account) error {
 		return err
 	}
 
-	log.Add("Username", account.Username).Info("accounts insert")
+	log.Add("Username", account.Username).Debug("accounts insert")
 	return nil
 }
 
@@ -73,6 +73,6 @@ func AccountsDelete(account *ospokemon.Account) error {
 		return errors.New("accounts delete: " + err.Error())
 	}
 
-	log.Add("Username", account.Username).Info("accounts delete")
+	log.Add("Username", account.Username).Debug("accounts delete")
 	return nil
 }
