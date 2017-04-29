@@ -2,7 +2,7 @@ package server
 
 import (
 	"ospokemon.com/log"
-	"ospokemon.com/server/api/logout"
+	"ospokemon.com/server/routes/logout"
 	"ospokemon.com/server/sessionman"
 	"time"
 )

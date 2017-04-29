@@ -1,13 +1,13 @@
-package server
+package routes
 
 import (
 	"net/http"
 	"ospokemon.com/log"
-	"ospokemon.com/server/api/logout"
+	"ospokemon.com/server/routes/logout"
 	"ospokemon.com/server/sessionman"
 )
 
-var LogoutHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+var Logout = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	if session := sessionman.FromRequestCookie(r); session != nil {
 		log.Add("Username", session.Username).Add("SessionId", session.SessionId).Info("api/logout")
 		logout.LogoutPlayer(session.Username)

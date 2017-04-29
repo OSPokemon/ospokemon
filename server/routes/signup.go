@@ -1,19 +1,20 @@
-package server
+package routes
 
 import (
 	"net/http"
 	"ospokemon.com"
-	"ospokemon.com/server/api/signup"
+	"ospokemon.com/server/routes/signup"
+	"ospokemon.com/server/security"
 )
 
-var SignupHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+var Signup = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		w.WriteHeader(404)
 		return
 	}
 
 	account := ospokemon.MakeAccount(r.FormValue("username"))
-	account.Password = hashpassword(r.FormValue("password"))
+	account.Password = security.HashPassword(r.FormValue("password"))
 
 	signup.MakePlayer(account)
 

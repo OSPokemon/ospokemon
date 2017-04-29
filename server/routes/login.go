@@ -1,13 +1,14 @@
-package server
+package routes
 
 import (
 	"net/http"
 	"ospokemon.com"
 	"ospokemon.com/log"
+	"ospokemon.com/server/security"
 	"ospokemon.com/server/sessionman"
 )
 
-var LoginHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+var Login = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		w.WriteHeader(404)
 		return
@@ -19,7 +20,7 @@ var LoginHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request)
 	}
 
 	username := r.FormValue("username")
-	password := hashpassword(r.FormValue("password"))
+	password := security.HashPassword(r.FormValue("password"))
 
 	account, _ := ospokemon.GetAccount(username)
 	if account == nil {

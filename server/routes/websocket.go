@@ -1,13 +1,14 @@
-package server
+package routes
 
 import (
-	"golang.org/x/net/websocket"
+	ws "golang.org/x/net/websocket"
 	"ospokemon.com"
 	"ospokemon.com/log"
+	"ospokemon.com/server/routes/websocket"
 	"ospokemon.com/server/sessionman"
 )
 
-var WebsocketHandler = websocket.Handler(func(conn *websocket.Conn) {
+var Websocket = ws.Handler(func(conn *ws.Conn) {
 	session := sessionman.FromRequestCookie(conn.Request())
 	if session == nil {
 		log.Add("RemoteAddr", conn.Request().RemoteAddr).Debug("websocket: session error")
@@ -27,6 +28,6 @@ var WebsocketHandler = websocket.Handler(func(conn *websocket.Conn) {
 		log.Add("Universe", p.GetEntity().UniverseId).Add("Username", session.Username).Add("SessionId", session.SessionId).Info("websocket opened")
 
 		u.Add(p.GetEntity())
-		Listen(session)
+		websocket.Listen(session)
 	}
 })

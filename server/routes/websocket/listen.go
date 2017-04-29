@@ -1,10 +1,10 @@
-package server
+package websocket
 
 import (
 	"ospokemon.com"
 	"ospokemon.com/log"
 	"ospokemon.com/option"
-	"ospokemon.com/server/api/logout"
+	"ospokemon.com/server/routes/logout"
 	"ospokemon.com/server/sessionman"
 )
 

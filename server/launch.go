@@ -7,7 +7,7 @@ import (
 )
 
 func Launch() {
-	routes()
+	HandleRoutes()
 	go PollSessionExpirations()
 
 	if option.Bool("usehttps") {
