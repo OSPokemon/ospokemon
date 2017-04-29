@@ -16,8 +16,6 @@ var Websocket = ws.Handler(func(conn *ws.Conn) {
 	}
 
 	session.Lock()
-	defer session.Unlock()
-
 	session.Websocket = conn
 
 	if p, err := ospokemon.GetPlayer(session.Username); err != nil {
@@ -30,4 +28,7 @@ var Websocket = ws.Handler(func(conn *ws.Conn) {
 		u.Add(p.GetEntity())
 		websocket.Listen(session)
 	}
+
+	session.Websocket = nil
+	session.Unlock()
 })
