@@ -9,4 +9,5 @@ patchpath=../patch
 refresh=250
 sessionlife=120
 # allow-refresh=true
+# js-minify=false
 passwordsalt=salt

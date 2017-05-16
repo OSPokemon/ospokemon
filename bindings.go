@@ -2,7 +2,6 @@ package ospokemon
 
 import (
 	"ospokemon.com/json"
-	// "time"
 )
 
 const PARTbindings = "bindings"
@@ -21,6 +20,10 @@ func (parts Parts) GetBindings() Bindings {
 func (bindings Bindings) SetAction(key string, action *Action) {
 	var binding *Binding
 
+	if binding = action.GetBinding(); binding != nil {
+		bindings.Remove(binding.Key)
+	}
+
 	if binding = bindings[key]; binding != nil {
 		binding.RemoveParts()
 	} else {
@@ -34,6 +37,10 @@ func (bindings Bindings) SetAction(key string, action *Action) {
 
 func (bindings Bindings) SetItemslot(key string, itemslot *Itemslot) {
 	var binding *Binding
+
+	if binding = itemslot.GetBinding(); binding != nil {
+		bindings.Remove(binding.Key)
+	}
 
 	if binding = bindings[key]; binding != nil {
 		binding.RemoveParts()
@@ -49,6 +56,10 @@ func (bindings Bindings) SetItemslot(key string, itemslot *Itemslot) {
 func (bindings Bindings) SetWalk(key string, walk string) {
 	var binding *Binding
 
+	// if binding = walk.GetBinding(); binding != nil {
+	// 	bindings.Remove(binding.Key)
+	// }
+
 	if binding = bindings[key]; binding != nil {
 		binding.RemoveParts()
 	} else {
@@ -62,6 +73,10 @@ func (bindings Bindings) SetWalk(key string, walk string) {
 
 func (bindings Bindings) SetMenu(key string, menu string) error {
 	var binding *Binding
+
+	// if binding = menu.GetBinding(); binding != nil {
+	// 	bindings.Remove(binding.Key)
+	// }
 
 	if binding = bindings[key]; binding != nil {
 		binding.RemoveParts()
@@ -91,9 +106,3 @@ func (bindings Bindings) Json() json.Json {
 	}
 	return json
 }
-
-// func (b Bindings) Update(u *Universe, e *Entity, d time.Duration) {
-// 	for _, binding := range b {
-// 		binding.Update(u, e, d)
-// 	}
-// }

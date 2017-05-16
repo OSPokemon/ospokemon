@@ -26,6 +26,9 @@ func MakePlayer(account *ospokemon.Account) {
 		bindings[binding.Key] = binding
 	}
 
+	stats := player.GetStats()
+	stats["speed"] = &ospokemon.Stat{Value: 5, Base: 5}
+
 	player.AddPart(account)
 	player.AddPart(player)
 	account.Parts = player.Parts

@@ -5,19 +5,14 @@ import (
 	"ospokemon.com"
 )
 
-func init() {
-	ospokemon.Scripts["dialogchoice"] = DialogChoice
-}
-
-func DialogChoice(e *ospokemon.Entity, data map[string]interface{}) error {
-	dialog := e.GetDialog()
-	if dialog == nil {
-		return nil
+func DialogChoice(e *ospokemon.Entity, choice string) error {
+	if choice == "" {
+		return errors.New("dialogchoice: missing data")
 	}
 
-	choice, _ := data["choice"].(string)
-	if choice == "" {
-		return nil
+	dialog := e.GetDialog()
+	if dialog == nil {
+		return errors.New("dialogchoice: dialog missing")
 	}
 
 	if nextDialog := dialog.Next(choice); nextDialog != nil {

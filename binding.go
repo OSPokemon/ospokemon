@@ -2,7 +2,6 @@ package ospokemon
 
 import (
 	"ospokemon.com/json"
-	// "time"
 )
 
 const PARTbinding = "binding"
@@ -83,6 +82,3 @@ func (binding *Binding) Json() json.Json {
 
 	return json
 }
-
-// func (b *Binding) Update(u *Universe, e *Entity, d time.Duration) {
-// }

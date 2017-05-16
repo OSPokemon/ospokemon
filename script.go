@@ -17,7 +17,7 @@ func MakeScripter() *Scripter {
 
 func (s *Scripter) Run(e *Entity) error {
 	if Scripts[s.Script] == nil {
-		return errors.New("ospokemon: missing script")
+		return errors.New("missing script: " + s.Script)
 	}
 	return Scripts[s.Script](e, s.Data)
 }

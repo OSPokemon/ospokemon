@@ -30,14 +30,14 @@ func BuildPlayer(username string, class *Class, entity *Entity) *Player {
 	player.AddPart(entity)
 	entity.SetClass(class)
 	player.AddPart(entity.Parts[PARTimaging])
+	entity.Parts = player.Parts
 
 	player.AddPart(MakeItembag())
 	player.AddPart(make(Bindings))
 	player.AddPart(MakeMenus())
 	player.AddPart(&Movement{})
 	player.AddPart(MakeToaster())
-
-	entity.Parts = player.Parts
+	player.AddPart(make(Stats))
 
 	return player
 }

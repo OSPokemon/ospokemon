@@ -3,11 +3,9 @@ package websocket
 import (
 	"encoding/json"
 	"ospokemon.com"
-	"ospokemon.com/event"
 	"ospokemon.com/log"
 	"ospokemon.com/script"
 	"ospokemon.com/server/sessionman"
-	"time"
 )
 
 func ReceiveMessage(session *sessionman.Session, message *sessionman.WebsocketMessage) {
@@ -22,38 +20,26 @@ func ReceiveMessage(session *sessionman.Session, message *sessionman.WebsocketMe
 			Image:   "/img/ospokemon.png",
 		})
 		session.Send("Pong")
-	} else if message.Event == "Key.Down" {
-		keydown(p, message.Message)
-	} else if message.Event == "Key.Up" {
-		keyup(p, message.Message)
-	} else if message.Event == "Item.Cast" {
+	} else if message.Event == "MovementOn" {
+		script.MovementOn(p, message.Message)
+	} else if message.Event == "MovementOff" {
+		script.MovementOff(p, message.Message)
+	} else if message.Event == "MenuToggle" {
+		p.GetMenus().Toggle(ospokemon.Menu(message.Message))
+	} else if message.Event == "Chat" {
+		script.SendChat(p, message.Message)
+	} else if message.Event == "ItemCast" {
 		itemcast(p, message.Message)
-	} else if message.Event == "Binding.Set" {
+	} else if message.Event == "BindingSet" {
 		bindingset(p, message.Message)
 	} else if message.Event == "Click.Universe" {
 		clickuniverse(p, message.Message)
 	} else if message.Event == "Click.Entity" {
 		clickentity(p, message.Message)
-	} else if message.Event == "Menu.Toggle" {
-		menutoggle(p, message.Message)
 	} else if message.Event == "Dialog.Choice" {
-		dialogchoice(p, message.Message)
-	} else if message.Event == "Chat" {
-		chat(p, message.Message)
+		script.DialogChoice(p.GetEntity(), message.Message)
 	} else {
-		log.Add("Message", message).Add("Username", p.Username).Warn("ReceiveMessage: unrecognized message type")
-	}
-}
-
-func keydown(player *ospokemon.Player, key string) {
-	if binding := player.GetBindings()[key]; binding != nil {
-		event.Fire(event.BindingDown, player, binding)
-	}
-}
-
-func keyup(player *ospokemon.Player, key string) {
-	if binding := player.GetBindings()[key]; binding != nil {
-		event.Fire(event.BindingUp, player, binding)
+		log.Add("Message", message).Add("Username", p.Username).Warn("receivemessage: unrecognized message type")
 	}
 }
 
@@ -61,9 +47,9 @@ func itemcast(player *ospokemon.Player, m string) {
 	data := make(map[string]interface{})
 
 	if err := json.Unmarshal([]byte(m), &data); err != nil {
-		log.Add("Error", err).Error("receivemessage: itemcast")
+		log.Add("Username", player.Username).Add("Error", err).Error("receivemessage: itemcast parse")
 	} else if err := script.ItemCast(player.GetEntity(), data); err != nil {
-		log.Add("Username", player.Username).Add("Error", err).Error("receivemessage: itemcast")
+		log.Add("Username", player.Username).Add("Error", err).Error("receivemessage: itemcast script")
 	}
 }
 
@@ -71,9 +57,9 @@ func bindingset(player *ospokemon.Player, m string) {
 	data := make(map[string]interface{})
 
 	if err := json.Unmarshal([]byte(m), &data); err != nil {
-		log.Add("Error", err).Error("receivemessage: bindingset")
+		log.Add("Username", player.Username).Add("Error", err).Error("receivemessage: bindingset parse")
 	} else if err := script.BindingSet(player.GetEntity(), data); err != nil {
-		log.Add("Username", player.Username).Add("Error", err).Error("receivemessage: bindingset")
+		log.Add("Username", player.Username).Add("Error", err).Error("receivemessage: bindingset script")
 	}
 }
 
@@ -81,9 +67,9 @@ func clickuniverse(player *ospokemon.Player, m string) {
 	data := make(map[string]interface{})
 
 	if err := json.Unmarshal([]byte(m), &data); err != nil {
-		log.Add("Error", err).Error("receivemessage: clickuniverse")
+		log.Add("Username", player.Username).Add("Error", err).Error("receivemessage: clickuniverse parse")
 	} else if err := script.ClickUniverse(player.GetEntity(), data); err != nil {
-		log.Add("Username", player.Username).Add("Error", err).Error("receivemessage: clickuniverse")
+		log.Add("Username", player.Username).Add("Error", err).Error("receivemessage: clickuniverse script")
 	}
 }
 
@@ -91,31 +77,8 @@ func clickentity(player *ospokemon.Player, m string) {
 	data := make(map[string]interface{})
 
 	if err := json.Unmarshal([]byte(m), &data); err != nil {
-		log.Add("Error", err).Error("receivemessage: clickuniverse")
+		log.Add("Username", player.Username).Add("Error", err).Error("receivemessage: clickuniverse parse")
 	} else if err := script.ClickEntity(player.GetEntity(), data); err != nil {
-		log.Add("Username", player.Username).Add("Error", err).Error("receivemessage: clickentity")
+		log.Add("Username", player.Username).Add("Error", err).Error("receivemessage: clickentity script")
 	}
-}
-
-func dialogchoice(player *ospokemon.Player, m string) {
-	data := make(map[string]interface{})
-
-	if err := json.Unmarshal([]byte(m), &data); err != nil {
-		log.Add("Error", err).Error("receivemessage: dialogchoice")
-	} else if err := script.DialogChoice(player.GetEntity(), data); err != nil {
-		log.Add("Username", player.Username).Add("Error", err.Error()).Error("receivemessage: itemcast")
-	}
-}
-
-func menutoggle(player *ospokemon.Player, m string) {
-	player.GetMenus().Toggle(ospokemon.Menu(m))
-}
-
-func chat(player *ospokemon.Player, m string) {
-	timer := 3 * time.Second
-	chatmessage := &ospokemon.ChatMessage{
-		Message: m,
-		Timer:   &timer,
-	}
-	player.AddPart(chatmessage)
 }

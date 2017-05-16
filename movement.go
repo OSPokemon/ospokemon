@@ -78,7 +78,11 @@ func (m *Movement) Walk(direction string) {
 		m.Left = true
 	} else if direction == "down" {
 		m.Down = true
+	} else {
+		return
 	}
+
+	m.Target = nil
 }
 
 func (m *Movement) ClearWalk(direction string) {
@@ -90,7 +94,11 @@ func (m *Movement) ClearWalk(direction string) {
 		m.Left = false
 	} else if direction == "down" {
 		m.Down = false
+	} else {
+		return
 	}
+
+	m.Target = nil
 }
 
 func (m *Movement) makeWalkVector() space.Vector {

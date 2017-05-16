@@ -1,0 +1,131 @@
+<div id="root">
+	<div id="universe"></div>
+	<div id="hud">
+		<div id="hud-portrait-frame">
+			<img id="hud-portrait"></img>
+			<span id="hud-name"></span>
+			<div id="hud-stats-block"></div>
+			<div id="hud-casting"></div>
+		</div>
+	</div>
+	<div id="toaster"></div>
+	<div id="bindings"></div>
+	<div id="menus"></div>
+	<div id="chat">
+		<div class="chat-history">
+		</div>
+		<input class="form-control">
+	</div>
+	<!-- itembag -->
+	<div id="itembag">
+		<div class="panel-heading">
+			<img src="/img/ui/menu/itembag.png"></img>
+			<h3 class="panel-title">Bag</h3>
+			<h3 class="panel-title navbar-right"><span class="glyphicon glyphicon-ok-circle" onclick="ospokemon.itembag.toggle()"></span></h3>
+		</div>
+		<div class="panel-body">
+		</div>
+	</div>
+	<!-- actions menu -->
+	<div id="actions" class="panel panel-default">
+		<div class="panel-heading">
+			<img src="/img/ui/menu/actions.png"></img>
+			<h3 class="panel-title">Actions</h3>
+			<h3 class="panel-title navbar-right"><a><span class="glyphicon glyphicon-ok-circle" onclick="ospokemon.actions.toggle()"></span></a></h3>
+		</div>
+		<div class="panel-body">
+		</div>
+	</div>
+	<!-- dialog -->
+	<div id="dialog" class="panel panel-default">
+		<div class="panel-heading">
+			<h3 class="panel-title">Dialog</h3>
+		</div>
+		<div class="panel-body">
+			<div id="dialog-lead"></div>
+			<div id="dialog-text"></div>
+			<div id="dialog-choices"></div>
+		</div>
+	</div>
+
+	<!-- settings menu -->
+	<div id="settings" class="panel panel-default">
+		<div class="panel-heading">
+			<img src="/img/ui/menu/settings.png"></img>
+			<h3 class="panel-title">Settings</h3>
+			<h3 class="panel-title navbar-right">
+				<span class="glyphicon glyphicon-ok-circle" onclick="ospokemon.settings.toggle()"></span>
+			</h3>
+		</div>
+		<ul  class="nav nav-pills">
+			<li><a  href="#settings-menus" data-toggle="tab">Menus</a></li>
+			<li><a href="#settings-movement" data-toggle="tab">Movement</a></li>
+			<li><a href="#settings-logout" data-toggle="tab">Logout</a></li>
+		</ul>
+		<div class="tab-content clearfix">
+			<div class="tab-pane" id="settings-menus">
+				<div class="input-group" id="settings-menus-chat">
+					<span class="input-group-addon">
+						<img src="/img/ui/menu/chat.png">
+					</span>
+					<input type="text" class="form-control">
+				</div>
+				<div class="input-group" id="settings-menus-player">
+					<span class="input-group-addon">
+						<img src="/img/ui/menu/player.png">
+					</span>
+					<input type="text" class="form-control">
+				</div>
+				<div class="input-group" id="settings-menus-itembag">
+					<span class="input-group-addon">
+						<img src="/img/ui/menu/itembag.png">
+					</span>
+					<input type="text" class="form-control">
+				</div>
+				<div class="input-group" id="settings-menus-actions">
+					<span class="input-group-addon">
+						<img src="/img/ui/menu/actions.png">
+					</span>
+					<input type="text" class="form-control">
+				</div>
+				<div class="input-group" id="settings-menus-settings">
+					<span class="input-group-addon">
+						<img src="/img/ui/menu/settings.png">
+					</span>
+					<input type="text" class="form-control">
+				</div>
+			</div>
+			<div class="tab-pane" id="settings-movement">
+				<div class="input-group" id="settings-movement-left">
+					<span class="input-group-addon">
+						<span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
+					</span>
+					<input type="text" class="form-control">
+				</div>
+				<div class="input-group" id="settings-movement-up">
+					<span class="input-group-addon">
+						<span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+					</span>
+					<input type="text" class="form-control">
+				</div>
+				<div class="input-group" id="settings-movement-right">
+					<span class="input-group-addon">
+						<span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+					</span>
+					<input type="text" class="form-control">
+				</div>
+				<div class="input-group" id="settings-movement-down">
+					<span class="input-group-addon">
+						<span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+					</span>
+					<input type="text" class="form-control">
+				</div>
+			</div>
+			<div class="tab-pane" id="settings-logout">
+				<span>Thanks for playing</span>
+				<br />
+				<button class="btn btn-danger">Logout</button>
+			</div>
+		</div>
+	</div>
+</div>

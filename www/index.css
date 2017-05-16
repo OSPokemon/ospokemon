@@ -3,7 +3,7 @@ body {
 	user-select: none;
 }
 
-.universe {
+#universe {
 	position: relative;
 	transition: .2s linear;
 	height: 100%;
@@ -77,67 +77,49 @@ body {
 }
 
 /* dialogs menu*/
-#menu-dialog .panel-body > div {
+#dialog .panel-body > div {
 	padding: 12px;
 }
-.menu-dialog-choice {
+.dialog-choice {
 	margin-right: 8px;
 }
 
-/* menu bar */
-.menu-menubar {
-	position: absolute;
-	bottom: 0px;
-	right: 0px;
-}
-
 /* Bindings bar */
-.menu-bindings {
+#bindings {
 	position: absolute;
 	bottom: 0px;
 	left: 0px;
 }
-.menu-bindings-button {
-	position: relative;
-	display: inline-block;
-	width: 48px;
-	height: 48px;
-	vertical-align: top;
-}
-.menu-bindings-button span {
+
+/* menu bar */
+#menus {
 	position: absolute;
-	font-weight:bold;
-	right: 0px;
-}
-.menu-bindings-button .key {
-	top: 0px;
-}
-.menu-bindings-button .amount {
 	bottom: 0px;
+	right: 0px;
 }
 
 /* Settings menu */
-#menus-settings .input-group {
+#settings .input-group {
 	height: 48px;
 	padding: 12px 48px;
 }
-#menus-settings .input-group-addon {
+#settings .input-group-addon {
 	width: 48px;
 	padding: 0px;
 }
-#menus-settings .input-group-addon img {
+#settings .input-group-addon img {
 	height: 46px;
 	width: 46px;
 }
-#menus-settings input {
+#settings input {
 	height: 48px;
 }
 
 /*chat menu*/
 #chat {
 	position: absolute;
-	left: 100px;
-	right: 100px;
+	left: 200px;
+	right: 200px;
 	bottom: 100px;
 	height: 160px;
 	opacity: 0.5;
@@ -175,6 +157,27 @@ body {
 .toast img {
 	width: 24px;
 	height: 24px;
+}
+
+#hud-portrait-frame {
+	position:absolute;
+	top:24px;
+	left:24px;
+	border: 2px solid #dddddd;
+}
+#hud-name {
+	vertical-align:top;
+	font-size:24px;
+}
+
+#itembag {
+	position: absolute;
+	right: 8px;
+	bottom: 56px;
+	border: 2px solid #dddddd;
+}
+#itembag .panel-heading {
+	background-color: #dddddd;
 }
 
 /* Resizable arrows */

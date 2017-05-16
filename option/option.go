@@ -25,6 +25,7 @@ var options = map[string]*option{
 	"refresh":       &option{"250", "Refresh rate in milliseconds"},
 	"sessionlife":   &option{"180", "Session lifetime in seconds"},
 	"allow-refresh": &option{"false", "Prevent closing session when losing websocket"},
+	"js-minify":     &option{"true", "Minify ospokemon.js after every compilation"},
 	"passwordsalt":  &option{"ospokemonsalt", "Salt string for password hashing"},
 }
 
