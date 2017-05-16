@@ -16,7 +16,7 @@ type Universe struct {
 	Private  bool
 	// internals
 	bodyIdGen *mathutil.FC32
-	Frame     json.Json
+	FullFrame json.Json
 }
 
 type Space struct {
@@ -39,7 +39,7 @@ func MakeUniverse(universeid uint) *Universe {
 		},
 		Entities:  make(map[uint]*Entity),
 		bodyIdGen: bodyIdGen,
-		Frame:     nil,
+		FullFrame: nil,
 	}
 }
 
@@ -57,7 +57,7 @@ func (u *Universe) Update(d time.Duration) {
 		entity.Update(u, d)
 		frame[json.StringUint(entityId)] = entity.Json()
 	}
-	u.Frame = frame
+	u.FullFrame = frame
 
 	for _, spawner := range u.Spawners {
 		spawner.Update(u, d)
