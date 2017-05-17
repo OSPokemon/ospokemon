@@ -1,8 +1,5 @@
 package event
 
-const BindingDown = "BindingDown"
-const BindingUp = "BindingUp"
-
 const Movement = "Movement"
 const Collision = "Collision"
 

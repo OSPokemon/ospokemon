@@ -3,6 +3,10 @@ body {
 	user-select: none;
 }
 
+.float-right {
+	float:right;
+}
+
 #universe {
 	position: relative;
 	transition: .2s linear;
@@ -179,6 +183,30 @@ body {
 #itembag .panel-heading {
 	background-color: #dddddd;
 }
+
+#news {
+	position: absolute;
+	top: 20%;
+	left: 20%;
+	right: 20%;
+	bottom: 20%;
+	border: 2px solid #dddddd;
+	z-index: 1;
+	background-color: white;
+}
+#news .panel-heading {
+	background-color: #dddddd;
+}
+#news .panel-footer {
+	position: absolute;
+	width: 100%;
+	bottom: 0px;
+}
+#news-play-auto-spacer {
+	display: inline-block;
+	padding-top: 10px;
+}
+
 
 /* Resizable arrows */
 .ui-resizable { position: absolute;}

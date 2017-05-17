@@ -50,7 +50,7 @@ ospokemon.script.cache['element/button'] = {
 
 		if (this.key != data.key) {
 			this.key = data.key;
-			$('.key', this).text(this.key);
+			$('.key', this).text(this.key.substr(0, 3));
 		};
 
 		if (this.amount != data.amount) {

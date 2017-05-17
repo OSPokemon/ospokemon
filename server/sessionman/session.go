@@ -23,7 +23,11 @@ func (s *Session) Refresh() {
 }
 
 func (s *Session) Send(message string) {
-	websocket.Message.Send(s.Websocket, message)
+	if s.Websocket != nil {
+		websocket.Message.Send(s.Websocket, message)
+	} else {
+		log.Add("SessionId", s.SessionId).Add("Username", s.Username).Warn("session.Frame: websocket missing")
+	}
 }
 
 func (s *Session) Frame() {
