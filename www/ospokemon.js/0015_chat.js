@@ -13,7 +13,7 @@ ospokemon.event.on('rootready', function() {
 			return;
 		} else {
 			setTimeout(function() {
-				$('input', ospokemon.menu.chat).focus()
+				$('input', ospokemon.chat).focus()
 			});
 			event.stopPropagation();
 			return false
