@@ -1,8 +1,10 @@
 package ospokemon
 
 import (
-	"ospokemon.com/json"
 	"time"
+
+	"ztaylor.me/cast"
+	"ztaylor.me/js"
 )
 
 const PARTactions = "actions"
@@ -20,19 +22,19 @@ func (parts Parts) GetActions() Actions {
 
 func (actions Actions) Update(universe *Universe, entity *Entity, d time.Duration) {
 	for _, action := range actions {
-		if action.Timer == nil {
-		} else if *action.Timer < d {
+		if t := action.Timer; t != nil {
+		} else if td := t.Duration(); td < d {
 			action.Timer = nil
 		} else {
-			*action.Timer = *action.Timer - d
+			action.Timer.Set(td - d)
 		}
 	}
 }
 
-func (actions Actions) Json() json.Json {
-	data := json.Json{}
+func (actions Actions) Json() js.Object {
+	data := js.Object{}
 	for id, action := range actions {
-		data[json.StringUint(id)] = action.Json()
+		data[cast.String(id)] = action.Json()
 	}
 	return data
 }

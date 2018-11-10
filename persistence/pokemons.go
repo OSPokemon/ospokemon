@@ -3,7 +3,7 @@ package persistence
 import (
 	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/log"
+	"ztaylor.me/log"
 )
 
 func PokemonSelect(id uint) (*ospokemon.Pokemon, error) {

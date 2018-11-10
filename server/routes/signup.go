@@ -2,6 +2,7 @@ package routes
 
 import (
 	"net/http"
+
 	"ospokemon.com"
 	"ospokemon.com/server/routes/signup"
 	"ospokemon.com/server/security"

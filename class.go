@@ -1,8 +1,6 @@
 package ospokemon
 
-import (
-	"ospokemon.com/space"
-)
+import "ospokemon.com/space"
 
 type Class struct {
 	Id         uint

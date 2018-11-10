@@ -1,21 +1,23 @@
 package ospokemon
 
 import (
-	"ospokemon.com/json"
-	"ospokemon.com/log"
 	"time"
+
+	"ztaylor.me/cast"
+	"ztaylor.me/js"
+	"ztaylor.me/log"
 )
 
 const PARTitembag = "itembag"
 
 type Itembag struct {
-	Timers map[uint]*time.Duration
+	Timers map[uint]*Timer
 	Slots  map[uint]*Itemslot
 }
 
 func MakeItembag() *Itembag {
 	bag := &Itembag{
-		Timers: make(map[uint]*time.Duration),
+		Timers: make(map[uint]*Timer),
 		Slots:  make(map[uint]*Itemslot),
 	}
 
@@ -68,16 +70,16 @@ func (itembag *Itembag) Remove(item *Item, amount int) bool {
 	return true
 }
 
-func (itembag *Itembag) Json() json.Json {
-	data := json.Json{}
+func (itembag *Itembag) Json() js.Object {
+	data := js.Object{}
 
 	for id, itemslot := range itembag.Slots {
 		if itemslot == nil {
-			data[json.StringUint(id)] = nil
+			data[cast.String(id)] = nil
 		} else {
 			itemslotJson := itemslot.Json()
-			itemslotJson["timer"] = json.FmtDuration(itembag.Timers[itemslot.Item.Id])
-			data[json.StringUint(id)] = itemslotJson
+			itemslotJson["timer"] = itembag.Timers[itemslot.Item.Id].Fmt()
+			data[cast.String(id)] = itemslotJson
 		}
 	}
 
@@ -96,9 +98,11 @@ func (itembag *Itembag) Update(u *Universe, e *Entity, d time.Duration) {
 			continue
 		}
 
-		*timer = *timer - d
+		td := timer.Duration()
 
-		if *timer <= item.Cooldown && *timer+d > item.Cooldown {
+		timer.Set(td - d)
+
+		if td <= item.Cooldown && td+d > item.Cooldown {
 			itemslot := itembag.Slots[itemid]
 			err := itemslot.Item.Run(e)
 

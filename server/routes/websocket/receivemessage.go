@@ -2,10 +2,11 @@ package websocket
 
 import (
 	"encoding/json"
+
 	"ospokemon.com"
-	"ospokemon.com/log"
 	"ospokemon.com/script"
 	"ospokemon.com/server/sessionman"
+	"ztaylor.me/log"
 )
 
 func ReceiveMessage(session *sessionman.Session, message *sessionman.WebsocketMessage) {

@@ -1,9 +1,10 @@
 package persistence
 
 import (
-	"ospokemon.com"
-	"ospokemon.com/log"
 	"time"
+
+	"ospokemon.com"
+	"ztaylor.me/log"
 )
 
 func ItembagsPlayersSelect(player *ospokemon.Player) (*ospokemon.Itembag, error) {
@@ -53,7 +54,7 @@ func ItembagsPlayersSelect(player *ospokemon.Player) (*ospokemon.Itembag, error)
 		}
 
 		if t := time.Duration(timebuff); timebuff > 0 {
-			itembag.Timers[itembuff] = &t
+			itembag.Timers[itembuff].Set(t)
 		} else {
 			itembag.Timers[itembuff] = nil
 		}

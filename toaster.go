@@ -1,7 +1,8 @@
 package ospokemon
 
 import (
-	"ospokemon.com/json"
+	"ztaylor.me/cast"
+	"ztaylor.me/js"
 )
 
 const PARTtoaster = "toaster"
@@ -43,18 +44,18 @@ func (toaster *Toaster) Clear() {
 	*toaster = *MakeToaster()
 }
 
-func (toast *Toast) Json() json.Json {
-	return json.Json{
+func (toast *Toast) Json() js.Object {
+	return js.Object{
 		"color":   toast.Color,
 		"image":   toast.Image,
 		"message": toast.Message,
 	}
 }
 
-func (toaster *Toaster) Json() json.Json {
-	data := make(json.Json)
+func (toaster *Toaster) Json() js.Object {
+	data := js.Object{}
 	for id, toast := range *toaster {
-		data[json.StringInt(id)] = toast.Json()
+		data[cast.String(id)] = toast.Json()
 	}
 	return data
 }

@@ -2,8 +2,9 @@ package persistence
 
 import (
 	"errors"
+
 	"ospokemon.com"
-	"ospokemon.com/log"
+	"ztaylor.me/log"
 )
 
 func DialogsSelect(universe *ospokemon.Universe) (map[uint]*ospokemon.Dialog, error) {

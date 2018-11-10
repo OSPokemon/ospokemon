@@ -1,8 +1,6 @@
 package ospokemon
 
-import (
-	"ospokemon.com/json"
-)
+import "ztaylor.me/js"
 
 const PARTitemslot = "itemslot"
 
@@ -38,8 +36,8 @@ func (parts Parts) GetItemslot() *Itemslot {
 	return itemslot
 }
 
-func (itemslot *Itemslot) Json() json.Json {
-	json := json.Json{
+func (itemslot *Itemslot) Json() js.Object {
+	json := js.Object{
 		"item":   itemslot.Item.Json(),
 		"amount": itemslot.Amount,
 	}

@@ -2,12 +2,14 @@ package sessionman
 
 import (
 	"encoding/json"
-	"golang.org/x/net/websocket"
-	"ospokemon.com"
-	"ospokemon.com/log"
-	"ospokemon.com/option"
 	"sync"
 	"time"
+
+	"golang.org/x/net/websocket"
+	"ospokemon.com"
+	"ztaylor.me/cast"
+	"ztaylor.me/env"
+	"ztaylor.me/log"
 )
 
 type Session struct {
@@ -19,7 +21,8 @@ type Session struct {
 }
 
 func (s *Session) Refresh() {
-	s.Expire = time.Now().Add(time.Duration(option.Int("sessionlife")) * time.Second)
+	env := env.Global()
+	s.Expire = time.Now().Add(time.Duration(cast.Int(env.Get("sessionlife"))) * time.Second)
 }
 
 func (s *Session) Send(message string) {

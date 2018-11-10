@@ -2,9 +2,10 @@ package routes
 
 import (
 	"net/http"
-	"ospokemon.com/log"
+
 	"ospokemon.com/server/routes/logout"
 	"ospokemon.com/server/sessionman"
+	"ztaylor.me/log"
 )
 
 var Logout = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

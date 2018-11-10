@@ -1,11 +1,13 @@
 package ospokemon
 
 import (
-	"github.com/cznic/mathutil"
-	"ospokemon.com/json"
-	"ospokemon.com/log"
-	"ospokemon.com/space"
 	"time"
+
+	"github.com/cznic/mathutil"
+	"ospokemon.com/space"
+	"ztaylor.me/cast"
+	"ztaylor.me/js"
+	"ztaylor.me/log"
 )
 
 type Universe struct {
@@ -16,7 +18,7 @@ type Universe struct {
 	Private  bool
 	// internals
 	bodyIdGen *mathutil.FC32
-	FullFrame json.Json
+	FullFrame js.Object
 }
 
 type Space struct {
@@ -48,14 +50,14 @@ func (u *Universe) GenerateId() uint {
 }
 
 func (u *Universe) Update(d time.Duration) {
-	frame := json.Json{}
+	frame := js.Object{}
 	for entityId, entity := range u.Entities {
 		if entity == nil {
 			continue
 		}
 
 		entity.Update(u, d)
-		frame[json.StringUint(entityId)] = entity.Json()
+		frame[cast.String(entityId)] = entity.Json()
 	}
 	u.FullFrame = frame
 

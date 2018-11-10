@@ -1,16 +1,17 @@
 package ospokemon
 
 import (
-	"ospokemon.com/event"
-	"ospokemon.com/json"
 	"time"
+
+	"ospokemon.com/event"
+	"ztaylor.me/js"
 )
 
 const PARTaction = "action"
 
 type Action struct {
 	Spell *Spell
-	Timer *time.Duration
+	*Timer
 	Parts
 }
 
@@ -43,9 +44,9 @@ func (a *Action) Update(universe *Universe, entity *Entity, d time.Duration) {
 	}
 }
 
-func (a *Action) Json() json.Json {
-	return json.Json{
-		"timer": json.FmtDuration(a.Timer),
+func (a *Action) Json() js.Object {
+	return js.Object{
+		"timer": a.Timer.Fmt(),
 		"spell": a.Spell.Json(),
 	}
 }

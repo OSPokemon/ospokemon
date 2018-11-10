@@ -1,8 +1,6 @@
 package ospokemon
 
-import (
-	"ospokemon.com/json"
-)
+import "ztaylor.me/js"
 
 const PARTdialog = "dialog"
 
@@ -43,8 +41,8 @@ func (parts Parts) GetDialog() *Dialog {
 	return dialog
 }
 
-func (dialog *Dialog) Json() json.Json {
-	json := json.Json{
+func (dialog *Dialog) Json() js.Object {
+	json := js.Object{
 		"id":   dialog.Id,
 		"lead": dialog.Lead,
 		"text": dialog.Text,

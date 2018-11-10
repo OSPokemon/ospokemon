@@ -2,7 +2,7 @@ package persistence
 
 import (
 	"ospokemon.com"
-	"ospokemon.com/log"
+	"ztaylor.me/log"
 )
 
 func EntitiesItemsSelect(universe *ospokemon.Universe) (map[uint]*ospokemon.Itemslot, error) {

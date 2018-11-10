@@ -3,7 +3,7 @@ package run
 import (
 	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/log"
+	"ztaylor.me/log"
 )
 
 func init() {
@@ -16,7 +16,7 @@ func ActionCast(args ...interface{}) {
 	action := args[2].(*ospokemon.Action)
 
 	spell := action.Spell
-	timer := spell.Cooldown
+	timer := ospokemon.Timer(spell.Cooldown)
 	action.Timer = &timer
 
 	if script, ok := ospokemon.Scripts[spell.Script]; ok {

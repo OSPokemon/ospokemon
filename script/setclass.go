@@ -3,7 +3,7 @@ package script
 import (
 	"errors"
 	"ospokemon.com"
-	"ospokemon.com/log"
+	"ztaylor.me/log"
 	"strconv"
 )
 

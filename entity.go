@@ -1,10 +1,11 @@
 package ospokemon
 
 import (
-	"ospokemon.com/event"
-	"ospokemon.com/json"
-	"ospokemon.com/space"
 	"time"
+
+	"ospokemon.com/event"
+	"ospokemon.com/space"
+	"ztaylor.me/js"
 )
 
 const PARTentity = "entity"
@@ -75,8 +76,8 @@ func (e *Entity) Move(vector space.Vector, universe *Universe) {
 	}
 }
 
-func (entity *Entity) Json() json.Json {
-	json := json.Json{
+func (entity *Entity) Json() js.Object {
+	json := js.Object{
 		"id":    entity.Id,
 		"shape": entity.Shape.Snapshot(),
 	}

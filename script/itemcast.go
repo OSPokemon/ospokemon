@@ -2,6 +2,7 @@ package script
 
 import (
 	"errors"
+
 	"ospokemon.com"
 	"ospokemon.com/script/util"
 )
@@ -30,7 +31,7 @@ func ItemCast(e *ospokemon.Entity, data map[string]interface{}) error {
 		return errors.New("itemcast: itemslot missing")
 	}
 
-	timer := item.CastTime + item.Cooldown
+	timer := ospokemon.Timer(item.CastTime + item.Cooldown)
 	itembag.Timers[itemslot.Item.Id] = &timer
 	return nil
 }

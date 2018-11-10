@@ -2,18 +2,23 @@ package persistence
 
 import (
 	"database/sql"
-	_ "github.com/mattn/go-sqlite3"
-	"ospokemon.com/log"
-	"ospokemon.com/option"
+
+	"ztaylor.me/db"
+	"ztaylor.me/env"
+	"ztaylor.me/log"
 )
 
 var Connection *sql.DB
 
-func init() {
+func Connect(env env.Provider) {
 	var err error
-	Connection, err = sql.Open("sqlite3", option.String("dbpath"))
+	Connection, err = db.OpenEnv(env)
+
+	log := log.Add("Host", env.Get(db.DB_HOST))
 
 	if err != nil {
-		log.Add("Path", option.String("dbpath")).Add("Error", err.Error()).Error("query.init")
+		log.Add("Error", err.Error()).Error("persistence.Connect")
+	} else {
+		log.Info("persistence.Connect")
 	}
 }

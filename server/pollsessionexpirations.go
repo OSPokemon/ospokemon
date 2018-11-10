@@ -1,10 +1,11 @@
 package server
 
 import (
-	"ospokemon.com/log"
+	"time"
+
 	"ospokemon.com/server/routes/logout"
 	"ospokemon.com/server/sessionman"
-	"time"
+	"ztaylor.me/log"
 )
 
 func PollSessionExpirations() {

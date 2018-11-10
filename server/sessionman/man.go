@@ -1,13 +1,15 @@
 package sessionman
 
 import (
-	"github.com/cznic/mathutil"
-	"golang.org/x/net/websocket"
 	"net/http"
-	"ospokemon.com"
-	"ospokemon.com/option"
 	"strconv"
 	"time"
+
+	"github.com/cznic/mathutil"
+	"golang.org/x/net/websocket"
+	"ospokemon.com"
+	"ztaylor.me/cast"
+	"ztaylor.me/env"
 )
 
 var Cache = make(map[uint]*Session)
@@ -23,10 +25,11 @@ func Get(account *ospokemon.Account) *Session {
 }
 
 func Add(account *ospokemon.Account) *Session {
+	env := env.Global()
 	session := &Session{
 		Username:  account.Username,
 		SessionId: uint(sessionIdGen.Next()),
-		Expire:    time.Now().Add(time.Duration(option.Int("sessionlife")) * time.Second),
+		Expire:    time.Now().Add(time.Duration(cast.Int(env.Get("sessionlife"))) * time.Second),
 	}
 
 	Cache[session.SessionId] = session

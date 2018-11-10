@@ -1,9 +1,10 @@
 package persistence
 
 import (
-	"ospokemon.com"
-	"ospokemon.com/log"
 	"time"
+
+	"ospokemon.com"
+	"ztaylor.me/log"
 )
 
 func init() {

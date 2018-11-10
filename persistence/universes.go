@@ -1,8 +1,6 @@
 package persistence
 
-import (
-	"ospokemon.com"
-)
+import "ospokemon.com"
 
 func init() {
 	ospokemon.Universes.Select = UniversesSelect

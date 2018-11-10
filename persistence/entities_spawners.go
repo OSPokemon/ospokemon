@@ -1,9 +1,10 @@
 package persistence
 
 import (
-	"ospokemon.com"
-	"ospokemon.com/log"
 	"time"
+
+	"ospokemon.com"
+	"ztaylor.me/log"
 )
 
 func EntitiesSpawnersSelect(universe *ospokemon.Universe) (map[uint]*ospokemon.Spawner, error) {

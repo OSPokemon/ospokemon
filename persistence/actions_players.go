@@ -1,9 +1,10 @@
 package persistence
 
 import (
-	"ospokemon.com"
-	"ospokemon.com/log"
 	"time"
+
+	"ospokemon.com"
+	"ztaylor.me/log"
 )
 
 func ActionsPlayersSelect(player *ospokemon.Player) (ospokemon.Actions, error) {
@@ -32,7 +33,7 @@ func ActionsPlayersSelect(player *ospokemon.Player) (ospokemon.Actions, error) {
 			action := ospokemon.BuildAction(spell)
 
 			if t := time.Duration(timebuff); timebuff > 0 {
-				action.Timer = &t
+				action.Timer.Set(t)
 			} else {
 				action.Timer = nil
 			}

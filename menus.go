@@ -1,8 +1,6 @@
 package ospokemon
 
-import (
-	"ospokemon.com/log"
-)
+import "ztaylor.me/log"
 
 const PARTmenu = "menu"
 const PARTmenus = "menus"

@@ -2,8 +2,8 @@ package logout
 
 import (
 	"ospokemon.com"
-	"ospokemon.com/log"
 	"ospokemon.com/server/sessionman"
+	"ztaylor.me/log"
 )
 
 func LogoutPlayer(username string) {

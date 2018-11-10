@@ -3,9 +3,9 @@ package routes
 import (
 	ws "golang.org/x/net/websocket"
 	"ospokemon.com"
-	"ospokemon.com/log"
 	"ospokemon.com/server/routes/websocket"
 	"ospokemon.com/server/sessionman"
+	"ztaylor.me/log"
 )
 
 var Websocket = ws.Handler(func(conn *ws.Conn) {

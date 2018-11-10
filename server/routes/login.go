@@ -2,10 +2,11 @@ package routes
 
 import (
 	"net/http"
+
 	"ospokemon.com"
-	"ospokemon.com/log"
 	"ospokemon.com/server/security"
 	"ospokemon.com/server/sessionman"
+	"ztaylor.me/log"
 )
 
 var Login = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

@@ -1,8 +1,9 @@
 package ospokemon
 
 import (
-	"ospokemon.com/json"
 	"time"
+
+	"ztaylor.me/js"
 )
 
 const PARTplayer = "player"
@@ -54,8 +55,8 @@ func (parts Parts) GetPlayer() *Player {
 func (p *Player) Update(u *Universe, e *Entity, d time.Duration) {
 }
 
-func (player *Player) Json() json.Json {
-	return json.Json{
+func (player *Player) Json() js.Object {
+	return js.Object{
 		"username": player.Username,
 		"level":    player.Level,
 	}

@@ -1,8 +1,6 @@
 package ospokemon
 
-import (
-	"ospokemon.com/json"
-)
+import "ztaylor.me/js"
 
 const PARTbindings = "bindings"
 
@@ -99,8 +97,8 @@ func (bindings Bindings) Remove(key string) error {
 	return nil
 }
 
-func (bindings Bindings) Json() json.Json {
-	json := json.Json{}
+func (bindings Bindings) Json() js.Object {
+	json := js.Object{}
 	for key, binding := range bindings {
 		json[key] = binding.Json()
 	}

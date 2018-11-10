@@ -1,8 +1,6 @@
 package ospokemon
 
-import (
-	"time"
-)
+import "time"
 
 const PARTaccount = "account"
 

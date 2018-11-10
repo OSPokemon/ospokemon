@@ -1,8 +1,9 @@
 package ospokemon
 
 import (
-	"ospokemon.com/json"
 	"time"
+
+	"ztaylor.me/js"
 )
 
 type Spell struct {
@@ -22,7 +23,7 @@ func MakeSpell() *Spell {
 	}
 }
 
-func (s *Spell) Json() json.Json {
+func (s *Spell) Json() js.Object {
 	return map[string]interface{}{
 		"id":         s.Id,
 		"casttime":   s.CastTime,

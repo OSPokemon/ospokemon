@@ -2,7 +2,7 @@ package persistence
 
 import (
 	"ospokemon.com"
-	"ospokemon.com/log"
+	"ztaylor.me/log"
 )
 
 func BindingsMovementsPlayersSelect(player *ospokemon.Player) (map[string]string, error) {

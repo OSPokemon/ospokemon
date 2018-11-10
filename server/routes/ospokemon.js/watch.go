@@ -2,23 +2,22 @@ package ospokemonjs
 
 import (
 	"github.com/fsnotify/fsnotify"
-	"ospokemon.com/log"
+	"ztaylor.me/env"
+	"ztaylor.me/log"
 )
 
-var watcher *fsnotify.Watcher
-
-func init() {
-	if w, err := fsnotify.NewWatcher(); err != nil {
-		log.Error(err)
-	} else if err = w.Add(path); err != nil {
-		log.Error(err)
-	} else {
-		watcher = w
-		go Watch()
-	}
-}
-
 func Watch() {
+	env := env.Global()
+	watcher, err := fsnotify.NewWatcher()
+	path := getPath(env)
+	if err != nil {
+		log.Error(err)
+		return
+	} else if err = watcher.Add(path); err != nil {
+		log.Error(err)
+		return
+	}
+
 	for {
 		select {
 		case event := <-watcher.Events:

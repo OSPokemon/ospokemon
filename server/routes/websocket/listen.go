@@ -2,13 +2,15 @@ package websocket
 
 import (
 	"ospokemon.com"
-	"ospokemon.com/log"
-	"ospokemon.com/option"
 	"ospokemon.com/server/routes/logout"
 	"ospokemon.com/server/sessionman"
+	"ztaylor.me/cast"
+	"ztaylor.me/env"
+	"ztaylor.me/log"
 )
 
 func Listen(session *sessionman.Session) {
+	env := env.Global()
 	for session.Websocket != nil {
 		if message, err := session.Receive(); err == nil {
 			go ReceiveMessage(session, message)
@@ -26,7 +28,7 @@ func Listen(session *sessionman.Session) {
 
 			log.Add("Username", session.Username).Add("Universe", account.GetEntity().UniverseId).Add("SessionId", session.SessionId).Info("websocket closed")
 
-			if !option.Bool("allow-refresh") {
+			if !cast.Bool(env.Get("allow-refresh")) {
 				logout.LogoutPlayer(session.Username)
 			} else {
 				logout.RemoveEntity(session.Username)

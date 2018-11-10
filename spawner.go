@@ -1,8 +1,8 @@
 package ospokemon
 
 import (
-	"ospokemon.com/log"
 	"time"
+	"ztaylor.me/log"
 )
 
 const PARTspawner = "spawner"

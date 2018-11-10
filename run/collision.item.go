@@ -3,7 +3,7 @@ package run
 import (
 	"ospokemon.com"
 	"ospokemon.com/event"
-	"ospokemon.com/log"
+	"ztaylor.me/log"
 	"ospokemon.com/script"
 )
 

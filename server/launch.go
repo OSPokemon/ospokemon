@@ -2,17 +2,19 @@ package server
 
 import (
 	"net/http"
-	"ospokemon.com/log"
-	"ospokemon.com/option"
+
+	"ztaylor.me/cast"
+	"ztaylor.me/env"
+	"ztaylor.me/log"
 )
 
-func Launch() {
-	HandleRoutes()
+func Launch(env env.Provider) {
+	HandleRoutes(env)
 	go PollSessionExpirations()
 
-	if option.Bool("usehttps") {
+	if cast.Bool(env.Get("usehttps")) {
 		log.Error(http.ListenAndServeTLS(":443", "ospokemon.cert", "ospokemon.key", nil))
 	} else {
-		log.Error(http.ListenAndServe(":"+option.String("port"), nil))
+		log.Error(http.ListenAndServe(":"+env.Get("port"), nil))
 	}
 }

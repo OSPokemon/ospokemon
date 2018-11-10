@@ -1,8 +1,6 @@
 package ospokemon
 
-import (
-	"ospokemon.com/json"
-)
+import "ztaylor.me/js"
 
 const PARTbinding = "binding"
 
@@ -63,8 +61,8 @@ func (binding *Binding) RemoveParts() {
 	}
 }
 
-func (binding *Binding) Json() json.Json {
-	json := json.Json{
+func (binding *Binding) Json() js.Object {
+	json := js.Object{
 		"key": binding.Key,
 	}
 
