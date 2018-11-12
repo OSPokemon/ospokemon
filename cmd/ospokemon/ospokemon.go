@@ -27,6 +27,13 @@ func main() {
 		return
 	}
 
+	if env.Get("edit") != "" {
+		log.Info("starting edit...")
+		Editor()
+		log.Info("edit finished...")
+		return
+	}
+
 	log.WithFields(log.Fields{
 		"loglevel": env.Get("loglevel"),
 		"port":     env.Get("port"),
