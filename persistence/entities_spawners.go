@@ -3,6 +3,7 @@ package persistence
 import (
 	"time"
 
+	"github.com/pkg/errors"
 	"ospokemon.com"
 	"ztaylor.me/log"
 )
@@ -15,7 +16,7 @@ func EntitiesSpawnersSelect(universe *ospokemon.Universe) (map[uint]*ospokemon.S
 		universe.Id,
 	)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "entities_spawners.select")
 	}
 
 	spawnerslog := make([]uint, 0)
@@ -25,7 +26,7 @@ func EntitiesSpawnersSelect(universe *ospokemon.Universe) (map[uint]*ospokemon.S
 		var speedbuff uint64
 		err = rows.Scan(&entityId, &speedbuff)
 		if err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "entities_spawners.scan")
 		}
 
 		spawner := ospokemon.MakeSpawner()

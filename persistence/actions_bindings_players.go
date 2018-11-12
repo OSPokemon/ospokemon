@@ -7,7 +7,7 @@ import (
 
 func ActionsBindingsPlayersSelect(player *ospokemon.Player) (map[string]uint, error) {
 	rows, err := Connection.Query(
-		"SELECT spell, key FROM actions_bindings_players WHERE username=?",
+		"SELECT spell, `key` FROM actions_bindings_players WHERE username=?",
 		player.Username,
 	)
 
@@ -47,7 +47,7 @@ func ActionsBindingsPlayersInsert(player *ospokemon.Player) error {
 
 	for key, action := range actions {
 		_, err := Connection.Exec(
-			"INSERT INTO actions_bindings_players (username, key, spell) VALUES (?, ?, ?)",
+			"INSERT INTO actions_bindings_players (username, `key`, spell) VALUES (?, ?, ?)",
 			player.Username,
 			key,
 			action,

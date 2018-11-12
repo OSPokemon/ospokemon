@@ -1,6 +1,7 @@
 package persistence
 
 import (
+	"github.com/pkg/errors"
 	"ospokemon.com"
 	"ztaylor.me/log"
 )
@@ -11,27 +12,30 @@ func ClassesEntitiesSelect(universe *ospokemon.Universe) (map[uint]*ospokemon.Cl
 		universe.Id,
 	)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "classes_entities.select")
 	}
 
-	classes := make(map[uint]*ospokemon.Class)
+	classesData := make(map[uint]uint)
 
 	for rows.Next() {
 		var entityId, classbuff uint
-		err := rows.Scan(&entityId, &classbuff)
-		if err != nil {
-			return nil, err
+		if err := rows.Scan(&entityId, &classbuff); err != nil {
+			return nil, errors.Wrap(err, "classes_entities.scan")
 		}
+		classesData[entityId] = classbuff
+	}
+	rows.Close()
 
-		class, err := ospokemon.GetClass(classbuff)
-		if err != nil {
-			return nil, err
+	classes := make(map[uint]*ospokemon.Class)
+
+	for k, v := range classesData {
+		if class, err := ospokemon.GetClass(v); err != nil {
+			return nil, errors.Wrap(err, "classes_entities.getclass")
+		} else {
+			classes[k] = class
 		}
-
-		classes[entityId] = class
 	}
 
 	log.Add("Classes", classes).Debug("classes_entities select")
-
 	return classes, nil
 }

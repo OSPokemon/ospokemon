@@ -1,8 +1,7 @@
 package persistence
 
 import (
-	"errors"
-
+	"github.com/pkg/errors"
 	"ospokemon.com"
 	"ospokemon.com/space"
 	"ztaylor.me/log"
@@ -26,12 +25,12 @@ func PlayersSelect(username string) (*ospokemon.Player, error) {
 
 	err := row.Scan(&levelbuff, &experiencebuff, &moneybuff, &classbuff, &entity.UniverseId, &r.Anchor.X, &r.Anchor.Y)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "players.scan")
 	}
 
 	class, err := ospokemon.GetClass(classbuff)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "players.getclass")
 	}
 
 	player := ospokemon.BuildPlayer(username, class, entity)
@@ -41,25 +40,25 @@ func PlayersSelect(username string) (*ospokemon.Player, error) {
 
 	actions, err := ActionsPlayersSelect(player)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "players.partactions")
 	}
 	player.AddPart(actions)
 
 	itembag, err := ItembagsPlayersSelect(player)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "players.partitembag")
 	}
 	player.AddPart(itembag)
 
 	stats, err := PlayersStatsSelect(player)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "players.partstats")
 	}
 	player.AddPart(stats)
 
 	err = BindingsPlayersSelect(player)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "players.partbindings")
 	}
 
 	log.Add("Username", player.Username).Debug("players select")

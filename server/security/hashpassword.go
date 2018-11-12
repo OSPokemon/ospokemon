@@ -6,9 +6,8 @@ import (
 	"ztaylor.me/env"
 )
 
-func HashPassword(password string) string {
-	env := env.Global()
-	hash := md5.Sum([]byte(password + env.Get("passwordsalt")))
-	password = string(hash[:])
-	return password
+func HashPassword(env env.Provider, password string) string {
+	salt := env.Get("passwordsalt")
+	hash := md5.Sum([]byte(password + salt))
+	return string(hash[:])
 }

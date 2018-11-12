@@ -32,7 +32,7 @@ func SpellsSelect(id uint) (*ospokemon.Spell, error) {
 	}
 
 	rows, err := Connection.Query(
-		"SELECT key, value FROM animations_spells WHERE spell=?",
+		"SELECT `key`, value FROM animations_spells WHERE spell=?",
 		id,
 	)
 	if err != nil {
@@ -50,7 +50,7 @@ func SpellsSelect(id uint) (*ospokemon.Spell, error) {
 	rows.Close()
 
 	rows, err = Connection.Query(
-		"SELECT key, value FROM spells_data WHERE spell=?",
+		"SELECT `key`, value FROM spells_data WHERE spell=?",
 		id,
 	)
 	if err != nil {

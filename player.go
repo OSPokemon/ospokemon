@@ -62,16 +62,13 @@ func (player *Player) Json() js.Object {
 	}
 }
 
-func GetPlayer(username string) (*Player, error) {
-	if Players.Cache[username] == nil {
-		if p, err := Players.Select(username); err == nil {
+func GetPlayer(username string) (p *Player, err error) {
+	if p = Players.Cache[username]; p == nil {
+		if p, err = Players.Select(username); err == nil {
 			Players.Cache[username] = p
-		} else {
-			return nil, err
 		}
 	}
-
-	return Players.Cache[username], nil
+	return
 }
 
 // persistence headers

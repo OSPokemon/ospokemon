@@ -1,19 +1,21 @@
 package persistence
 
 import (
-	"errors"
+	"strings"
 
+	"github.com/pkg/errors"
 	"ospokemon.com"
+	"ztaylor.me/cast"
 	"ztaylor.me/log"
 )
 
-func DialogsSelect(universe *ospokemon.Universe) (map[uint]*ospokemon.Dialog, error) {
+func DialogsSelect(universeID uint) (map[uint]*ospokemon.Dialog, error) {
 	rows, err := Connection.Query(
 		"SELECT entity, id, parent, lead, text FROM dialogs WHERE universe=?",
-		universe.Id,
+		universeID,
 	)
 	if err != nil {
-		return nil, errors.New("dialogsselect: " + err.Error())
+		return nil, errors.Wrap(err, "dialogs.select")
 	}
 
 	// dialogs
@@ -23,7 +25,7 @@ func DialogsSelect(universe *ospokemon.Universe) (map[uint]*ospokemon.Dialog, er
 		var entitybuff uint
 		dialog := ospokemon.MakeDialog()
 		if err = rows.Scan(&entitybuff, &dialog.Id, &dialog.Parent, &dialog.Lead, &dialog.Text); err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "dialogs.scan")
 		}
 
 		if dialogs[entitybuff] == nil {
@@ -33,26 +35,40 @@ func DialogsSelect(universe *ospokemon.Universe) (map[uint]*ospokemon.Dialog, er
 	}
 	rows.Close()
 
-	// dialogs items tests
+	// dialogs items tests item:quanity (i:q)
 
 	rows, err = Connection.Query(
-		"SELECT entity, dialog, item, amount FROM dialogs_items_tests WHERE universe=?",
-		universe.Id,
+		"SELECT entity, dialog, data FROM dialogs_tests WHERE universe=? AND test='i:q'",
+		universeID,
 	)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "dialogs_tests.select")
 	}
 
 	for rows.Next() {
 		dialogItemTest := &ospokemon.DialogItemTest{}
+		var dialogTestData string
 		var entitybuff, dialogbuff uint
 
-		err = rows.Scan(&entitybuff, &dialogbuff, &dialogItemTest.Item, &dialogItemTest.Amount)
+		err = rows.Scan(&entitybuff, &dialogbuff, &dialogTestData)
 		if err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "dialogs_tests.scan")
 		}
 
-		dialogs[entitybuff][dialogbuff].Tests = append(dialogs[entitybuff][dialogbuff].Tests, dialogItemTest)
+		if parts := strings.Split(dialogTestData, ":"); len(parts) != 2 {
+			log.Add("Parts", parts).Warn("dialogs_tests: i:q data invalid")
+		} else if i := cast.Int(parts[0]); i < 1 {
+			log.Add("I", parts[0]).Warn("dialogs_tests: i:q i invalid")
+		} else if q := cast.Int(parts[1]); q < 1 {
+			log.Add("I", parts[0]).Warn("dialogs_tests: i:q q invalid")
+		} else {
+			dialogItemTest.Item = uint(i)
+			dialogItemTest.Amount = q
+			dialogs[entitybuff][dialogbuff].Tests = append(
+				dialogs[entitybuff][dialogbuff].Tests,
+				dialogItemTest,
+			)
+		}
 	}
 	rows.Close()
 
@@ -60,10 +76,10 @@ func DialogsSelect(universe *ospokemon.Universe) (map[uint]*ospokemon.Dialog, er
 
 	rows, err = Connection.Query(
 		"SELECT entity, dialog, script FROM dialogs_scripts WHERE universe=?",
-		universe.Id,
+		universeID,
 	)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "dialogs_scripts.select")
 	}
 
 	for rows.Next() {
@@ -72,7 +88,7 @@ func DialogsSelect(universe *ospokemon.Universe) (map[uint]*ospokemon.Dialog, er
 
 		err = rows.Scan(&entitybuff, &dialogbuff, &scripter.Script)
 		if err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "dialogs_scripts.scan")
 		}
 
 		dialogs[entitybuff][dialogbuff].Scripts[scripter.Script] = scripter
@@ -82,18 +98,18 @@ func DialogsSelect(universe *ospokemon.Universe) (map[uint]*ospokemon.Dialog, er
 	// dialogs_scripts_data
 
 	rows, err = Connection.Query(
-		"SELECT entity, dialog, script, key, value FROM dialogs_scripts_data WHERE universe=?",
-		universe.Id,
+		"SELECT entity, dialog, script, `key`, value FROM dialogs_scripts_data WHERE universe=?",
+		universeID,
 	)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "dialogs_scripts_data.select")
 	}
 
 	for rows.Next() {
 		var entitybuff, dialogbuff uint
 		var scriptbuff, keybuff, valuebuff string
 		if err = rows.Scan(&entitybuff, &dialogbuff, &scriptbuff, &keybuff, &valuebuff); err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "dialogs_scripts_data.scan")
 		}
 		dialogs[entitybuff][dialogbuff].Scripts[scriptbuff].Data[keybuff] = valuebuff
 	}
@@ -118,7 +134,7 @@ func DialogsSelect(universe *ospokemon.Universe) (map[uint]*ospokemon.Dialog, er
 	}
 
 	if len(compiledDialogs) > 0 && err == nil {
-		log.Add("Universe", universe.Id).Add("Dialogs", len(compiledDialogs)).Debug("dialogs select")
+		log.Add("Universe", universeID).Add("Dialogs", len(compiledDialogs)).Info("dialogs select")
 	}
 
 	return compiledDialogs, nil

@@ -2,10 +2,15 @@ package signup
 
 import (
 	"ospokemon.com"
+	"ztaylor.me/log"
 )
 
 func MakePlayer(account *ospokemon.Account) {
-	class, _ := ospokemon.GetClass(0)
+	class, err := ospokemon.GetClass(0)
+	if err != nil {
+		log.Add("Error", err.Error()).Error("signup: failed to get class 0")
+		return
+	}
 	entity := ospokemon.MakeEntity()
 	player := ospokemon.BuildPlayer(account.Username, class, entity)
 	player.Username = account.Username

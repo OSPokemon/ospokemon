@@ -3,9 +3,17 @@ package persistence
 import (
 	"time"
 
+	"github.com/pkg/errors"
 	"ospokemon.com"
 	"ztaylor.me/log"
 )
+
+type tableItemslotsPlayers struct {
+	username string
+	item     uint
+	amount   int
+	sort     int
+}
 
 func ItembagsPlayersSelect(player *ospokemon.Player) (*ospokemon.Itembag, error) {
 	rows, err := Connection.Query(
@@ -13,35 +21,39 @@ func ItembagsPlayersSelect(player *ospokemon.Player) (*ospokemon.Itembag, error)
 		player.Username,
 	)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "itemslots_players.select")
 	}
+
+	itembagbuf := make([]*tableItemslotsPlayers, 0)
+
+	for rows.Next() {
+		var buf tableItemslotsPlayers
+
+		if err = rows.Scan(&buf.sort, &buf.item, &buf.amount); err != nil {
+			return nil, errors.Wrap(err, "itemslots_players.scan")
+		}
+		itembagbuf = append(itembagbuf, &buf)
+	}
+	rows.Close()
 
 	itembag := ospokemon.MakeItembag()
 
-	for rows.Next() {
-		var amountbuff, sortbuff int
-		var itembuff uint
-
-		if err = rows.Scan(&sortbuff, &itembuff, &amountbuff); err != nil {
-			return itembag, err
-		}
-
-		item, err := ospokemon.GetItem(itembuff)
+	for _, buf := range itembagbuf {
+		item, err := ospokemon.GetItem(buf.item)
 		if err != nil {
-			return itembag, err
+			return nil, errors.Wrap(err, "itembags_players.getitem")
 		}
 
-		itembag.Slots[itembuff] = ospokemon.BuildItemslot(item, amountbuff)
-		itembag.Slots[itembuff].Sort = sortbuff
+		itembag.Slots[buf.item] = ospokemon.BuildItemslot(item, buf.amount)
+		itembag.Slots[buf.item].Sort = buf.sort
 	}
-	rows.Close()
 
 	rows, err = Connection.Query(
 		"SELECT itemid, timer FROM itembags_players WHERE username=?",
 		player.Username,
 	)
 	if err != nil {
-		return itembag, err
+		return itembag, errors.Wrap(err, "itembags_players.select")
 	}
 
 	for rows.Next() {
@@ -50,7 +62,7 @@ func ItembagsPlayersSelect(player *ospokemon.Player) (*ospokemon.Itembag, error)
 
 		err = rows.Scan(&itembuff, &timebuff)
 		if err != nil {
-			return itembag, err
+			return nil, errors.Wrap(err, "itembags_players.scan")
 		}
 
 		if t := time.Duration(timebuff); timebuff > 0 {

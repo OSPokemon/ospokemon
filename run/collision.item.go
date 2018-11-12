@@ -3,8 +3,8 @@ package run
 import (
 	"ospokemon.com"
 	"ospokemon.com/event"
-	"ztaylor.me/log"
 	"ospokemon.com/script"
+	"ztaylor.me/log"
 )
 
 func init() {
@@ -27,7 +27,7 @@ func init() {
 			return
 		}
 
-		universe := ospokemon.Multiverse[entity2.UniverseId]
+		universe := ospokemon.Universes.Cache[entity2.UniverseId]
 		universe.Remove(entity2)
 	})
 }

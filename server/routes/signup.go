@@ -6,23 +6,26 @@ import (
 	"ospokemon.com"
 	"ospokemon.com/server/routes/signup"
 	"ospokemon.com/server/security"
+	"ztaylor.me/env"
 )
 
-var Signup = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
-		w.WriteHeader(404)
-		return
-	}
+func Signup(env env.Provider) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "POST" {
+			w.WriteHeader(404)
+			return
+		}
 
-	account := ospokemon.MakeAccount(r.FormValue("username"))
-	account.Password = security.HashPassword(r.FormValue("password"))
+		account := ospokemon.MakeAccount(r.FormValue("username"))
+		account.Password = security.HashPassword(env, r.FormValue("password"))
 
-	signup.MakePlayer(account)
+		signup.MakePlayer(account)
 
-	if err := ospokemon.Accounts.Insert(account); err != nil {
-		w.Write([]byte(err.Error()))
-		return
-	}
+		if err := ospokemon.Accounts.Insert(account); err != nil {
+			w.Write([]byte(err.Error()))
+			return
+		}
 
-	http.Redirect(w, r, "/login/#"+account.Username, 307)
-})
+		http.Redirect(w, r, "/login/#"+account.Username, 307)
+	})
+}

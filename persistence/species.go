@@ -121,7 +121,7 @@ func SpeciesSelect(id uint) (*ospokemon.Species, error) {
 
 	// Species Animations
 	rows, err = Connection.Query(
-		"SELECT key, value FROM animations_species WHERE species=?",
+		"SELECT `key`, value FROM animations_species WHERE species=?",
 		id,
 	)
 	if err != nil {

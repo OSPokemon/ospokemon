@@ -1,4 +1,4 @@
-package main
+package main // import "ospokemon.com/cmd/ospokemon"
 
 import (
 	"ospokemon.com/persistence"
@@ -9,13 +9,15 @@ import (
 	"ztaylor.me/log"
 )
 
-const PATCH = 12
+const PATCH = 9
 
 func main() {
 	env := env.Global()
-	log.Add("Patch", PATCH).Info("OSPokemon")
+	log.SetLevel(env.Default("loglevel", "info"))
+	log.Add("Patch", PATCH).Debug("ospokemon: starting...")
 
 	persistence.Connect(env)
+	go run.Run(env)
 
 	if patch, err := db.Patch(persistence.Connection); err != nil {
 		log.Error("Failed to open database")
@@ -25,6 +27,9 @@ func main() {
 		return
 	}
 
-	go run.Run(env)
+	log.WithFields(log.Fields{
+		"loglevel": env.Get("loglevel"),
+		"port":     env.Get("port"),
+	}).Info("OSPokemon Server")
 	server.Launch(env)
 }

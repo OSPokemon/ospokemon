@@ -7,7 +7,7 @@ import (
 
 func BindingsMenusPlayersSelect(player *ospokemon.Player) (map[string]string, error) {
 	rows, err := Connection.Query(
-		"SELECT key, menu FROM bindings_menus_players WHERE username=?",
+		"SELECT `key`, menu FROM bindings_menus_players WHERE username=?",
 		player.Username,
 	)
 
@@ -46,10 +46,10 @@ func BindingsMenusPlayersInsert(player *ospokemon.Player) error {
 
 	for key, menu := range menus {
 		_, err := Connection.Exec(
-			"INSERT INTO bindings_menus_players (username, key, menu) VALUES (?, ?, ?)",
+			"INSERT INTO bindings_menus_players (username, `key`, menu) VALUES (?, ?, ?)",
 			player.Username,
 			key,
-			menu,
+			string(menu),
 		)
 
 		if err != nil {

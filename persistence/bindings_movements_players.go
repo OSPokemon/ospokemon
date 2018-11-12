@@ -7,7 +7,7 @@ import (
 
 func BindingsMovementsPlayersSelect(player *ospokemon.Player) (map[string]string, error) {
 	rows, err := Connection.Query(
-		"SELECT key, direction FROM bindings_movements_players WHERE username=?",
+		"SELECT `key`, direction FROM bindings_movements_players WHERE username=?",
 		player.Username,
 	)
 
@@ -46,10 +46,10 @@ func BindingsMovementsPlayersInsert(player *ospokemon.Player) error {
 
 	for key, direction := range movements {
 		_, err := Connection.Exec(
-			"INSERT INTO bindings_movements_players (username, key, direction) VALUES (?, ?, ?)",
+			"INSERT INTO bindings_movements_players (username, `key`, direction) VALUES (?, ?, ?)",
 			player.Username,
 			key,
-			direction,
+			string(direction),
 		)
 
 		if err != nil {

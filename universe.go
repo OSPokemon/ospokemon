@@ -25,7 +25,7 @@ type Space struct {
 	Dimension space.Vector
 	Division  *space.Line
 	Sub       *[2]*Space
-	Entities  []Entity
+	Entities  Entities
 }
 
 func MakeUniverse(universeid uint) *Universe {
@@ -37,7 +37,7 @@ func MakeUniverse(universeid uint) *Universe {
 			Dimension: space.Vector{},
 			Division:  nil,
 			Sub:       nil,
-			Entities:  make([]Entity, 0),
+			Entities:  Entities{},
 		},
 		Entities:  make(map[uint]*Entity),
 		bodyIdGen: bodyIdGen,
@@ -87,20 +87,21 @@ func (u *Universe) Remove(e *Entity) {
 	e.Id = 0
 }
 
-var Multiverse = make(map[uint]*Universe)
-
-func GetUniverse(id uint) (*Universe, error) {
-	if Multiverse[id] == nil {
-		if m, err := Universes.Select(id); err == nil {
-			Multiverse[id] = m
+func GetUniverse(id uint) (u *Universe, err error) {
+	if u = Universes.Cache[id]; u == nil {
+		if u, err = Universes.Select(id); err == nil {
+			Universes.Cache[id] = u
 		} else {
-			return nil, err
+			log.WithFields(log.Fields{
+				"Universe": id,
+				"Error":    err.Error(),
+			}).Error("ospokemon.GetUniverse: create")
 		}
 	}
-
-	return Multiverse[id], nil
+	return
 }
 
-var Universes struct {
+var Universes = struct {
+	Cache  map[uint]*Universe
 	Select func(uint) (*Universe, error)
-}
+}{make(map[uint]*Universe), nil}

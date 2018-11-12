@@ -1,6 +1,9 @@
 package persistence
 
-import "ospokemon.com"
+import (
+	"github.com/pkg/errors"
+	"ospokemon.com"
+)
 
 func init() {
 	ospokemon.Universes.Select = UniversesSelect
@@ -15,16 +18,15 @@ func UniversesSelect(id uint) (*ospokemon.Universe, error) {
 	universe := ospokemon.MakeUniverse(id)
 	err := row.Scan(&universe.Space.Dimension.DX, &universe.Space.Dimension.DY, &universe.Private)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "universes.scan")
 	}
 
 	entities, err := EntitiesUniversesSelect(universe)
 	if err != nil {
 		return nil, err
 	}
-	universe.Add(entities...)
 
-	ospokemon.Multiverse[id] = universe
+	universe.Add(entities...)
 
 	return universe, nil
 }

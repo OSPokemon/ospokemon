@@ -8,8 +8,6 @@ type Class struct {
 	Animations map[string]string
 }
 
-var classes = make(map[uint]*Class)
-
 func MakeClass(id uint) *Class {
 	c := &Class{
 		Id:         id,
@@ -20,19 +18,17 @@ func MakeClass(id uint) *Class {
 	return c
 }
 
-func GetClass(id uint) (*Class, error) {
-	if classes[id] == nil {
-		if c, err := Classes.Select(id); err == nil {
-			classes[id] = c
-		} else {
-			return nil, err
+func GetClass(id uint) (c *Class, err error) {
+	if c = Classes.Cache[id]; c == nil {
+		if c, err = Classes.Select(id); err == nil {
+			Classes.Cache[id] = c
 		}
 	}
-
-	return classes[id], nil
+	return
 }
 
 // persistence headers
-var Classes struct {
+var Classes = struct {
+	Cache  map[uint]*Class
 	Select func(uint) (*Class, error)
-}
+}{make(map[uint]*Class), nil}

@@ -1,6 +1,7 @@
 package persistence
 
 import (
+	"github.com/pkg/errors"
 	"ospokemon.com"
 	"ztaylor.me/log"
 )
@@ -19,26 +20,17 @@ func ClassesSelect(id uint) (*ospokemon.Class, error) {
 	err := row.Scan(&class.Dimension.DX, &class.Dimension.DY)
 
 	if err != nil {
-		return class, err
+		return nil, errors.Wrap(err, "classes.scan")
 	}
 
-	rows, err := Connection.Query(
-		"SELECT key, value FROM animations_classes WHERE class=?",
-		class.Id,
-	)
-
+	animationsClassesBuf, err := AnimationsClassesSelect(id)
 	if err != nil {
-		return class, err
+		return nil, errors.Wrap(err, "classes.scan")
+	}
+	for k, v := range animationsClassesBuf {
+		class.Animations[k] = v
 	}
 
-	for rows.Next() {
-		var keybuff, valuebuff string
-		err = rows.Scan(&keybuff, &valuebuff)
-		class.Animations[keybuff] = valuebuff
-	}
-	rows.Close()
-
-	log.Add("Class", class.Id).Info("classes select")
-
+	log.Add("Class", class.Id).Debug("classes select")
 	return class, nil
 }

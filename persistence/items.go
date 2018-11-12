@@ -35,7 +35,7 @@ func ItemsSelect(id uint) (*ospokemon.Item, error) {
 	}
 
 	rows, err := Connection.Query(
-		"SELECT key, value FROM animations_items WHERE item=?",
+		"SELECT `key`, value FROM animations_items WHERE item=?",
 		id,
 	)
 	if err != nil {
@@ -53,7 +53,7 @@ func ItemsSelect(id uint) (*ospokemon.Item, error) {
 	rows.Close()
 
 	rows, err = Connection.Query(
-		"SELECT key, value FROM items_data WHERE item=?",
+		"SELECT `key`, value FROM items_data WHERE item=?",
 		id,
 	)
 	if err != nil {

@@ -45,7 +45,7 @@ func (s *Session) Frame() {
 	}
 
 	entity := player.GetEntity()
-	universe, _ := ospokemon.GetUniverse(entity.UniverseId)
+	universe := ospokemon.Universes.Cache[entity.UniverseId]
 	if universe == nil {
 		return
 	}

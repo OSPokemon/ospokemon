@@ -1,6 +1,7 @@
 package persistence
 
 import (
+	"github.com/pkg/errors"
 	"ospokemon.com"
 	"ospokemon.com/space"
 )
@@ -12,7 +13,7 @@ func EntitiesUniversesSelect(universe *ospokemon.Universe) ([]*ospokemon.Entity,
 	)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "entities_universes.select")
 	}
 
 	entities := make(map[uint]*ospokemon.Entity)
@@ -23,7 +24,7 @@ func EntitiesUniversesSelect(universe *ospokemon.Universe) ([]*ospokemon.Entity,
 
 		err = rows.Scan(&entity.Id, &entity.UniverseId, &r.Anchor.X, &r.Anchor.Y, &r.Dimension.DX, &r.Dimension.DY)
 		if err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "entities_universes.scan")
 		}
 		entities[entity.Id] = entity
 	}
@@ -32,7 +33,7 @@ func EntitiesUniversesSelect(universe *ospokemon.Universe) ([]*ospokemon.Entity,
 	// classes
 	classes, err := ClassesEntitiesSelect(universe)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "entities_universes")
 	}
 	for entityId, class := range classes {
 		entity := entities[entityId]
@@ -45,9 +46,9 @@ func EntitiesUniversesSelect(universe *ospokemon.Universe) ([]*ospokemon.Entity,
 	}
 
 	// dialogs
-	dialogs, err := DialogsSelect(universe)
+	dialogs, err := DialogsSelect(universe.Id)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "entities_universes")
 	}
 	for entityId, dialog := range dialogs {
 		entities[entityId].AddPart(dialog)
@@ -56,7 +57,7 @@ func EntitiesUniversesSelect(universe *ospokemon.Universe) ([]*ospokemon.Entity,
 	// itemslots
 	itemslots, err := EntitiesItemsSelect(universe)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "entities_universes")
 	}
 	for entityId, itemslot := range itemslots {
 		entity := entities[entityId]
@@ -73,7 +74,7 @@ func EntitiesUniversesSelect(universe *ospokemon.Universe) ([]*ospokemon.Entity,
 	// spawners
 	spawners, err := EntitiesSpawnersSelect(universe)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "entities_universes")
 	}
 	for entityId, spawner := range spawners {
 		spawner.Child = entities[entityId]
@@ -84,7 +85,7 @@ func EntitiesUniversesSelect(universe *ospokemon.Universe) ([]*ospokemon.Entity,
 	// terrain
 	terrains, err := EntitiesTerrainsSelect(universe)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "entities_universes")
 	}
 	for entityId, terrain := range terrains {
 		entity := entities[entityId]
