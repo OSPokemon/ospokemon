@@ -4,6 +4,7 @@ ospokemon.websocket = {
 		ospokemon.websocket.websocket = new WebSocket(window.location.protocol.replace('http', 'ws')+window.location.host+'/api/websocket');
 
 		ospokemon.websocket.websocket.onmessage = function (e) {
+			console.debug('websocket.onmessage', e);
 			var data = JSON.parse(e.data);
 
 			if (data.event == 'Update') {
