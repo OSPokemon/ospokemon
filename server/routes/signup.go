@@ -6,10 +6,9 @@ import (
 	"ospokemon.com"
 	"ospokemon.com/server/routes/signup"
 	"ospokemon.com/server/security"
-	"ztaylor.me/env"
 )
 
-func Signup(env env.Provider) http.HandlerFunc {
+func Signup(dbsalt string) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "POST" {
 			w.WriteHeader(404)
@@ -17,7 +16,7 @@ func Signup(env env.Provider) http.HandlerFunc {
 		}
 
 		account := ospokemon.MakeAccount(r.FormValue("username"))
-		account.Password = security.HashPassword(env, r.FormValue("password"))
+		account.Password = security.HashPassword(dbsalt, r.FormValue("password"))
 
 		signup.MakePlayer(account)
 

@@ -6,11 +6,10 @@ import (
 	"ospokemon.com"
 	"ospokemon.com/server/security"
 	"ospokemon.com/server/sessionman"
-	"ztaylor.me/env"
 	"ztaylor.me/log"
 )
 
-func Login(env env.Provider) http.Handler {
+func Login(dbsalt string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "POST" {
 			w.WriteHeader(404)
@@ -23,7 +22,7 @@ func Login(env env.Provider) http.Handler {
 		}
 
 		username := r.FormValue("username")
-		password := security.HashPassword(env, r.FormValue("password"))
+		password := security.HashPassword(dbsalt, r.FormValue("password"))
 
 		account, _ := ospokemon.GetAccount(username)
 		if account == nil {

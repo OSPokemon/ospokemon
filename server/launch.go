@@ -5,16 +5,17 @@ import (
 
 	"ztaylor.me/cast"
 	"ztaylor.me/env"
-	"ztaylor.me/log"
 )
 
-func Launch(env env.Provider) {
-	HandleRoutes(env)
+func LaunchEnv(env env.Provider) {
+	fs := http.Dir(env.Get("webpath"))
+	dbsalt := env.Get("passwordsalt")
+	server := New(fs, dbsalt)
 	go PollSessionExpirations()
 
 	if cast.Bool(env.Get("usehttps")) {
-		log.Error(http.ListenAndServeTLS(":443", "ospokemon.cert", "ospokemon.key", nil))
+		server.ListenAndServeTLS("ospokemon.cert", "ospokemon.key")
 	} else {
-		log.Error(http.ListenAndServe(":"+env.Get("port"), nil))
+		server.ListenAndServe(":" + env.Get("port"))
 	}
 }

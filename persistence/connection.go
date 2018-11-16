@@ -10,7 +10,9 @@ import (
 
 var Connection *sql.DB
 
-func Connect(env env.Provider) {
+var Open = db.Open
+
+func OpenEnv(env env.Provider) {
 	var err error
 	Connection, err = db.OpenEnv(env)
 

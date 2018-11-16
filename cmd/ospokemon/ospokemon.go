@@ -16,7 +16,7 @@ func main() {
 	log.SetLevel(env.Default("loglevel", "info"))
 	log.Add("Patch", PATCH).Debug("ospokemon: starting...")
 
-	persistence.Connect(env)
+	persistence.OpenEnv(env)
 	go run.Run(env)
 
 	if patch, err := db.Patch(persistence.Connection); err != nil {
@@ -38,5 +38,5 @@ func main() {
 		"loglevel": env.Get("loglevel"),
 		"port":     env.Get("port"),
 	}).Info("OSPokemon Server")
-	server.Launch(env)
+	server.LaunchEnv(env)
 }
