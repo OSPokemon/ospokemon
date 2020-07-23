@@ -1,8 +1,7 @@
 package persistence
 
 import (
-	"ospokemon.com"
-	"ztaylor.me/log"
+	"github.com/ospokemon/ospokemon"
 )
 
 func TypesSelect(id uint) (*ospokemon.Type, error) {
@@ -39,7 +38,7 @@ func TypesSelect(id uint) (*ospokemon.Type, error) {
 
 	ospokemon.Types[id] = t
 
-	log.Add("Type", id).Info("types select")
+	ospokemon.LOG().Add("Type", id).Info("types select")
 
 	return t, nil
 }

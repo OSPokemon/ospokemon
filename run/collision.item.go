@@ -1,10 +1,9 @@
 package run
 
 import (
-	"ospokemon.com"
-	"ospokemon.com/event"
-	"ospokemon.com/script"
-	"ztaylor.me/log"
+	"github.com/ospokemon/ospokemon"
+	"github.com/ospokemon/ospokemon/event"
+	"github.com/ospokemon/ospokemon/script"
 )
 
 func init() {
@@ -23,7 +22,7 @@ func init() {
 		})
 
 		if err != nil {
-			log.Add("Entity", entity1.Id).Add("Universe", entity1.UniverseId).Add("Error", err.Error()).Error("collision.item")
+			ospokemon.LOG().Add("Entity", entity1.Id).Add("Universe", entity1.UniverseId).Add("Error", err.Error()).Error("collision.item")
 			return
 		}
 

@@ -2,7 +2,7 @@ package script
 
 import (
 	"errors"
-	"ospokemon.com"
+	"github.com/ospokemon/ospokemon"
 )
 
 func DialogChoice(e *ospokemon.Entity, choice string) error {

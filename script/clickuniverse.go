@@ -2,8 +2,8 @@ package script
 
 import (
 	"errors"
-	"ospokemon.com"
-	"ospokemon.com/space"
+	"github.com/ospokemon/ospokemon"
+	"github.com/ospokemon/ospokemon/space"
 )
 
 func ClickUniverse(e *ospokemon.Entity, data map[string]interface{}) error {

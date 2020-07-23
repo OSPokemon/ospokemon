@@ -1,1 +1,1 @@
-package sessionman // import "ospokemon.com/server/sessionman"
+package sessionman // import "github.com/ospokemon/ospokemon/server/sessionman"

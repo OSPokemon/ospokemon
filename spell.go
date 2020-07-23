@@ -3,7 +3,7 @@ package ospokemon
 import (
 	"time"
 
-	"ztaylor.me/js"
+	"taylz.io/types"
 )
 
 type Spell struct {
@@ -23,7 +23,7 @@ func MakeSpell() *Spell {
 	}
 }
 
-func (s *Spell) Json() js.Object {
+func (s *Spell) Json() types.Dict {
 	return map[string]interface{}{
 		"id":         s.Id,
 		"casttime":   s.CastTime,

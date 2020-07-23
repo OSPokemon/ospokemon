@@ -6,8 +6,9 @@ import (
 	"os"
 	"strings"
 
-	ospokemon "ospokemon.com"
-	"ztaylor.me/cast"
+	"taylz.io/types"
+
+	"github.com/ospokemon/ospokemon"
 )
 
 func Editor() {
@@ -52,7 +53,7 @@ q --  --  --  --  --  -- quit
 }
 
 func EditorUniverse(parts []string, reader *bufio.Reader) {
-	universeid := uint(cast.Int(parts[0]))
+	universeid := uint(types.IntString(parts[0]))
 	universe, err := ospokemon.GetUniverse(universeid)
 	if err != nil {
 		fmt.Println("OSPokemon edit universe mode failed:", err.Error())
@@ -134,7 +135,7 @@ func EditorClass(reader *bufio.Reader) {
 		} else if line == "help" {
 			EditorClassHelp()
 		} else if parts[0] == "print" && len(parts) > 1 && parts[1] != "" {
-			classid := uint(cast.Int(parts[1]))
+			classid := uint(types.IntString(parts[1]))
 			class, err := ospokemon.GetClass(classid)
 			if err != nil {
 				fmt.Println("OSPokemon edit class mode failed:", err.Error())

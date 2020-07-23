@@ -3,8 +3,7 @@ package ospokemon
 import (
 	"time"
 
-	"ztaylor.me/cast"
-	"ztaylor.me/js"
+	"taylz.io/types"
 )
 
 const PARTactions = "actions"
@@ -31,10 +30,10 @@ func (actions Actions) Update(universe *Universe, entity *Entity, d time.Duratio
 	}
 }
 
-func (actions Actions) Json() js.Object {
-	data := js.Object{}
+func (actions Actions) Json() types.Dict {
+	data := types.Dict{}
 	for id, action := range actions {
-		data[cast.String(id)] = action.Json()
+		data[types.StringUint(id)] = action.Json()
 	}
 	return data
 }

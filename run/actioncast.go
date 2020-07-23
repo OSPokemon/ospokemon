@@ -1,9 +1,8 @@
 package run
 
 import (
-	"ospokemon.com"
-	"ospokemon.com/event"
-	"ztaylor.me/log"
+	"github.com/ospokemon/ospokemon"
+	"github.com/ospokemon/ospokemon/event"
 )
 
 func init() {
@@ -21,7 +20,7 @@ func ActionCast(args ...interface{}) {
 
 	if script, ok := ospokemon.Scripts[spell.Script]; ok {
 		if err := script(entity, spell.Data); err != nil {
-			log.Add("Universe", universe.Id).Add("Entity", entity.Id).Add("Spell", spell.Id).Add("Error", err.Error()).Error("action cast")
+			ospokemon.LOG().Add("Universe", universe.Id).Add("Entity", entity.Id).Add("Spell", spell.Id).Add("Error", err.Error()).Error("action cast")
 		}
 	}
 }

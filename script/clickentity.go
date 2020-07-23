@@ -1,7 +1,7 @@
 package script
 
 import (
-	"ospokemon.com"
+	"github.com/ospokemon/ospokemon"
 )
 
 func ClickEntity(e *ospokemon.Entity, data map[string]interface{}) error {

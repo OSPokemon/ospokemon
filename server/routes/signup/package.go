@@ -1,1 +1,1 @@
-package signup // import "ospokemon.com/server/routes/signup"
+package signup // import "github.com/ospokemon/ospokemon/server/routes/signup"

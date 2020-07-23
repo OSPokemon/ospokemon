@@ -1,1 +1,1 @@
-package ospokemonjs // import "ospokemon.com/server/routes/ospokemon.js"
+package ospokemonjs // import "github.com/ospokemon/ospokemon/server/routes/ospokemon.js"

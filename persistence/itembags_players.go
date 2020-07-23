@@ -3,9 +3,8 @@ package persistence
 import (
 	"time"
 
+	"github.com/ospokemon/ospokemon"
 	"github.com/pkg/errors"
-	"ospokemon.com"
-	"ztaylor.me/log"
 )
 
 type tableItemslotsPlayers struct {
@@ -73,7 +72,7 @@ func ItembagsPlayersSelect(player *ospokemon.Player) (*ospokemon.Itembag, error)
 	}
 	rows.Close()
 
-	log.Add("Username", player.Username).Add("Itembag", itembag.GetItems()).Debug("itembags_players select")
+	ospokemon.LOG().Add("Username", player.Username).Add("Itembag", itembag.GetItems()).Debug("itembags_players select")
 	return itembag, nil
 }
 
@@ -115,7 +114,7 @@ func ItembagsPlayersInsert(player *ospokemon.Player) error {
 		}
 	}
 
-	log.Add("Username", player.Username).Add("Itembag", itembag.Slots).Debug("itembags_players insert")
+	ospokemon.LOG().Add("Username", player.Username).Add("Itembag", itembag.Slots).Debug("itembags_players insert")
 	return nil
 }
 
@@ -136,6 +135,6 @@ func ItembagsPlayersDelete(player *ospokemon.Player) error {
 		return err
 	}
 
-	log.Add("Username", player.Username).Debug("itembags_players delete")
+	ospokemon.LOG().Add("Username", player.Username).Debug("itembags_players delete")
 	return err
 }

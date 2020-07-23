@@ -6,10 +6,9 @@ import (
 	"time"
 
 	"github.com/cznic/mathutil"
+	"github.com/ospokemon/ospokemon"
 	"golang.org/x/net/websocket"
-	"ospokemon.com"
-	"ztaylor.me/cast"
-	"ztaylor.me/env"
+	"taylz.io/types"
 )
 
 var Cache = make(map[uint]*Session)
@@ -25,11 +24,11 @@ func Get(account *ospokemon.Account) *Session {
 }
 
 func Add(account *ospokemon.Account) *Session {
-	env := env.Global()
+	env := ospokemon.ENV()
 	session := &Session{
 		Username:  account.Username,
 		SessionId: uint(sessionIdGen.Next()),
-		Expire:    time.Now().Add(time.Duration(cast.Int(env.Get("sessionlife"))) * time.Second),
+		Expire:    time.Now().Add(time.Duration(types.IntString(env["sessionlife"])) * time.Second),
 	}
 
 	Cache[session.SessionId] = session

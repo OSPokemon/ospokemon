@@ -1,16 +1,17 @@
-package routes // import "ospokemon.com/server/routes"
+package routes // import "github.com/ospokemon/ospokemon/server/routes"
 
 import (
 	"net/http"
 
-	"ztaylor.me/http/mux"
+	"taylz.io/http/router"
+	"taylz.io/http/server"
 )
 
-func Routes(mux *mux.Mux, fs http.FileSystem, dbsalt string) {
-	mux.MapLit("/ospokemon.js", OSPokemonJs)
-	mux.MapLit("/api/signup", Signup(dbsalt))
-	mux.MapLit("/api/login", Login(dbsalt))
-	mux.MapLit("/api/logout", Logout)
-	mux.MapLit("/api/websocket", Websocket)
-	mux.MapLit("/", Page(fs))
+func Routes(mux *server.Mux, fs http.FileSystem, dbsalt string) {
+	mux.Route(router.Path("/ospokemon.js"), OSPokemonJs)
+	mux.Route(router.Path("/api/signup"), Signup(dbsalt))
+	mux.Route(router.Path("/api/login"), Login(dbsalt))
+	mux.Route(router.Path("/api/logout"), Logout)
+	mux.Route(router.Path("/api/websocket"), Websocket)
+	mux.Route(router.Path("/"), Page(fs))
 }

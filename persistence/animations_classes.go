@@ -1,8 +1,8 @@
 package persistence
 
 import (
+	"github.com/ospokemon/ospokemon"
 	"github.com/pkg/errors"
-	"ztaylor.me/log"
 )
 
 func AnimationsClassesSelect(id uint) (map[string]string, error) {
@@ -27,6 +27,6 @@ func AnimationsClassesSelect(id uint) (map[string]string, error) {
 		anim[keybuff] = valuebuff
 	}
 
-	log.Add("ClassID", id).Add("Animations", len(anim)).Debug("animations_classes select")
+	ospokemon.LOG().Add("ClassID", id).Add("Animations", len(anim)).Debug("animations_classes select")
 	return anim, nil
 }

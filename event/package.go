@@ -1,1 +1,1 @@
-package event // import "ospokemon.com/event"
+package event // import "github.com/ospokemon/ospokemon/event"

@@ -1,7 +1,7 @@
 package ospokemon
 
 import (
-	"ospokemon.com/space"
+	"github.com/ospokemon/ospokemon/space"
 	"time"
 )
 

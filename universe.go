@@ -4,10 +4,8 @@ import (
 	"time"
 
 	"github.com/cznic/mathutil"
-	"ospokemon.com/space"
-	"ztaylor.me/cast"
-	"ztaylor.me/js"
-	"ztaylor.me/log"
+	"github.com/ospokemon/ospokemon/space"
+	"taylz.io/types"
 )
 
 type Universe struct {
@@ -18,7 +16,7 @@ type Universe struct {
 	Private  bool
 	// internals
 	bodyIdGen *mathutil.FC32
-	FullFrame js.Object
+	FullFrame types.Dict
 }
 
 type Space struct {
@@ -50,14 +48,14 @@ func (u *Universe) GenerateId() uint {
 }
 
 func (u *Universe) Update(d time.Duration) {
-	frame := js.Object{}
+	frame := types.Dict{}
 	for entityId, entity := range u.Entities {
 		if entity == nil {
 			continue
 		}
 
 		entity.Update(u, d)
-		frame[cast.String(entityId)] = entity.Json()
+		frame[types.StringUint(entityId)] = entity.Json()
 	}
 	u.FullFrame = frame
 
@@ -92,7 +90,7 @@ func GetUniverse(id uint) (u *Universe, err error) {
 		if u, err = Universes.Select(id); err == nil {
 			Universes.Cache[id] = u
 		} else {
-			log.WithFields(log.Fields{
+			log.With(types.Dict{
 				"Universe": id,
 				"Error":    err.Error(),
 			}).Error("ospokemon.GetUniverse: create")

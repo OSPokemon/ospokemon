@@ -5,11 +5,9 @@ import (
 	"sync"
 	"time"
 
+	"github.com/ospokemon/ospokemon"
 	"golang.org/x/net/websocket"
-	"ospokemon.com"
-	"ztaylor.me/cast"
-	"ztaylor.me/env"
-	"ztaylor.me/log"
+	"taylz.io/types"
 )
 
 type Session struct {
@@ -21,15 +19,15 @@ type Session struct {
 }
 
 func (s *Session) Refresh() {
-	env := env.Global()
-	s.Expire = time.Now().Add(time.Duration(cast.Int(env.Get("sessionlife"))) * time.Second)
+	env := ospokemon.ENV()
+	s.Expire = time.Now().Add(time.Duration(types.IntString(env["sessionlife"])) * time.Second)
 }
 
 func (s *Session) Send(message string) {
 	if s.Websocket != nil {
 		websocket.Message.Send(s.Websocket, message)
 	} else {
-		log.Add("SessionId", s.SessionId).Add("Username", s.Username).Warn("session.Frame: websocket missing")
+		ospokemon.LOG().Add("SessionId", s.SessionId).Add("Username", s.Username).Warn("session.Frame: websocket missing")
 	}
 }
 
@@ -40,7 +38,7 @@ func (s *Session) Frame() {
 
 	player := ospokemon.Players.Cache[s.Username]
 	if player == nil {
-		log.Add("SessionId", s.SessionId).Add("Username", s.Username).Warn("session.Frame: player missing")
+		ospokemon.LOG().Add("SessionId", s.SessionId).Add("Username", s.Username).Warn("session.Frame: player missing")
 		return
 	}
 

@@ -1,15 +1,14 @@
 package logout
 
 import (
-	"ospokemon.com"
-	"ospokemon.com/server/sessionman"
-	"ztaylor.me/log"
+	"github.com/ospokemon/ospokemon"
+	"github.com/ospokemon/ospokemon/server/sessionman"
 )
 
 func LogoutPlayer(username string) {
 	account := ospokemon.Accounts.Cache[username]
 	if account == nil {
-		log.Add("Username", username).Warn("logout: account missing")
+		ospokemon.LOG().Add("Username", username).Warn("logout: account missing")
 		return
 	}
 

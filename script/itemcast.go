@@ -3,8 +3,8 @@ package script
 import (
 	"errors"
 
-	"ospokemon.com"
-	"ospokemon.com/script/util"
+	"github.com/ospokemon/ospokemon"
+	"github.com/ospokemon/ospokemon/script/util"
 )
 
 func init() {

@@ -1,7 +1,7 @@
 package script
 
 import (
-	"ospokemon.com"
+	"github.com/ospokemon/ospokemon"
 )
 
 func MovementOff(player *ospokemon.Player, walk string) {

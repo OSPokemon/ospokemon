@@ -2,8 +2,8 @@ package persistence
 
 import (
 	"github.com/pkg/errors"
-	"ospokemon.com"
-	"ospokemon.com/space"
+	"github.com/ospokemon/ospokemon"
+	"github.com/ospokemon/ospokemon/space"
 )
 
 func EntitiesUniversesSelect(universe *ospokemon.Universe) ([]*ospokemon.Entity, error) {

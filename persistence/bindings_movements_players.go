@@ -1,8 +1,7 @@
 package persistence
 
 import (
-	"ospokemon.com"
-	"ztaylor.me/log"
+	"github.com/ospokemon/ospokemon"
 )
 
 func BindingsMovementsPlayersSelect(player *ospokemon.Player) (map[string]string, error) {
@@ -28,7 +27,7 @@ func BindingsMovementsPlayersSelect(player *ospokemon.Player) (map[string]string
 	}
 	rows.Close()
 
-	log.Add("Username", player.Username).Add("Bindings", movements).Debug("bindings_movements_players select")
+	ospokemon.LOG().Add("Username", player.Username).Add("Bindings", movements).Debug("bindings_movements_players select")
 
 	return movements, nil
 }
@@ -57,7 +56,7 @@ func BindingsMovementsPlayersInsert(player *ospokemon.Player) error {
 		}
 	}
 
-	log.Add("Username", player.Username).Add("Menus", movements).Debug("bindings_movements_players insert")
+	ospokemon.LOG().Add("Username", player.Username).Add("Menus", movements).Debug("bindings_movements_players insert")
 
 	return nil
 }
@@ -69,7 +68,7 @@ func BindingsMovementsPlayersDelete(player *ospokemon.Player) error {
 	)
 
 	if err == nil {
-		log.Add("Username", player.Username).Debug("bindings_movements_players delete")
+		ospokemon.LOG().Add("Username", player.Username).Debug("bindings_movements_players delete")
 	}
 
 	return err

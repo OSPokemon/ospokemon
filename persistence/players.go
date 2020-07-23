@@ -1,10 +1,9 @@
 package persistence
 
 import (
+	"github.com/ospokemon/ospokemon"
+	"github.com/ospokemon/ospokemon/space"
 	"github.com/pkg/errors"
-	"ospokemon.com"
-	"ospokemon.com/space"
-	"ztaylor.me/log"
 )
 
 func init() {
@@ -61,7 +60,7 @@ func PlayersSelect(username string) (*ospokemon.Player, error) {
 		return nil, errors.Wrap(err, "players.partbindings")
 	}
 
-	log.Add("Username", player.Username).Debug("players select")
+	ospokemon.LOG().Add("Username", player.Username).Debug("players select")
 	return player, nil
 }
 
@@ -104,7 +103,7 @@ func PlayersInsert(player *ospokemon.Player) error {
 		return err
 	}
 
-	log.Add("Username", player.Username).Debug("players insert")
+	ospokemon.LOG().Add("Username", player.Username).Debug("players insert")
 	return err
 }
 
@@ -134,6 +133,6 @@ func PlayersDelete(player *ospokemon.Player) error {
 		return err
 	}
 
-	log.Add("Username", player.Username).Debug("players delete")
+	ospokemon.LOG().Add("Username", player.Username).Debug("players delete")
 	return nil
 }

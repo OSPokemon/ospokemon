@@ -3,11 +3,11 @@ package ospokemonjs
 import (
 	"io/ioutil"
 
+	"github.com/ospokemon/ospokemon"
 	"github.com/tdewolff/minify"
 	"github.com/tdewolff/minify/js"
-	"ztaylor.me/cast"
-	"ztaylor.me/env"
-	"ztaylor.me/log"
+	"taylz.io/env"
+	"taylz.io/types"
 )
 
 var Content string
@@ -18,7 +18,7 @@ func init() {
 }
 
 func CreateContent() {
-	env := env.Global()
+	env := ospokemon.ENV()
 	path := getPath(env)
 	Content = "$(function(){\n"
 
@@ -29,13 +29,15 @@ func CreateContent() {
 	}
 	Content += "})"
 
-	if cast.Bool(env.Get("js-minify")) {
+	useminify := types.Bool(env["js-minify"])
+
+	if useminify {
 		Content, _ = minifier.String("text/javascript", Content)
 	}
 
-	log.Add("js-minify", cast.Bool(env.Get("js-minify"))).Debug("ospokemon.js: compile")
+	ospokemon.LOG().Add("js-minify", useminify).Debug("ospokemon.js: compile")
 }
 
-func getPath(env env.Provider) string {
-	return env.Get("webpath") + "/ospokemon.js/"
+func getPath(env env.Service) string {
+	return env["webpath"] + "/ospokemon.js/"
 }

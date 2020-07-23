@@ -1,1 +1,1 @@
-package logout // import "ospokemon.com/server/routes/logout"
+package logout // import "github.com/ospokemon/ospokemon/server/routes/logout"

@@ -3,10 +3,9 @@ package routes
 import (
 	"net/http"
 
-	"ospokemon.com"
-	"ospokemon.com/server/security"
-	"ospokemon.com/server/sessionman"
-	"ztaylor.me/log"
+	"github.com/ospokemon/ospokemon"
+	"github.com/ospokemon/ospokemon/server/security"
+	"github.com/ospokemon/ospokemon/server/sessionman"
 )
 
 func Login(dbsalt string) http.Handler {
@@ -26,13 +25,13 @@ func Login(dbsalt string) http.Handler {
 
 		account, _ := ospokemon.GetAccount(username)
 		if account == nil {
-			log.Add("Username", username).Warn("login: account not found")
+			ospokemon.LOG().Add("Username", username).Warn("login: account not found")
 			http.Redirect(w, r, "/login/?account", 307)
 			return
 		}
 
 		if account.Password != password {
-			log.Add("Username", username).Warn("login: incorrect password")
+			ospokemon.LOG().Add("Username", username).Warn("login: incorrect password")
 			delete(ospokemon.Accounts.Cache, username)
 			delete(ospokemon.Players.Cache, username)
 			http.Redirect(w, r, "/login/?password#"+username, 307)
@@ -41,7 +40,7 @@ func Login(dbsalt string) http.Handler {
 
 		if session := sessionman.Get(account); session == nil {
 			session = sessionman.Add(account)
-			log.Add("Username", username).Add("SessionId", session.SessionId).Info("login: create session")
+			ospokemon.LOG().Add("Username", username).Add("SessionId", session.SessionId).Info("login: create session")
 		}
 
 		sessionman.Get(account).WriteSessionId(w)

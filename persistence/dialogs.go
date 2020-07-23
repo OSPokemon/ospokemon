@@ -3,10 +3,9 @@ package persistence
 import (
 	"strings"
 
+	"github.com/ospokemon/ospokemon"
 	"github.com/pkg/errors"
-	"ospokemon.com"
-	"ztaylor.me/cast"
-	"ztaylor.me/log"
+	"taylz.io/types"
 )
 
 func DialogsSelect(universeID uint) (map[uint]*ospokemon.Dialog, error) {
@@ -56,11 +55,11 @@ func DialogsSelect(universeID uint) (map[uint]*ospokemon.Dialog, error) {
 		}
 
 		if parts := strings.Split(dialogTestData, ":"); len(parts) != 2 {
-			log.Add("Parts", parts).Warn("dialogs_tests: i:q data invalid")
-		} else if i := cast.Int(parts[0]); i < 1 {
-			log.Add("I", parts[0]).Warn("dialogs_tests: i:q i invalid")
-		} else if q := cast.Int(parts[1]); q < 1 {
-			log.Add("I", parts[0]).Warn("dialogs_tests: i:q q invalid")
+			ospokemon.LOG().Add("Parts", parts).Warn("dialogs_tests: i:q data invalid")
+		} else if i := types.IntString(parts[0]); i < 1 {
+			ospokemon.LOG().Add("I", parts[0]).Warn("dialogs_tests: i:q i invalid")
+		} else if q := types.IntString(parts[1]); q < 1 {
+			ospokemon.LOG().Add("I", parts[0]).Warn("dialogs_tests: i:q q invalid")
 		} else {
 			dialogItemTest.Item = uint(i)
 			dialogItemTest.Amount = q
@@ -134,7 +133,7 @@ func DialogsSelect(universeID uint) (map[uint]*ospokemon.Dialog, error) {
 	}
 
 	if len(compiledDialogs) > 0 && err == nil {
-		log.Add("Universe", universeID).Add("Dialogs", len(compiledDialogs)).Info("dialogs select")
+		ospokemon.LOG().Add("Universe", universeID).Add("Dialogs", len(compiledDialogs)).Info("dialogs select")
 	}
 
 	return compiledDialogs, nil

@@ -1,7 +1,5 @@
 package ospokemon
 
-import "ztaylor.me/log"
-
 const PARTmenu = "menu"
 const PARTmenus = "menus"
 

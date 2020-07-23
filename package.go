@@ -1,1 +1,1 @@
-package ospokemon // import "ospokemon.com"
+package ospokemon // import "github.com/ospokemon/ospokemon"

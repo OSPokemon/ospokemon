@@ -1,7 +1,7 @@
 package persistence
 
 import (
-	"ospokemon.com"
+	"github.com/ospokemon/ospokemon"
 )
 
 func BindingsPlayersSelect(player *ospokemon.Player) error {

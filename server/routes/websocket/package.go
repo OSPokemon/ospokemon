@@ -1,1 +1,1 @@
-package websocket // import "ospokemon.com/server/routes/websocket"
+package websocket // import "github.com/ospokemon/ospokemon/server/routes/websocket"

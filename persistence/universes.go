@@ -2,7 +2,7 @@ package persistence
 
 import (
 	"github.com/pkg/errors"
-	"ospokemon.com"
+	"github.com/ospokemon/ospokemon"
 )
 
 func init() {

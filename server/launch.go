@@ -3,19 +3,21 @@ package server
 import (
 	"net/http"
 
-	"ztaylor.me/cast"
-	"ztaylor.me/env"
+	"taylz.io/env"
+	"taylz.io/types"
 )
 
-func LaunchEnv(env env.Provider) {
-	fs := http.Dir(env.Get("webpath"))
-	dbsalt := env.Get("passwordsalt")
+func LaunchEnv(env env.Service) {
+	fs := http.Dir(env["webpath"])
+	dbsalt := env["passwordsalt"]
 	server := New(fs, dbsalt)
 	go PollSessionExpirations()
 
-	if cast.Bool(env.Get("usehttps")) {
-		server.ListenAndServeTLS("ospokemon.cert", "ospokemon.key")
+	port := ":" + env["port"]
+
+	if types.BoolString(env["usehttps"]) {
+		http.ListenAndServeTLS(port, "ospokemon.cert", "ospokemon.key", server)
 	} else {
-		server.ListenAndServe(":" + env.Get("port"))
+		http.ListenAndServe(port, server)
 	}
 }

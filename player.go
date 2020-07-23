@@ -3,7 +3,7 @@ package ospokemon
 import (
 	"time"
 
-	"ztaylor.me/js"
+	"taylz.io/types"
 )
 
 const PARTplayer = "player"
@@ -55,8 +55,8 @@ func (parts Parts) GetPlayer() *Player {
 func (p *Player) Update(u *Universe, e *Entity, d time.Duration) {
 }
 
-func (player *Player) Json() js.Object {
-	return js.Object{
+func (player *Player) Json() types.Dict {
+	return types.Dict{
 		"username": player.Username,
 		"level":    player.Level,
 	}

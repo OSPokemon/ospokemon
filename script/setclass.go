@@ -2,9 +2,9 @@ package script
 
 import (
 	"errors"
-	"ospokemon.com"
-	"ztaylor.me/log"
 	"strconv"
+
+	"github.com/ospokemon/ospokemon"
 )
 
 func init() {
@@ -38,6 +38,6 @@ func SetClass(e *ospokemon.Entity, data map[string]interface{}) error {
 
 	e.SetClass(class)
 	e.GetPlayer().Class = class.Id
-	log.Add("EntityId", e.Id).Add("Universe", e.UniverseId).Add("Class", class.Id).Info("setclass")
+	ospokemon.LOG().Add("EntityId", e.Id).Add("Universe", e.UniverseId).Add("Class", class.Id).Info("setclass")
 	return nil
 }

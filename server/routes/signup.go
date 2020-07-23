@@ -3,9 +3,9 @@ package routes
 import (
 	"net/http"
 
-	"ospokemon.com"
-	"ospokemon.com/server/routes/signup"
-	"ospokemon.com/server/security"
+	"github.com/ospokemon/ospokemon"
+	"github.com/ospokemon/ospokemon/server/routes/signup"
+	"github.com/ospokemon/ospokemon/server/security"
 )
 
 func Signup(dbsalt string) http.HandlerFunc {

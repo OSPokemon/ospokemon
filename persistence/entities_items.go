@@ -1,9 +1,8 @@
 package persistence
 
 import (
+	"github.com/ospokemon/ospokemon"
 	"github.com/pkg/errors"
-	"ospokemon.com"
-	"ztaylor.me/log"
 )
 
 type tableEntitiesItems struct {
@@ -47,7 +46,7 @@ func EntitiesItemsSelect(universe *ospokemon.Universe) (map[uint]*ospokemon.Item
 		itemslots[buf.entity] = itemslot
 	}
 
-	log.Add("Universe", universe.Id).Add("Itemslots", entities_items_buff).Debug("entities_items select")
+	ospokemon.LOG().Add("Universe", universe.Id).Add("Itemslots", entities_items_buff).Debug("entities_items select")
 
 	return itemslots, nil
 }

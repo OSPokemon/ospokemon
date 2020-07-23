@@ -1,16 +1,14 @@
 package websocket
 
 import (
-	"ospokemon.com"
-	"ospokemon.com/server/routes/logout"
-	"ospokemon.com/server/sessionman"
-	"ztaylor.me/cast"
-	"ztaylor.me/env"
-	"ztaylor.me/log"
+	"github.com/ospokemon/ospokemon"
+	"github.com/ospokemon/ospokemon/server/routes/logout"
+	"github.com/ospokemon/ospokemon/server/sessionman"
+	"taylz.io/types"
 )
 
 func Listen(session *sessionman.Session) {
-	env := env.Global()
+	env := ospokemon.ENV()
 	for session.Websocket != nil {
 		if message, err := session.Receive(); err == nil {
 			go ReceiveMessage(session, message)
@@ -18,7 +16,7 @@ func Listen(session *sessionman.Session) {
 			session.Websocket.Close()
 
 			if err.Error() != "EOF" {
-				log.Add("Error", err).Error("websocket error")
+				ospokemon.LOG().Add("Error", err).Error("websocket error")
 			}
 
 			account := ospokemon.Accounts.Cache[session.Username]
@@ -26,9 +24,9 @@ func Listen(session *sessionman.Session) {
 				return
 			}
 
-			log.Add("Username", session.Username).Add("Universe", account.GetEntity().UniverseId).Add("SessionId", session.SessionId).Info("websocket closed")
+			ospokemon.LOG().Add("Username", session.Username).Add("Universe", account.GetEntity().UniverseId).Add("SessionId", session.SessionId).Info("websocket closed")
 
-			if !cast.Bool(env.Get("allow-refresh")) {
+			if !types.BoolString(env["allow-refresh"]) {
 				logout.LogoutPlayer(session.Username)
 			} else {
 				logout.RemoveEntity(session.Username)

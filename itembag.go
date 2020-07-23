@@ -3,9 +3,7 @@ package ospokemon
 import (
 	"time"
 
-	"ztaylor.me/cast"
-	"ztaylor.me/js"
-	"ztaylor.me/log"
+	"taylz.io/types"
 )
 
 const PARTitembag = "itembag"
@@ -70,16 +68,16 @@ func (itembag *Itembag) Remove(item *Item, amount int) bool {
 	return true
 }
 
-func (itembag *Itembag) Json() js.Object {
-	data := js.Object{}
+func (itembag *Itembag) Json() types.Dict {
+	data := types.Dict{}
 
 	for id, itemslot := range itembag.Slots {
 		if itemslot == nil {
-			data[cast.String(id)] = nil
+			data[types.StringUint(id)] = nil
 		} else {
 			itemslotJson := itemslot.Json()
 			itemslotJson["timer"] = itembag.Timers[itemslot.Item.Id].Fmt()
-			data[cast.String(id)] = itemslotJson
+			data[types.StringUint(id)] = itemslotJson
 		}
 	}
 

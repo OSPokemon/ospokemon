@@ -3,9 +3,9 @@ package server
 import (
 	"time"
 
-	"ospokemon.com/server/routes/logout"
-	"ospokemon.com/server/sessionman"
-	"ztaylor.me/log"
+	"github.com/ospokemon/ospokemon"
+	"github.com/ospokemon/ospokemon/server/routes/logout"
+	"github.com/ospokemon/ospokemon/server/sessionman"
 )
 
 func PollSessionExpirations() {
@@ -13,7 +13,7 @@ func PollSessionExpirations() {
 		for _, session := range sessionman.Cache {
 			if session.Expire.Before(now) {
 
-				log.Add("Username", session.Username).Add("SessionId", session.SessionId).Info("session expired")
+				ospokemon.LOG().Add("Username", session.Username).Add("SessionId", session.SessionId).Info("session expired")
 				logout.LogoutPlayer(session.Username)
 
 				if session.Websocket != nil {

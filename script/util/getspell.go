@@ -2,7 +2,7 @@ package util
 
 import (
 	"errors"
-	"ospokemon.com"
+	"github.com/ospokemon/ospokemon"
 	"strconv"
 )
 

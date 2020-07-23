@@ -3,8 +3,8 @@ package ospokemon
 import (
 	"time"
 
-	"ospokemon.com/event"
-	"ztaylor.me/js"
+	"github.com/ospokemon/ospokemon/event"
+	"taylz.io/types"
 )
 
 const PARTaction = "action"
@@ -44,8 +44,8 @@ func (a *Action) Update(universe *Universe, entity *Entity, d time.Duration) {
 	}
 }
 
-func (a *Action) Json() js.Object {
-	return js.Object{
+func (a *Action) Json() types.Dict {
+	return types.Dict{
 		"timer": a.Timer.Fmt(),
 		"spell": a.Spell.Json(),
 	}

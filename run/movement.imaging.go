@@ -2,9 +2,9 @@ package run
 
 import (
 	"math"
-	"ospokemon.com"
-	"ospokemon.com/event"
-	"ospokemon.com/space"
+	"github.com/ospokemon/ospokemon"
+	"github.com/ospokemon/ospokemon/event"
+	"github.com/ospokemon/ospokemon/space"
 )
 
 func init() {

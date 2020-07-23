@@ -1,9 +1,8 @@
 package persistence
 
 import (
-	"ospokemon.com"
-	"ospokemon.com/event"
-	"ztaylor.me/log"
+	"github.com/ospokemon/ospokemon"
+	"github.com/ospokemon/ospokemon/event"
 )
 
 func PokemonSelect(id uint) (*ospokemon.Pokemon, error) {
@@ -31,7 +30,7 @@ func PokemonSelect(id uint) (*ospokemon.Pokemon, error) {
 
 	ospokemon.Pokemons[id] = pokemon
 
-	log.Add("Pokemon", id).Info("pokemon select")
+	ospokemon.LOG().Add("Pokemon", id).Info("pokemon select")
 
 	event.Fire(event.PokemonSelect, pokemon)
 	return pokemon, nil
@@ -50,7 +49,7 @@ func PokemonInsert(pokemon *ospokemon.Pokemon) error {
 	)
 
 	if err == nil {
-		log.Add("Pokemon", pokemon.Id).Info("pokemon insert")
+		ospokemon.LOG().Add("Pokemon", pokemon.Id).Info("pokemon insert")
 
 		event.Fire(event.PokemonInsert, pokemon)
 	}
@@ -62,7 +61,7 @@ func PokemonDelete(id uint) error {
 	_, err := Connection.Exec("DELETE FROM pokemon WHERE id=?", id)
 
 	if err == nil {
-		log.Add("Pokemon", id).Info("pokemon delete")
+		ospokemon.LOG().Add("Pokemon", id).Info("pokemon delete")
 
 		event.Fire(event.PokemonDelete, id)
 	}

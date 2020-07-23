@@ -1,17 +1,15 @@
 package run
 
 import (
-	"time"
-
-	"ospokemon.com"
-	"ospokemon.com/server/sessionman"
-	"ztaylor.me/cast"
-	"ztaylor.me/env"
+	"github.com/ospokemon/ospokemon"
+	"github.com/ospokemon/ospokemon/server/sessionman"
+	"taylz.io/env"
+	"taylz.io/types"
 )
 
-func Run(env env.Provider) {
-	d := time.Duration(cast.Int(env.Get("refresh"))) * time.Millisecond
-	for range time.Tick(d) {
+func Run(env env.Service) {
+	d := types.Duration(types.IntString(env["refresh"])) * types.Millisecond
+	for range types.NewChanTick(d) {
 		for _, u := range ospokemon.Universes.Cache {
 			u.Update(d)
 		}

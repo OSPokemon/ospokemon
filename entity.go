@@ -3,9 +3,9 @@ package ospokemon
 import (
 	"time"
 
-	"ospokemon.com/event"
-	"ospokemon.com/space"
-	"ztaylor.me/js"
+	"github.com/ospokemon/ospokemon/event"
+	"github.com/ospokemon/ospokemon/space"
+	"taylz.io/types"
 )
 
 const PARTentity = "entity"
@@ -76,8 +76,8 @@ func (e *Entity) Move(vector space.Vector, universe *Universe) {
 	}
 }
 
-func (entity *Entity) Json() js.Object {
-	json := js.Object{
+func (entity *Entity) Json() types.Dict {
+	json := types.Dict{
 		"id":    entity.Id,
 		"shape": entity.Shape.Snapshot(),
 	}

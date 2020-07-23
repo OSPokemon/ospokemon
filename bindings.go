@@ -1,6 +1,6 @@
 package ospokemon
 
-import "ztaylor.me/js"
+import "taylz.io/types"
 
 const PARTbindings = "bindings"
 
@@ -97,8 +97,8 @@ func (bindings Bindings) Remove(key string) error {
 	return nil
 }
 
-func (bindings Bindings) Json() js.Object {
-	json := js.Object{}
+func (bindings Bindings) Json() types.Dict {
+	json := types.Dict{}
 	for key, binding := range bindings {
 		json[key] = binding.Json()
 	}

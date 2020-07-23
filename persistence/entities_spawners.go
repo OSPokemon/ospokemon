@@ -3,9 +3,8 @@ package persistence
 import (
 	"time"
 
+	"github.com/ospokemon/ospokemon"
 	"github.com/pkg/errors"
-	"ospokemon.com"
-	"ztaylor.me/log"
 )
 
 func EntitiesSpawnersSelect(universe *ospokemon.Universe) (map[uint]*ospokemon.Spawner, error) {
@@ -39,7 +38,7 @@ func EntitiesSpawnersSelect(universe *ospokemon.Universe) (map[uint]*ospokemon.S
 		spawnerslog = append(spawnerslog, entityId)
 	}
 
-	log.Add("Universe", universe.Id).Add("Spawners", spawnerslog).Debug("entities_spawners select")
+	ospokemon.LOG().Add("Universe", universe.Id).Add("Spawners", spawnerslog).Debug("entities_spawners select")
 
 	return spawners, nil
 }

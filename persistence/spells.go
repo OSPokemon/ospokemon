@@ -3,8 +3,7 @@ package persistence
 import (
 	"time"
 
-	"ospokemon.com"
-	"ztaylor.me/log"
+	"github.com/ospokemon/ospokemon"
 )
 
 func init() {
@@ -67,7 +66,7 @@ func SpellsSelect(id uint) (*ospokemon.Spell, error) {
 	}
 	rows.Close()
 
-	log.Add("Spell", id).Info("spells select")
+	ospokemon.LOG().Add("Spell", id).Info("spells select")
 
 	return spell, nil
 }

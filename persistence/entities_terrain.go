@@ -1,9 +1,8 @@
 package persistence
 
 import (
+	"github.com/ospokemon/ospokemon"
 	"github.com/pkg/errors"
-	"ospokemon.com"
-	"ztaylor.me/log"
 )
 
 func EntitiesTerrainsSelect(universe *ospokemon.Universe) (map[uint]*ospokemon.Terrain, error) {
@@ -40,7 +39,7 @@ func EntitiesTerrainsSelect(universe *ospokemon.Universe) (map[uint]*ospokemon.T
 		terrains[k] = terrain
 	}
 
-	log.Add("Universe", universe.Id).Add("Terrains", buf).Debug("entities_terrains select")
+	ospokemon.LOG().Add("Universe", universe.Id).Add("Terrains", buf).Debug("entities_terrains select")
 
 	return terrains, err
 }

@@ -1,6 +1,6 @@
 package ospokemon
 
-import "ztaylor.me/js"
+import "taylz.io/types"
 
 const PARTitemslot = "itemslot"
 
@@ -36,8 +36,8 @@ func (parts Parts) GetItemslot() *Itemslot {
 	return itemslot
 }
 
-func (itemslot *Itemslot) Json() js.Object {
-	json := js.Object{
+func (itemslot *Itemslot) Json() types.Dict {
+	json := types.Dict{
 		"item":   itemslot.Item.Json(),
 		"amount": itemslot.Amount,
 	}

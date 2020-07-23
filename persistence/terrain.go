@@ -1,8 +1,7 @@
 package persistence
 
 import (
-	"ospokemon.com"
-	"ztaylor.me/log"
+	"github.com/ospokemon/ospokemon"
 )
 
 func init() {
@@ -19,7 +18,7 @@ func TerrainSelect(id uint) (*ospokemon.Terrain, error) {
 	err := row.Scan(&t.Collision, &t.Image)
 
 	if err == nil {
-		log.Add("Terrain", id).Info("terrain select")
+		ospokemon.LOG().Add("Terrain", id).Info("terrain select")
 	}
 
 	return t, err

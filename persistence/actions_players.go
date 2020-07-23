@@ -3,8 +3,7 @@ package persistence
 import (
 	"time"
 
-	"ospokemon.com"
-	"ztaylor.me/log"
+	"github.com/ospokemon/ospokemon"
 )
 
 func ActionsPlayersSelect(player *ospokemon.Player) (ospokemon.Actions, error) {
@@ -44,7 +43,7 @@ func ActionsPlayersSelect(player *ospokemon.Player) (ospokemon.Actions, error) {
 		}
 	}
 
-	log.Add("Username", player.Username).Add("Actions", actions).Debug("actions_players select")
+	ospokemon.LOG().Add("Username", player.Username).Add("Actions", actions).Debug("actions_players select")
 
 	return actions, nil
 }
@@ -70,14 +69,14 @@ func ActionsPlayersInsert(player *ospokemon.Player) error {
 		}
 	}
 
-	log.Add("Username", player.Username).Add("Actions", actions).Debug("actions_players insert")
+	ospokemon.LOG().Add("Username", player.Username).Add("Actions", actions).Debug("actions_players insert")
 	return nil
 }
 
 func ActionsPlayersDelete(player *ospokemon.Player) error {
 	_, err := Connection.Exec("DELETE FROM actions_players WHERE username=?", player.Username)
 
-	log.Add("Username", player.Username).Debug("actions_players delete")
+	ospokemon.LOG().Add("Username", player.Username).Debug("actions_players delete")
 
 	return err
 }

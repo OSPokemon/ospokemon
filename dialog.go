@@ -1,6 +1,6 @@
 package ospokemon
 
-import "ztaylor.me/js"
+import "taylz.io/types"
 
 const PARTdialog = "dialog"
 
@@ -41,8 +41,8 @@ func (parts Parts) GetDialog() *Dialog {
 	return dialog
 }
 
-func (dialog *Dialog) Json() js.Object {
-	json := js.Object{
+func (dialog *Dialog) Json() types.Dict {
+	json := types.Dict{
 		"id":   dialog.Id,
 		"lead": dialog.Lead,
 		"text": dialog.Text,

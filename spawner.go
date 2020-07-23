@@ -1,9 +1,6 @@
 package ospokemon
 
-import (
-	"time"
-	"ztaylor.me/log"
-)
+import "time"
 
 const PARTspawner = "spawner"
 

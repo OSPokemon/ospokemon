@@ -3,20 +3,20 @@ package routes
 import (
 	"net/http"
 
-	"ospokemon.com/server/routes/logout"
-	"ospokemon.com/server/sessionman"
-	"ztaylor.me/log"
+	"github.com/ospokemon/ospokemon"
+	"github.com/ospokemon/ospokemon/server/routes/logout"
+	"github.com/ospokemon/ospokemon/server/sessionman"
 )
 
 var Logout = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	if session := sessionman.FromRequestCookie(r); session != nil {
-		log.Add("Username", session.Username).Add("SessionId", session.SessionId).Info("api/logout")
+		ospokemon.LOG().Add("Username", session.Username).Add("SessionId", session.SessionId).Info("api/logout")
 		logout.LogoutPlayer(session.Username)
 
 		w.Header().Set("Set-Cookie", "SessionId=0; Path=/;")
 		http.Redirect(w, r, "/login/#"+session.Username, 307)
 	} else {
-		log.Add("RemoteAddr", r.RemoteAddr).Warn("logout: no session")
+		ospokemon.LOG().Add("RemoteAddr", r.RemoteAddr).Warn("logout: no session")
 		http.Redirect(w, r, "/login/", 307)
 	}
 })

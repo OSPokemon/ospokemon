@@ -3,7 +3,7 @@ package routes
 import (
 	"net/http"
 
-	"ospokemon.com/server/sessionman"
+	"github.com/ospokemon/ospokemon/server/sessionman"
 )
 
 func Page(fs http.FileSystem) http.Handler {

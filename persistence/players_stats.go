@@ -1,8 +1,7 @@
 package persistence
 
 import (
-	"ospokemon.com"
-	"ztaylor.me/log"
+	"github.com/ospokemon/ospokemon"
 )
 
 func PlayersStatsSelect(player *ospokemon.Player) (ospokemon.Stats, error) {
@@ -28,7 +27,7 @@ func PlayersStatsSelect(player *ospokemon.Player) (ospokemon.Stats, error) {
 	}
 	rows.Close()
 
-	log.Add("Username", player.Username).Add("Stats", stats).Debug("players_stats select")
+	ospokemon.LOG().Add("Username", player.Username).Add("Stats", stats).Debug("players_stats select")
 
 	return stats, nil
 }
@@ -49,7 +48,7 @@ func PlayersStatsInsert(player *ospokemon.Player) error {
 		}
 	}
 
-	log.Add("Username", player.Username).Add("stats", stats).Debug("players_stats insert")
+	ospokemon.LOG().Add("Username", player.Username).Add("stats", stats).Debug("players_stats insert")
 
 	return nil
 }
@@ -61,7 +60,7 @@ func PlayersStatsDelete(player *ospokemon.Player) error {
 	)
 
 	if err == nil {
-		log.Add("Username", player.Username).Debug("players_stats delete")
+		ospokemon.LOG().Add("Username", player.Username).Debug("players_stats delete")
 	}
 
 	return err

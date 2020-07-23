@@ -1,22 +1,19 @@
 package persistence
 
 import (
-	"database/sql"
-
-	"ztaylor.me/db"
-	"ztaylor.me/env"
-	"ztaylor.me/log"
+	"github.com/ospokemon/ospokemon"
+	"taylz.io/db"
+	"taylz.io/db/mysql"
+	"taylz.io/env"
 )
 
-var Connection *sql.DB
+var Connection *db.DB
 
-var Open = db.Open
-
-func OpenEnv(env env.Provider) {
+func OpenEnv(env env.Service) {
 	var err error
-	Connection, err = db.OpenEnv(env)
+	Connection, err = mysql.Open(db.ParseDSN(env))
 
-	log := log.Add("Host", env.Get(db.DB_HOST))
+	log := ospokemon.LOG().Add("Host", ospokemon.ENV()["DB_HOST"])
 
 	if err != nil {
 		log.Add("Error", err.Error()).Error("persistence.Connect")

@@ -1,7 +1,7 @@
 package signup
 
 import (
-	"ospokemon.com"
+	"github.com/ospokemon/ospokemon"
 )
 
 var menuBindings = map[string]ospokemon.Menu{

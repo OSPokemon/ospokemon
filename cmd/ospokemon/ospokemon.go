@@ -1,25 +1,34 @@
-package main // import "ospokemon.com/cmd/ospokemon"
+package main
 
 import (
-	"ospokemon.com/persistence"
-	"ospokemon.com/run"
-	"ospokemon.com/server"
-	"ztaylor.me/db"
-	"ztaylor.me/env"
-	"ztaylor.me/log"
+	"github.com/ospokemon/ospokemon"
+	"github.com/ospokemon/ospokemon/persistence"
+	"github.com/ospokemon/ospokemon/run"
+	"github.com/ospokemon/ospokemon/server"
+	"taylz.io/db/patch"
+	"taylz.io/log"
+	"taylz.io/types"
 )
 
 const PATCH = 9
 
 func main() {
-	env := env.Global()
-	log.SetLevel(env.Default("loglevel", "info"))
+	env := ospokemon.ENV().ParseDefault()
+	logf := log.DefaultFormatWithColor()
+	loglvl, err := log.GetLevel(env["loglevel"])
+	if err != nil {
+		log.StdOutService(log.LevelDebug, logf).Error(`env["loglevel"]`, env["loglevel"], err)
+		return
+	}
+	logp := env["logpath"]
+	ospokemon.SetLogger(log.NewService(loglvl, logf, log.NewRoller(logp)))
+	log := ospokemon.LOG()
 	log.Add("Patch", PATCH).Debug("ospokemon: starting...")
 
 	persistence.OpenEnv(env)
 	go run.Run(env)
 
-	if patch, err := db.Patch(persistence.Connection); err != nil {
+	if patch, err := patch.Get(persistence.Connection); err != nil {
 		log.Error("Failed to open database")
 		return
 	} else if patch != PATCH {
@@ -27,16 +36,16 @@ func main() {
 		return
 	}
 
-	if env.Get("edit") != "" {
+	if env["edit"] != "" {
 		log.Info("starting edit...")
 		Editor()
 		log.Info("edit finished...")
 		return
 	}
 
-	log.WithFields(log.Fields{
-		"loglevel": env.Get("loglevel"),
-		"port":     env.Get("port"),
+	log.With(types.Dict{
+		"loglevel": loglvl,
+		"port":     env["port"],
 	}).Info("OSPokemon Server")
 	server.LaunchEnv(env)
 }

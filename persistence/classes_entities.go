@@ -1,9 +1,8 @@
 package persistence
 
 import (
+	"github.com/ospokemon/ospokemon"
 	"github.com/pkg/errors"
-	"ospokemon.com"
-	"ztaylor.me/log"
 )
 
 func ClassesEntitiesSelect(universe *ospokemon.Universe) (map[uint]*ospokemon.Class, error) {
@@ -36,6 +35,6 @@ func ClassesEntitiesSelect(universe *ospokemon.Universe) (map[uint]*ospokemon.Cl
 		}
 	}
 
-	log.Add("Classes", classes).Debug("classes_entities select")
+	ospokemon.LOG().Add("Classes", classes).Debug("classes_entities select")
 	return classes, nil
 }

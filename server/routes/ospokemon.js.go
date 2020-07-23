@@ -3,7 +3,7 @@ package routes
 import (
 	"net/http"
 
-	"ospokemon.com/server/routes/ospokemon.js"
+	ospokemonjs "github.com/ospokemon/ospokemon/server/routes/ospokemon.js"
 )
 
 var OSPokemonJs = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

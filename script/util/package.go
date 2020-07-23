@@ -1,1 +1,1 @@
-package util // import "ospokemon.com/script/util"
+package util // import "github.com/ospokemon/ospokemon/script/util"

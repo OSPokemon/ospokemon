@@ -2,9 +2,9 @@ package script
 
 import (
 	"errors"
-	"ospokemon.com"
-	"ztaylor.me/log"
-	"ospokemon.com/script/util"
+
+	"github.com/ospokemon/ospokemon"
+	"github.com/ospokemon/ospokemon/script/util"
 )
 
 func init() {
@@ -34,7 +34,7 @@ func BindingSet(e *ospokemon.Entity, data map[string]interface{}) error {
 		} else if action := actions[spell.Id]; action == nil {
 			return errors.New("bindingset: action missing")
 		} else {
-			log.Add("Username", e.GetPlayer().Username).Add("Key", key).Add("Spell", action.Spell.Id).Info("bindingset: spell")
+			ospokemon.LOG().Add("Username", e.GetPlayer().Username).Add("Key", key).Add("Spell", action.Spell.Id).Info("bindingset: spell")
 			bindings.SetAction(key, action)
 			return nil
 		}
@@ -52,7 +52,7 @@ func BindingSet(e *ospokemon.Entity, data map[string]interface{}) error {
 		} else if itemslot := itembag.Slots[item.Id]; itemslot == nil {
 			return errors.New("bindingset: itemslot missing")
 		} else {
-			log.Add("Username", e.GetPlayer().Username).Add("Key", key).Add("Item", itemslot.Item.Id).Info("bindingset: itemslot")
+			ospokemon.LOG().Add("Username", e.GetPlayer().Username).Add("Key", key).Add("Item", itemslot.Item.Id).Info("bindingset: itemslot")
 			bindings.SetItemslot(key, itemslot)
 			return nil
 		}

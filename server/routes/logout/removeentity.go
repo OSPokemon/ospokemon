@@ -1,7 +1,7 @@
 package logout
 
 import (
-	"ospokemon.com"
+	"github.com/ospokemon/ospokemon"
 )
 
 func RemoveEntity(username string) {

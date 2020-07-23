@@ -1,9 +1,8 @@
 package persistence
 
 import (
+	"github.com/ospokemon/ospokemon"
 	"github.com/pkg/errors"
-	"ospokemon.com"
-	"ztaylor.me/log"
 )
 
 func init() {
@@ -31,6 +30,6 @@ func ClassesSelect(id uint) (*ospokemon.Class, error) {
 		class.Animations[k] = v
 	}
 
-	log.Add("Class", class.Id).Debug("classes select")
+	ospokemon.LOG().Add("Class", class.Id).Debug("classes select")
 	return class, nil
 }
